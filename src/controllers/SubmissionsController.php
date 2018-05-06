@@ -2,11 +2,9 @@
 
 namespace rias\contactformextensions\controllers;
 
-use Craft;
 use craft\web\Controller;
 use rias\contactformextensions\elements\ContactFormSubmission;
 use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
-use yii\web\ForbiddenHttpException;
 
 class SubmissionsController extends Controller
 {
@@ -26,8 +24,8 @@ class SubmissionsController extends Controller
 
         $messageObject = (array) json_decode($submission->message);
         $variables = [
-            'submission' => $submission,
-            'siteHandle' => $siteHandle,
+            'submission'    => $submission,
+            'siteHandle'    => $siteHandle,
             'messageObject' => $messageObject,
         ];
 

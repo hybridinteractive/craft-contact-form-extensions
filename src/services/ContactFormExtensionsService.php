@@ -1,27 +1,24 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
  * @link      https://rias.be
+ *
  * @copyright Copyright (c) 2018 Rias
  */
 
 namespace rias\contactformextensions\services;
 
-use craft\contactform\models\Submission;
-use craft\mail\Message;
-use rias\contactformextensions\ContactFormExtensions;
-
 use Craft;
 use craft\base\Component;
+use craft\contactform\models\Submission;
 use rias\contactformextensions\elements\ContactFormSubmission;
-use rias\contactformextensions\records\SubmissionRecord;
 use yii\base\Exception;
 
 /**
- * CraftContactFormExtensionsService Service
+ * CraftContactFormExtensionsService Service.
  *
  * All of your plugin’s business logic should go in services, including saving data,
  * retrieving data, etc. They provide APIs that your controllers, template variables,
@@ -30,7 +27,7 @@ use yii\base\Exception;
  * https://craftcms.com/docs/plugins/services
  *
  * @author    Rias
- * @package   CraftContactFormExtensions
+ *
  * @since     1.0.0
  */
 class ContactFormExtensionsService extends Component
@@ -40,7 +37,7 @@ class ContactFormExtensionsService extends Component
 
     /**
      * This function can literally be anything you want, and you can have as many service
-     * functions as you want
+     * functions as you want.
      *
      * From any other plugin file, call it like this:
      *
@@ -48,11 +45,12 @@ class ContactFormExtensionsService extends Component
      *
      * @param Submission $submission
      *
-     * @return mixed
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
+     *
+     * @return mixed
      */
     public function saveSubmission(Submission $submission)
     {

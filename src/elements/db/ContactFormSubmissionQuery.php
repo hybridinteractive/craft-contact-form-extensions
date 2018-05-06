@@ -1,10 +1,9 @@
 <?php
+
 namespace rias\contactformextensions\elements\db;
 
-use craft\db\Query;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
-use ns\prefix\elements\Product;
 
 class ContactFormSubmissionQuery extends ElementQuery
 {
