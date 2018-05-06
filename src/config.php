@@ -1,15 +1,16 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
  * @link      https://rias.be
+ *
  * @copyright Copyright (c) 2018 Rias
  */
 
 /**
- * Craft Contact Form Extensions config.php
+ * Craft Contact Form Extensions config.php.
  *
  * This file exists only as a template for the Craft Contact Form Extensions settings.
  * It does nothing on its own.
@@ -23,9 +24,9 @@
  */
 
 return [
-    "enableDatabase" => true,
-    "enableConfirmationEmail" => true,
-    "enableTemplateOverwrite" => true,
-    "notificationTemplate" => "",
-    "confirmationTemplate" => "",
+    'enableDatabase'          => true,
+    'enableConfirmationEmail' => true,
+    'enableTemplateOverwrite' => true,
+    'notificationTemplate'    => '',
+    'confirmationTemplate'    => '',
 ];

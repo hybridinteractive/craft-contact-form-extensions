@@ -1,29 +1,24 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
  * @link      https://rias.be
+ *
  * @copyright Copyright (c) 2018 Rias
  */
 
 namespace rias\contactformextensions\elements;
 
-use craft\elements\actions\Delete;
-use craft\helpers\ArrayHelper;
-use craft\i18n\Locale;
-use rias\contactformextensions\ContactFormExtensions;
-
 use Craft;
 use craft\base\Element;
-use craft\elements\db\ElementQuery;
+use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
 use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
-use rias\contactformextensions\records\SubmissionRecord;
 
 /**
- *  Element
+ *  Element.
  *
  * Element is the base class for classes representing elements in terms of objects.
  *
@@ -63,7 +58,7 @@ use rias\contactformextensions\records\SubmissionRecord;
  * http://pixelandtonic.com/blog/craft-element-types
  *
  * @author    Rias
- * @package   CraftContactFormExtensions
+ *
  * @since     1.0.0
  */
 class ContactFormSubmission extends Element
@@ -111,21 +106,21 @@ class ContactFormSubmission extends Element
     {
         $forms = array_unique(array_map(function (ContactFormSubmission $submission) {
             return $submission->form;
-        }, ContactFormSubmission::find()->all()));
+        }, self::find()->all()));
 
         $sources = [
             [
-                'key' => '*',
-                'label' => 'All submissions',
-                'criteria' => []
+                'key'      => '*',
+                'label'    => 'All submissions',
+                'criteria' => [],
             ],
         ];
 
         foreach ($forms as $formHandle) {
             $sources[] = [
-                'key' => $formHandle,
-                'label' => ucfirst($formHandle),
-                'criteria' => ['form' => $formHandle]
+                'key'      => $formHandle,
+                'label'    => ucfirst($formHandle),
+                'criteria' => ['form' => $formHandle],
             ];
         }
 
@@ -137,9 +132,9 @@ class ContactFormSubmission extends Element
         $actions = [];
 
         $actions[] = Craft::$app->getElements()->createAction([
-            'type' => Delete::class,
+            'type'                => Delete::class,
             'confirmationMessage' => Craft::t('app', 'Are you sure you want to delete the selected entries?'),
-            'successMessage' => Craft::t('app', 'Entries deleted.'),
+            'successMessage'      => Craft::t('app', 'Entries deleted.'),
         ]);
 
         return $actions;
@@ -148,12 +143,12 @@ class ContactFormSubmission extends Element
     protected static function defineTableAttributes(): array
     {
         $attributes = [
-            'id' => Craft::t('contact-form-extensions', 'ID'),
-            'form' => Craft::t('contact-form-extensions', 'Form'),
-            'subject' => Craft::t('contact-form-extensions', 'Subject'),
-            'fromName' => Craft::t('contact-form-extensions', 'From Name'),
-            'fromEmail' => Craft::t('contact-form-extensions', 'From Email'),
-            'message' => Craft::t('contact-form-extensions', 'Message'),
+            'id'          => Craft::t('contact-form-extensions', 'ID'),
+            'form'        => Craft::t('contact-form-extensions', 'Form'),
+            'subject'     => Craft::t('contact-form-extensions', 'Subject'),
+            'fromName'    => Craft::t('contact-form-extensions', 'From Name'),
+            'fromEmail'   => Craft::t('contact-form-extensions', 'From Email'),
+            'message'     => Craft::t('contact-form-extensions', 'Message'),
             'dateCreated' => Craft::t('contact-form-extensions', 'Date Created'),
         ];
 
@@ -162,14 +157,15 @@ class ContactFormSubmission extends Element
 
     public function getTableAttributeHtml(string $attribute): string
     {
-        if ($attribute == "message") {
+        if ($attribute == 'message') {
             $message = (array) json_decode($this->message);
-            $html = "<ul>";
+            $html = '<ul>';
             foreach ($message as $key => $value) {
                 $shortened = trim(substr($value, 0, 30));
                 $html .= "<li><em>{$key}</em>: {$shortened}...</li>";
             }
-            $html .= "</ul>";
+            $html .= '</ul>';
+
             return $html;
         }
 
@@ -195,27 +191,26 @@ class ContactFormSubmission extends Element
         if ($isNew) {
             Craft::$app->db->createCommand()
                 ->insert('{{%contactform_submissions}}', [
-                    'id' => $this->id,
-                    'form' => $this->form,
-                    'subject' => $this->subject,
-                    'fromName' => $this->fromName,
+                    'id'        => $this->id,
+                    'form'      => $this->form,
+                    'subject'   => $this->subject,
+                    'fromName'  => $this->fromName,
                     'fromEmail' => $this->fromEmail,
-                    'message' => $this->message,
+                    'message'   => $this->message,
                 ])
                 ->execute();
         } else {
             Craft::$app->db->createCommand()
                 ->update('{{%contactform_submissions}}', [
-                    'form' => $this->form,
-                    'subject' => $this->subject,
-                    'fromName' => $this->fromName,
+                    'form'      => $this->form,
+                    'subject'   => $this->subject,
+                    'fromName'  => $this->fromName,
                     'fromEmail' => $this->fromEmail,
-                    'message' => $this->message,
+                    'message'   => $this->message,
                 ], ['id' => $this->id])
                 ->execute();
         }
 
         parent::afterSave($isNew);
     }
-
 }

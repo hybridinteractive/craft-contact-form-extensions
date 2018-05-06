@@ -1,23 +1,21 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
  * @link      https://rias.be
+ *
  * @copyright Copyright (c) 2018 Rias
  */
 
 namespace rias\contactformextensions\migrations;
 
-use rias\contactformextensions\ContactFormExtensions;
-
 use Craft;
-use craft\config\DbConfig;
 use craft\db\Migration;
 
 /**
- * Craft Contact Form Extensions Install Migration
+ * Craft Contact Form Extensions Install Migration.
  *
  * If your plugin needs to create any custom database tables when it gets installed,
  * create a migrations/ folder within your plugin folder, and save an Install.php file
@@ -27,7 +25,7 @@ use craft\db\Migration;
  * safeUp() and safeDown() methods.
  *
  * @author    Rias
- * @package   CraftContactFormExtensions
+ *
  * @since     1.0.0
  */
 class Install extends Migration
@@ -50,8 +48,8 @@ class Install extends Migration
      * Child classes may implement this method instead of [[up()]] if the DB logic
      * needs to be within a transaction.
      *
-     * @return boolean return a false value to indicate the migration fails
-     * and should not proceed further. All other return values mean the migration succeeds.
+     * @return bool return a false value to indicate the migration fails
+     *              and should not proceed further. All other return values mean the migration succeeds.
      */
     public function safeUp()
     {
@@ -73,8 +71,8 @@ class Install extends Migration
      * Child classes may implement this method instead of [[down()]] if the DB logic
      * needs to be within a transaction.
      *
-     * @return boolean return a false value to indicate the migration fails
-     * and should not proceed further. All other return values mean the migration succeeds.
+     * @return bool return a false value to indicate the migration fails
+     *              and should not proceed further. All other return values mean the migration succeeds.
      */
     public function safeDown()
     {
@@ -88,7 +86,7 @@ class Install extends Migration
     // =========================================================================
 
     /**
-     * Creates the tables needed for the Records used by the plugin
+     * Creates the tables needed for the Records used by the plugin.
      *
      * @return bool
      */
@@ -96,22 +94,22 @@ class Install extends Migration
     {
         $tablesCreated = false;
 
-    // contactform_submissions table
+        // contactform_submissions table
         $tableSchema = Craft::$app->db->schema->getTableSchema('{{%contactform_submissions}}');
         if ($tableSchema === null) {
             $tablesCreated = true;
             $this->createTable(
                 '{{%contactform_submissions}}',
                 [
-                    'id' => $this->integer()->notNull(),
-                    'form' => $this->string()->null(),
-                    'subject' => $this->string()->null(),
-                    'fromName' => $this->string()->null(),
-                    'fromEmail' => $this->string()->null(),
-                    'message' => $this->text()->notNull(),
+                    'id'          => $this->integer()->notNull(),
+                    'form'        => $this->string()->null(),
+                    'subject'     => $this->string()->null(),
+                    'fromName'    => $this->string()->null(),
+                    'fromEmail'   => $this->string()->null(),
+                    'message'     => $this->text()->notNull(),
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
+                    'uid'         => $this->uid(),
                     'PRIMARY KEY(id)',
                 ]
             );
@@ -121,13 +119,13 @@ class Install extends Migration
     }
 
     /**
-     * Creates the foreign keys needed for the Records used by the plugin
+     * Creates the foreign keys needed for the Records used by the plugin.
      *
      * @return void
      */
     protected function addForeignKeys()
     {
-    // contactform_submissions table
+        // contactform_submissions table
         $this->addForeignKey(
             $this->db->getForeignKeyName('{{%contactform_submissions}}', 'id'),
             '{{%contactform_submissions}}',
@@ -149,13 +147,13 @@ class Install extends Migration
     }
 
     /**
-     * Removes the tables needed for the Records used by the plugin
+     * Removes the tables needed for the Records used by the plugin.
      *
      * @return void
      */
     protected function removeTables()
     {
-    // contactform_submissions table
+        // contactform_submissions table
         $this->dropTableIfExists('{{%contactform_submissions}}');
     }
 }

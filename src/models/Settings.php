@@ -1,22 +1,21 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
  * @link      https://rias.be
+ *
  * @copyright Copyright (c) 2018 Rias
  */
 
 namespace rias\contactformextensions\models;
 
-use rias\contactformextensions\ContactFormExtensions;
-
 use Craft;
 use craft\base\Model;
 
 /**
- * CraftContactFormExtensions Settings Model
+ * CraftContactFormExtensions Settings Model.
  *
  * This is a model used to define the plugin's settings.
  *
@@ -26,7 +25,7 @@ use craft\base\Model;
  * https://craftcms.com/docs/plugins/models
  *
  * @author    Rias
- * @package   CraftContactFormExtensions
+ *
  * @since     1.0.0
  */
 class Settings extends Model
@@ -35,15 +34,15 @@ class Settings extends Model
     // =========================================================================
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $enableDatabase = true;
 
     public $enableTemplateOverwrite = true;
     public $enableConfirmationEmail = true;
-    public $notificationTemplate = "";
-    public $confirmationTemplate = "";
-    public $confirmationSubject = "";
+    public $notificationTemplate = '';
+    public $confirmationTemplate = '';
+    public $confirmationSubject = '';
 
     // Public Methods
     // =========================================================================

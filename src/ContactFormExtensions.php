@@ -1,42 +1,32 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
  * @link      https://rias.be
+ *
  * @copyright Copyright (c) 2018 Rias
  */
 
 namespace rias\contactformextensions;
 
+use Craft;
+use craft\base\Plugin;
 use craft\contactform\events\SendEvent;
 use craft\contactform\Mailer;
 use craft\contactform\models\Submission;
-use craft\events\RegisterCpNavItemsEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\helpers\UrlHelper;
 use craft\mail\Message;
-use craft\web\twig\variables\Cp;
+use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
-use rias\contactformextensions\elements\ContactFormSubmission;
-use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
-use rias\contactformextensions\elements\SubmissionsElement;
-use rias\contactformextensions\variables\ContactFormExtensionsVariable;
-use yii\base\ModelEvent;
-use rias\contactformextensions\services\ContactFormExtensionsService as ContactFormExtensionsServiceService;
 use rias\contactformextensions\models\Settings;
-
-use Craft;
-use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
-use craft\services\Elements;
-use craft\events\RegisterComponentTypesEvent;
-
+use rias\contactformextensions\services\ContactFormExtensionsService as ContactFormExtensionsServiceService;
+use rias\contactformextensions\variables\ContactFormExtensionsVariable;
 use yii\base\Event;
+use yii\base\ModelEvent;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -49,11 +39,12 @@ use yii\base\Event;
  * https://craftcms.com/docs/plugins/introduction
  *
  * @author    Rias
- * @package   CraftContactFormExtensions
+ *
  * @since     1.0.0
  *
  * @property  ContactFormExtensionsServiceService $contactFormExtensionsService
  * @property  Settings $settings
+ *
  * @method    Settings getSettings()
  */
 class ContactFormExtensions extends Plugin
@@ -63,7 +54,7 @@ class ContactFormExtensions extends Plugin
 
     /**
      * Static property that is an instance of this plugin class so that it can be accessed via
-     * ContactFormExtensions::$plugin
+     * ContactFormExtensions::$plugin.
      *
      * @var ContactFormExtensions
      */
@@ -76,14 +67,13 @@ class ContactFormExtensions extends Plugin
 
     /**
      * Set our $plugin static property to this class so that it can be accessed via
-     * CraftContactFormExtensions::$plugin
+     * CraftContactFormExtensions::$plugin.
      *
      * Called after the plugin class is instantiated; do any one-time initialization
      * here such as hooks and events.
      *
      * If you have a '/vendor/autoload.php' file, it will be loaded for you automatically;
      * you do not need to load it in your init() method.
-     *
      */
     public function init()
     {
@@ -96,10 +86,9 @@ class ContactFormExtensions extends Plugin
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules = array_merge($event->rules, [
-                'contact-form-extensions/submissions/<submissionId:\d+>' => 'contact-form-extensions/submissions/show-submission',
+                'contact-form-extensions/submissions/<submissionId:\d+>'                       => 'contact-form-extensions/submissions/show-submission',
                 'contact-form-extensions/submissions/<submissionId:\d+>/<siteHandle:{handle}>' => 'contact-form-extensions/submissions/show-submission',
             ]);
-
         });
 
         Event::on(Submission::class, Submission::EVENT_BEFORE_VALIDATE, function (ModelEvent $e) {
@@ -168,7 +157,7 @@ class ContactFormExtensions extends Plugin
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCpNavItem()
     {
@@ -196,9 +185,10 @@ class ContactFormExtensions extends Plugin
      * Returns the rendered settings HTML, which will be inserted into the content
      * block on the settings page.
      *
-     * @return string The rendered settings HTML
      * @throws \Twig_Error_Loader
      * @throws \yii\base\Exception
+     *
+     * @return string The rendered settings HTML
      */
     protected function settingsHtml(): string
     {
@@ -212,7 +202,7 @@ class ContactFormExtensions extends Plugin
         return Craft::$app->view->renderTemplate(
             'contact-form-extensions/settings',
             [
-                'settings' => $this->getSettings(),
+                'settings'  => $this->getSettings(),
                 'overrides' => array_keys($overrides),
             ]
         );
