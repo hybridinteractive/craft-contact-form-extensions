@@ -1,0 +1,26 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ *
+ * Craft Contact Form Extensions index.twig
+ *
+ * @author    Rias
+ * @copyright Copyright (c) 2018 Rias
+ * @link      https://rias.be
+ * @package   CraftContactFormExtensions
+ * @since     1.0.0
+ */
+#}
+
+{% set elementType = "\\rias\\contactformextensions\\elements\\ContactFormSubmission" %}
+{% extends '_layouts/elementindex' %}
+
+{% set title = "Submissions" |t %}
+
+{% if crumbs is not defined %}
+    {% set crumbs = [
+        { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') }
+    ] %}
+{% endif %}
+

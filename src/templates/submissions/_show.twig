@@ -1,0 +1,57 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set fullPageForm = true %}
+{% set title = submission.dateCreated|date('d/m/Y H:i') %}
+
+{% hook "cp.contactFormSubmission.show" %}
+
+{% block header %}
+    {{ block('pageTitle') }}
+    {{ block('contextMenu') }}
+    <div class="flex-grow"></div>
+    {{ block('actionButton') }}
+{% endblock %}
+
+{% block contextMenu %}
+{% endblock %}
+
+{% block actionButton %}
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="readable">
+        <h3>{{ "From name"|t('contact-form-extensions') }}</h3>
+        <p>{{ submission.fromName }}</p>
+        <h3>{{ "From email"|t('contact-form-extensions') }}</h3>
+        <p>{{ submission.fromEmail }}</p>
+        {% for key, value in messageObject %}
+            <h3>{{ key|ucfirst }}</h3>
+            <p>{{ value }}</p>
+        {% endfor %}
+    </div>
+
+    <hr>
+    <a href="{{ url('contact-form-extensions') }}" class="btn">{{ "Back to overview"|t('contact-form-extensions') }}</a>
+
+    {# Give plugins a chance to add other things here #}
+    {% hook "cp.contactFormSubmission.show.content" %}
+{% endblock %}
+
+{% block details %}
+    {% if submission.id %}
+        <hr>
+        <div class="meta read-only">
+            <div class="data">
+                <h5 class="heading">{{ "Date Created"|t('app') }}</h5>
+                <div class="value">{{ submission.dateCreated|datetime('short') }}</div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Give plugins a chance to add other stuff here #}
+    {% hook "cp.contactFormSubmission.show.details" %}
+{% endblock %}
+

@@ -1,0 +1,94 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Craft Contact Form Extensions plugin for Craft CMS 3.x
+ *
+ * Craft Contact Form Extensions Settings.twig
+ *
+ * @author    Rias
+ * @copyright Copyright (c) 2018 Rias
+ * @link      https://rias.be
+ * @package   CraftContactFormExtensions
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% macro configWarning(setting) -%}
+    {% set setting = '<code>'~setting~'</code>' %}
+    {{ "This is being overridden by the {setting} config setting in your {file} config file."|t('contact-form-extensions', {
+        setting: setting,
+        file: 'contact-form-extensions.php'
+    })|raw }}
+{%- endmacro %}
+
+{% from _self import configWarning %}
+
+{{ forms.lightswitchField({
+    label: 'Save submissions to the database',
+    instructions: 'Save the submissions to the database so they can be viewed in the control panel',
+    id: 'enableDatabase',
+    name: 'enableDatabase',
+    disabled:     'enableDatabase' in overrides,
+    warning:      'enableDatabase' in overrides ? configWarning('enableDatabase'),
+    on: settings.enableDatabase == true })
+}}
+
+{{ forms.lightswitchField({
+    label: 'Send confirmation email',
+    instructions: 'Sends a confirmation email to the person who filled in the contact form, a `fromEmail` field is required.',
+    id: 'enableConfirmationEmail',
+    name: 'enableConfirmationEmail',
+    disabled:     'enableConfirmationEmail' in overrides,
+    warning:      'enableConfirmationEmail' in overrides ? configWarning('enableConfirmationEmail'),
+    on: settings.enableConfirmationEmail == true,
+    toggle: "confirmationTemplate"
+}) }}
+
+<div id="confirmationTemplate" style="margin-bottom: 20px;">
+    {{ forms.textField({
+        label: 'Set the template for the confirmation email',
+        instructions: 'The template will receive a `submission` variable',
+        id: 'confirmationTemplate',
+        name: 'confirmationTemplate',
+        disabled:     'confirmationTemplate' in overrides,
+        warning:      'confirmationTemplate' in overrides ? configWarning('confirmationTemplate'),
+        value: settings.confirmationTemplate,
+    }) }}
+
+    {{ forms.textField({
+        label: 'Confirmation Subject',
+        instructions: 'The subject for the confirmation email',
+        id: 'confirmationSubject',
+        name: 'confirmationSubject',
+        disabled:     'confirmationSubject' in overrides,
+        warning:      'confirmationSubject' in overrides ? configWarning('confirmationSubject'),
+        value: settings.getConfirmationSubject,
+    }) }}
+</div>
+
+{{ forms.lightswitchField({
+    label: 'Overwrite the e-mail template',
+    instructions: 'Overwrite the templates for the emails that are sent.',
+    id: 'enableTemplateOverwrite',
+    name: 'enableTemplateOverwrite',
+    disabled:     'enableTemplateOverwrite' in overrides,
+    warning:      'enableTemplateOverwrite' in overrides ? configWarning('enableTemplateOverwrite'),
+    on: settings.enableTemplateOverwrite == true,
+    toggle: "templateSettings"
+}) }}
+
+<div id="templateSettings">
+    {{ forms.textField({
+        label: 'Set a template for the notification email',
+        instructions: 'The template will receive a `submission` variable',
+        id: 'notificationTemplate',
+        name: 'notificationTemplate',
+        disabled:     'notificationTemplate' in overrides,
+        warning:      'notificationTemplate' in overrides ? configWarning('notificationTemplate'),
+        value: settings.notificationTemplate,
+    }) }}
+</div>
+
+
