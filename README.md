@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/rias500/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/rias500/craft-contact-form-extensions/releases)
 [![Quality Score](https://img.shields.io/scrutinizer/g/rias500/craft-contact-form-extensions.svg?style=flat-square)](https://scrutinizer-ci.com/g/rias500/craft-contact-form-extensions)
-[![StyleCI](https://styleci.io/repos/117454863/shield)](https://styleci.io/repos/117454863)
+[![StyleCI](https://styleci.io/repos/132350120/shield)](https://styleci.io/repos/132350120)
 [![Total Downloads](https://img.shields.io/packagist/dt/rias/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/packages/rias/craft-contact-form-extensions)
 
 # Craft Contact Form Extensions
