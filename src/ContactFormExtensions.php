@@ -108,7 +108,7 @@ class ContactFormExtensions extends Plugin
                 // Render the set template
                 $html = Craft::$app->view->renderTemplate(
                     $this->settings->notificationTemplate,
-                    ['submission' => $submission]
+                    ['submission' => $e->submission]
                 );
 
                 // Update the message body
