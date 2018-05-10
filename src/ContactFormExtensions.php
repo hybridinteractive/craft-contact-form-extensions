@@ -26,7 +26,6 @@ use rias\contactformextensions\models\Settings;
 use rias\contactformextensions\services\ContactFormExtensionsService as ContactFormExtensionsServiceService;
 use rias\contactformextensions\variables\ContactFormExtensionsVariable;
 use yii\base\Event;
-use yii\base\ModelEvent;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -158,7 +157,7 @@ class ContactFormExtensions extends Plugin
     public function getCpNavItem()
     {
         if (!$this->settings->enableDatabase) {
-            return null;
+            return;
         }
 
         $navItem = parent::getCpNavItem();
