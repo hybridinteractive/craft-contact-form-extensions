@@ -91,10 +91,6 @@ class ContactFormExtensions extends Plugin
             ]);
         });
 
-        Event::on(Submission::class, Submission::EVENT_BEFORE_VALIDATE, function (ModelEvent $e) {
-            // Do something
-        });
-
         Event::on(Mailer::class, Mailer::EVENT_BEFORE_SEND, function (SendEvent $e) {
             $submission = $e->submission;
             if ($this->settings->enableDatabase) {
@@ -161,6 +157,10 @@ class ContactFormExtensions extends Plugin
      */
     public function getCpNavItem()
     {
+        if (!$this->settings->enableDatabase) {
+            return null;
+        }
+
         $navItem = parent::getCpNavItem();
 
         $navItem['label'] = Craft::t('contact-form-extensions', 'Form Submissions');
