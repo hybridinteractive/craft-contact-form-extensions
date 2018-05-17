@@ -55,7 +55,7 @@ class ContactFormExtensionsService extends Component
     public function saveSubmission(Submission $submission)
     {
         $contactFormSubmission = new ContactFormSubmission();
-        $contactFormSubmission->form = 'contact';
+        $contactFormSubmission->form = $submission->message['formName'] ?? 'contact';
         $contactFormSubmission->fromName = $submission->fromName;
         $contactFormSubmission->fromEmail = $submission->fromEmail;
         $contactFormSubmission->subject = $submission->subject;
