@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.4 - 2018-05-22
+### Added
+- You can now change the form name by passing a `message[formName]` field in your form. This way the entries will be grouped by each form. Thanks @curtishenson
+
 ## 1.0.3 - 2018-05-14
 ### Fixed
 - Fixed a bug where the confirmation email was not sent to the person filling out the form.
