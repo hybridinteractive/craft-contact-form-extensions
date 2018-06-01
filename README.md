@@ -12,6 +12,7 @@ Adds extensions to the Craft CMS contact form plugin.
 - Save submissions to the database and view them in the Control Panel
 - Add a confirmation email that is sent to the submitting email
 - Overwrite the default e-mail template
+- Add an invisble reCAPTCHA
 
 ![Screenshot](resources/screenshot.png)
 
