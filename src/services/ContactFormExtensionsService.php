@@ -76,8 +76,8 @@ class ContactFormExtensionsService extends Component
         $options = [
             'hideBadge' => ContactFormExtensions::$plugin->settings->recaptchaHideBadge,
             'dataBadge' => ContactFormExtensions::$plugin->settings->recaptchaDataBadge,
-            'timeout' => ContactFormExtensions::$plugin->settings->recaptchaTimeout,
-            'debug' => ContactFormExtensions::$plugin->settings->recaptchaDebug,
+            'timeout'   => ContactFormExtensions::$plugin->settings->recaptchaTimeout,
+            'debug'     => ContactFormExtensions::$plugin->settings->recaptchaDebug,
         ];
 
         return new \AlbertCht\InvisibleReCaptcha\InvisibleReCaptcha($siteKey, $secretKey, $options);
