@@ -13,6 +13,7 @@ namespace rias\contactformextensions;
 
 use Craft;
 use craft\base\Plugin;
+use craft\events\TemplateEvent;
 use craft\contactform\events\SendEvent;
 use craft\contactform\Mailer;
 use craft\contactform\models\Submission;
@@ -83,6 +84,19 @@ class ContactFormExtensions extends Plugin
             Craft::$app->session->setNotice(Craft::t('contact-form-extensions', 'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.'));
         }
 
+        Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function(TemplateEvent $e) {
+            if (
+                $e->template === 'settings/plugins/_settings' &&
+                $e->variables['plugin'] === $this
+            ) {
+                // Add the tabs
+                $e->variables['tabs'] = [
+                    ['label' => 'Settings', 'url' => '#settings-tab-settings'],
+                    ['label' => 'reCAPTCHA', 'url' => '#settings-tab-recaptcha'],
+                ];
+            }
+        });
+
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules = array_merge($event->rules, [
                 'contact-form-extensions/submissions/<submissionId:\d+>'                       => 'contact-form-extensions/submissions/show-submission',
@@ -91,6 +105,17 @@ class ContactFormExtensions extends Plugin
         });
 
         Event::on(Mailer::class, Mailer::EVENT_BEFORE_SEND, function (SendEvent $e) {
+            if ($this->settings->recaptcha) {
+                $recaptcha = $this->contactFormExtensionsService->recaptcha;
+                $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
+
+                if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
+                    $e->isSpam = true;
+                    $e->handled = true;
+                    return;
+                }
+            }
+
             $submission = $e->submission;
             if ($this->settings->enableDatabase) {
                 $submission = $this->contactFormExtensionsService->saveSubmission($submission);

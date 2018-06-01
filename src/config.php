@@ -29,4 +29,12 @@ return [
     'enableTemplateOverwrite' => true,
     'notificationTemplate'    => '',
     'confirmationTemplate'    => '',
+
+    'recaptcha'               => false,
+    'recaptchaSiteKey'        => '',
+    'recaptchaSecretKey'      => '',
+    'recaptchaHideBadge'      => false,
+    'recaptchaDataBadge'      => 'bottomright',
+    'recaptchaTimeout'        => 5,
+    'recaptchaDebug'          => false,
 ];

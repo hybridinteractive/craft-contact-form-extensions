@@ -14,6 +14,7 @@ namespace rias\contactformextensions\services;
 use Craft;
 use craft\base\Component;
 use craft\contactform\models\Submission;
+use rias\contactformextensions\ContactFormExtensions;
 use rias\contactformextensions\elements\ContactFormSubmission;
 use yii\base\Exception;
 
@@ -66,5 +67,19 @@ class ContactFormExtensionsService extends Component
         }
 
         throw new Exception(json_encode($contactFormSubmission->errors));
+    }
+
+    public function getRecaptcha()
+    {
+        $siteKey = ContactFormExtensions::$plugin->settings->recaptchaSiteKey;
+        $secretKey = ContactFormExtensions::$plugin->settings->recaptchaSecretKey;
+        $options = [
+            'hideBadge' => ContactFormExtensions::$plugin->settings->recaptchaHideBadge,
+            'dataBadge' => ContactFormExtensions::$plugin->settings->recaptchaDataBadge,
+            'timeout' => ContactFormExtensions::$plugin->settings->recaptchaTimeout,
+            'debug' => ContactFormExtensions::$plugin->settings->recaptchaDebug,
+        ];
+
+        return new \AlbertCht\InvisibleReCaptcha\InvisibleReCaptcha($siteKey, $secretKey, $options);
     }
 }

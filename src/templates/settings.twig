@@ -25,70 +25,147 @@
 
 {% from _self import configWarning %}
 
-{{ forms.lightswitchField({
-    label: 'Save submissions to the database',
-    instructions: 'Save the submissions to the database so they can be viewed in the control panel',
-    id: 'enableDatabase',
-    name: 'enableDatabase',
-    disabled:     'enableDatabase' in overrides,
-    warning:      'enableDatabase' in overrides ? configWarning('enableDatabase'),
-    on: settings.enableDatabase == true })
-}}
+<div id="tab-settings">
+    {{ forms.lightswitchField({
+        label: 'Save submissions to the database',
+        instructions: 'Save the submissions to the database so they can be viewed in the control panel',
+        id: 'enableDatabase',
+        name: 'enableDatabase',
+        disabled:     'enableDatabase' in overrides,
+        warning:      'enableDatabase' in overrides ? configWarning('enableDatabase'),
+        on: settings.enableDatabase == true })
+    }}
 
-{{ forms.lightswitchField({
-    label: 'Send confirmation email',
-    instructions: 'Sends a confirmation email to the person who filled in the contact form, a `fromEmail` field is required.',
-    id: 'enableConfirmationEmail',
-    name: 'enableConfirmationEmail',
-    disabled:     'enableConfirmationEmail' in overrides,
-    warning:      'enableConfirmationEmail' in overrides ? configWarning('enableConfirmationEmail'),
-    on: settings.enableConfirmationEmail == true,
-    toggle: "confirmationTemplate"
-}) }}
-
-<div id="confirmationTemplate" style="margin-bottom: 20px;">
-    {{ forms.textField({
-        label: 'Set the template for the confirmation email',
-        instructions: 'The template will receive a `submission` variable',
-        id: 'confirmationTemplate',
-        name: 'confirmationTemplate',
-        disabled:     'confirmationTemplate' in overrides,
-        warning:      'confirmationTemplate' in overrides ? configWarning('confirmationTemplate'),
-        value: settings.confirmationTemplate,
+    {{ forms.lightswitchField({
+        label: 'Send confirmation email',
+        instructions: 'Sends a confirmation email to the person who filled in the contact form, a `fromEmail` field is required.',
+        id: 'enableConfirmationEmail',
+        name: 'enableConfirmationEmail',
+        disabled:     'enableConfirmationEmail' in overrides,
+        warning:      'enableConfirmationEmail' in overrides ? configWarning('enableConfirmationEmail'),
+        on: settings.enableConfirmationEmail == true,
+        toggle: "confirmationTemplate"
     }) }}
 
-    {{ forms.textField({
-        label: 'Confirmation Subject',
-        instructions: 'The subject for the confirmation email',
-        id: 'confirmationSubject',
-        name: 'confirmationSubject',
-        disabled:     'confirmationSubject' in overrides,
-        warning:      'confirmationSubject' in overrides ? configWarning('confirmationSubject'),
-        value: settings.getConfirmationSubject,
+    <div id="confirmationTemplate" style="margin-bottom: 20px;">
+        {{ forms.textField({
+            label: 'Set the template for the confirmation email',
+            instructions: 'The template will receive a `submission` variable',
+            id: 'confirmationTemplate',
+            name: 'confirmationTemplate',
+            disabled:     'confirmationTemplate' in overrides,
+            warning:      'confirmationTemplate' in overrides ? configWarning('confirmationTemplate'),
+            value: settings.confirmationTemplate,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Confirmation Subject',
+            instructions: 'The subject for the confirmation email',
+            id: 'confirmationSubject',
+            name: 'confirmationSubject',
+            disabled:     'confirmationSubject' in overrides,
+            warning:      'confirmationSubject' in overrides ? configWarning('confirmationSubject'),
+            value: settings.getConfirmationSubject,
+        }) }}
+    </div>
+
+    {{ forms.lightswitchField({
+        label: 'Overwrite the e-mail template',
+        instructions: 'Overwrite the templates for the emails that are sent.',
+        id: 'enableTemplateOverwrite',
+        name: 'enableTemplateOverwrite',
+        disabled:     'enableTemplateOverwrite' in overrides,
+        warning:      'enableTemplateOverwrite' in overrides ? configWarning('enableTemplateOverwrite'),
+        on: settings.enableTemplateOverwrite == true,
+        toggle: "templateSettings"
     }) }}
+
+    <div id="templateSettings">
+        {{ forms.textField({
+            label: 'Set a template for the notification email',
+            instructions: 'The template will receive a `submission` variable',
+            id: 'notificationTemplate',
+            name: 'notificationTemplate',
+            disabled:     'notificationTemplate' in overrides,
+            warning:      'notificationTemplate' in overrides ? configWarning('notificationTemplate'),
+            value: settings.notificationTemplate,
+        }) }}
+    </div>
 </div>
-
-{{ forms.lightswitchField({
-    label: 'Overwrite the e-mail template',
-    instructions: 'Overwrite the templates for the emails that are sent.',
-    id: 'enableTemplateOverwrite',
-    name: 'enableTemplateOverwrite',
-    disabled:     'enableTemplateOverwrite' in overrides,
-    warning:      'enableTemplateOverwrite' in overrides ? configWarning('enableTemplateOverwrite'),
-    on: settings.enableTemplateOverwrite == true,
-    toggle: "templateSettings"
-}) }}
-
-<div id="templateSettings">
-    {{ forms.textField({
-        label: 'Set a template for the notification email',
-        instructions: 'The template will receive a `submission` variable',
-        id: 'notificationTemplate',
-        name: 'notificationTemplate',
-        disabled:     'notificationTemplate' in overrides,
-        warning:      'notificationTemplate' in overrides ? configWarning('notificationTemplate'),
-        value: settings.notificationTemplate,
+<div id="tab-recaptcha" class="hidden">
+    {{ forms.lightswitchField({
+        label: 'Enable Invisible Recaptcha',
+        instructions: 'Make sure to render the captcha with `{{ craft.contactFormExtensions.recaptcha | raw }}` in your forms.',
+        id: 'recaptcha',
+        name: 'recaptcha',
+        disabled:     'recaptcha' in overrides,
+        warning:      'recaptcha' in overrides ? configWarning('recaptcha'),
+        on: settings.recaptcha == true,
+        toggle: "recaptchaSettings"
     }) }}
+
+    <div id="recaptchaSettings" {% if not settings.recaptcha %}class="hidden"{% endif %}>
+        {{ forms.textField({
+            label: 'Site Key',
+            instructions: 'Recaptcha Site Key',
+            id: 'recaptchaSiteKey',
+            name: 'recaptchaSiteKey',
+            disabled:     'recaptchaSiteKey' in overrides,
+            warning:      'recaptchaSiteKey' in overrides ? configWarning('recaptchaSiteKey'),
+            value: settings.recaptchaSiteKey,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Secret Key',
+            instructions: 'Recaptcha Site Key',
+            id: 'recaptchaSecretKey',
+            name: 'recaptchaSecretKey',
+            disabled:     'recaptchaSecretKey' in overrides,
+            warning:      'recaptchaSecretKey' in overrides ? configWarning('recaptchaSecretKey'),
+            value: settings.recaptchaSecretKey,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Hide Badge',
+            instructions: 'Hide the recaptcha badge.',
+            id: 'recaptchaHideBadge',
+            name: 'recaptchaHideBadge',
+            disabled:     'recaptchaHideBadge' in overrides,
+            warning:      'recaptchaHideBadge' in overrides ? configWarning('recaptchaHideBadge'),
+            on: settings.recaptchaHideBadge == true,
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Badge position',
+            instructions: 'Reposition the reCAPTCHA badge. "inline" allows you to control the CSS.',
+            id: 'recaptchaDataBadge',
+            name: 'recaptchaDataBadge',
+            options: ['bottomright', 'bottomleft', 'inline'],
+            disabled:     'recaptchaDataBadge' in overrides,
+            warning:      'recaptchaDataBadge' in overrides ? configWarning('recaptchaDataBadge'),
+        }) }}
+
+        {{ forms.textField({
+            label: 'Timeout',
+            instructions: 'How long before the reCAPTCHA session times out.',
+            id: 'recaptchaTimeout',
+            name: 'recaptchaTimeout',
+            type: 'number',
+            disabled:     'recaptchaTimeout' in overrides,
+            warning:      'recaptchaTimeout' in overrides ? configWarning('recaptchaTimeout'),
+            value: settings.recaptchaTimeout,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Debug',
+            instructions: 'Enable the reCAPTCHA debug mode.',
+            id: 'recaptchaDebug',
+            name: 'recaptchaDebug',
+            disabled:     'recaptchaDebug' in overrides,
+            warning:      'recaptchaDebug' in overrides ? configWarning('recaptchaDebug'),
+            on: settings.recaptchaDebug == true,
+        }) }}
+    </div>
 </div>
 
 

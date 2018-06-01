@@ -44,6 +44,14 @@ class Settings extends Model
     public $confirmationTemplate = '';
     public $confirmationSubject = '';
 
+    public $recaptcha = false;
+    public $recaptchaSiteKey = '';
+    public $recaptchaSecretKey = '';
+    public $recaptchaHideBadge = false;
+    public $recaptchaDataBadge = 'bottomright';
+    public $recaptchaTimeout = 5;
+    public $recaptchaDebug = false;
+
     // Public Methods
     // =========================================================================
 
@@ -78,6 +86,13 @@ class Settings extends Model
             ['notificationTemplate', 'string'],
             ['confirmationTemplate', 'string'],
             ['confirmationSubject', 'string'],
+            ['recaptcha', 'boolean'],
+            ['recaptchaSiteKey', 'string'],
+            ['recaptchaSecretKey', 'string'],
+            ['recaptchaHideBadge', 'boolean'],
+            ['recaptchaDataBadge', 'string'],
+            ['recaptchaTimeout', 'integer'],
+            ['recaptchaDebug', 'boolean'],
         ];
     }
 }

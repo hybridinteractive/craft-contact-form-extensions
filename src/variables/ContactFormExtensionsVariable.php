@@ -24,4 +24,13 @@ class ContactFormExtensionsVariable
     {
         return ContactFormExtensions::$plugin->name;
     }
+
+    public function recaptcha()
+    {
+        if (ContactFormExtensions::$plugin->settings->recaptcha) {
+            return ContactFormExtensions::$plugin->contactFormExtensionsService->getRecaptcha()->render();
+        }
+
+        return '';
+    }
 }
