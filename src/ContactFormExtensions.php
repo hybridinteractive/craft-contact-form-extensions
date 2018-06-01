@@ -13,11 +13,11 @@ namespace rias\contactformextensions;
 
 use Craft;
 use craft\base\Plugin;
-use craft\events\TemplateEvent;
 use craft\contactform\events\SendEvent;
 use craft\contactform\Mailer;
 use craft\contactform\models\Submission;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\TemplateEvent;
 use craft\mail\Message;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
@@ -84,7 +84,7 @@ class ContactFormExtensions extends Plugin
             Craft::$app->session->setNotice(Craft::t('contact-form-extensions', 'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.'));
         }
 
-        Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function(TemplateEvent $e) {
+        Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function (TemplateEvent $e) {
             if (
                 $e->template === 'settings/plugins/_settings' &&
                 $e->variables['plugin'] === $this
@@ -112,6 +112,7 @@ class ContactFormExtensions extends Plugin
                 if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
                     $e->isSpam = true;
                     $e->handled = true;
+
                     return;
                 }
             }
