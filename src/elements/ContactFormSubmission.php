@@ -161,8 +161,10 @@ class ContactFormSubmission extends Element
             $message = (array) json_decode($this->message);
             $html = '<ul>';
             foreach ($message as $key => $value) {
-                $shortened = trim(substr($value, 0, 30));
-                $html .= "<li><em>{$key}</em>: {$shortened}...</li>";
+                if (is_string($value)) {
+                    $shortened = trim(substr($value, 0, 30));
+                    $html .= "<li><em>{$key}</em>: {$shortened}...</li>";
+                }
             }
             $html .= '</ul>';
 

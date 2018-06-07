@@ -29,7 +29,13 @@
         <p>{{ submission.fromEmail }}</p>
         {% for key, value in messageObject %}
             <h3>{{ key|ucfirst }}</h3>
-            <p>{{ value }}</p>
+            {% if value is iterable %}
+                {% for item in value %}
+                    <p>{{ item }}</p>
+                {% endfor %}
+            {% else %}
+                <p>{{ value }}</p>
+            {% endif %}
         {% endfor %}
     </div>
 
