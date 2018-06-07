@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.6 - 2018-06-07
+### Fixed
+- The badge position setting now saves the correct values
+- Added a note when hiding the badge you should inform users in a different way
+- Fix saving checkbox and radio inputs
+
 ## 1.0.5 - 2018-06-01
 ### Added
 - You can now add an invisible reCAPTCHA to your forms.
