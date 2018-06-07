@@ -140,7 +140,11 @@
             instructions: 'Reposition the reCAPTCHA badge. "inline" allows you to control the CSS.',
             id: 'recaptchaDataBadge',
             name: 'recaptchaDataBadge',
-            options: ['bottomright', 'bottomleft', 'inline'],
+            options: [
+                {label: 'Bottom Right', value: 'bottomright'},
+                {label: 'Bottom Left', value: 'bottomleft'},
+                {label: 'Inline', value: 'inline'},
+            ],
             disabled:     'recaptchaDataBadge' in overrides,
             warning:      'recaptchaDataBadge' in overrides ? configWarning('recaptchaDataBadge'),
         }) }}
