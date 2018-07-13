@@ -111,7 +111,7 @@ class ContactFormSubmission extends Element
         $sources = [
             [
                 'key'      => '*',
-                'label'    => 'All submissions',
+                'label'    => Craft::t('contact-form-extensions', 'All submissions'),
                 'criteria' => [],
             ],
         ];
