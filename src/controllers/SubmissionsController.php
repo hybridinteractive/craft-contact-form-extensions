@@ -22,7 +22,7 @@ class SubmissionsController extends Controller
         /* @var ContactFormSubmission $submission */
         $submission = $query->one();
 
-        $messageObject = (array) json_decode($submission->message);
+        $messageObject = array_map('utf8_decode', (array) json_decode($submission->message));
         $variables = [
             'submission'    => $submission,
             'siteHandle'    => $siteHandle,

@@ -60,7 +60,8 @@ class ContactFormExtensionsService extends Component
         $contactFormSubmission->fromName = $submission->fromName;
         $contactFormSubmission->fromEmail = $submission->fromEmail;
         $contactFormSubmission->subject = $submission->subject;
-        $contactFormSubmission->message = json_encode($submission->message);
+        $message = array_map('utf8_encode', $submission->message);
+        $contactFormSubmission->message = json_encode($message);
 
         if (Craft::$app->elements->saveElement($contactFormSubmission)) {
             return $contactFormSubmission;
