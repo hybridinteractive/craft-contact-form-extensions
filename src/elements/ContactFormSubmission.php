@@ -155,10 +155,23 @@ class ContactFormSubmission extends Element
         return $attributes;
     }
 
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        return [
+            'id',
+            'form',
+            'subject',
+            'fromName',
+            'fromEmail',
+            'message',
+            'dateCreated',
+        ];
+    }
+
     public function getTableAttributeHtml(string $attribute): string
     {
         if ($attribute == 'message') {
-            $message = (array) json_decode($this->message);
+            $message = array_map('utf8_decode', (array) json_decode($this->message));
             $html = '<ul>';
             foreach ($message as $key => $value) {
                 if (is_string($value)) {
