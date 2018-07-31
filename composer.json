@@ -2,7 +2,7 @@
     "name": "rias/craft-contact-form-extensions",
     "description": "Adds extensions to the Craft CMS contact form plugin.",
     "type": "craft-plugin",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "keywords": [
         "craft",
         "cms",

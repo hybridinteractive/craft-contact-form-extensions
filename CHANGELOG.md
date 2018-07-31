@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.8 - 2018-07-31
+### Fixed
+- UTF8 encoding issues should now be fixed for new submissions
+- The columns added by the "Upvote" plugin won't show anymore
+
 ## 1.0.7 - 2018-07-13
 ### Fixed
 - "All submissions" can now be translated
