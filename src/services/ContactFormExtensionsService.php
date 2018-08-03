@@ -60,6 +60,11 @@ class ContactFormExtensionsService extends Component
         $contactFormSubmission->fromName = $submission->fromName;
         $contactFormSubmission->fromEmail = $submission->fromEmail;
         $contactFormSubmission->subject = $submission->subject;
+
+        if (!is_array($submission->message)) {
+            $submission->message = ['message' => $submission->message];
+        }
+
         $message = array_map('utf8_encode', $submission->message);
         $contactFormSubmission->message = json_encode($message);
 
