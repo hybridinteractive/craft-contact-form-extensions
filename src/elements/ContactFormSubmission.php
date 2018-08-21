@@ -171,7 +171,7 @@ class ContactFormSubmission extends Element
     public function getTableAttributeHtml(string $attribute): string
     {
         if ($attribute == 'message') {
-            $message = array_map('utf8_decode', (array) json_decode($this->message));
+            $message = (array) json_decode($this->message);
             $html = '<ul>';
             foreach ($message as $key => $value) {
                 if (is_string($value)) {

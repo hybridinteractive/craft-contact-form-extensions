@@ -14,6 +14,7 @@ namespace rias\contactformextensions\services;
 use Craft;
 use craft\base\Component;
 use craft\contactform\models\Submission;
+use craft\helpers\StringHelper;
 use rias\contactformextensions\ContactFormExtensions;
 use rias\contactformextensions\elements\ContactFormSubmission;
 use yii\base\Exception;
@@ -65,7 +66,7 @@ class ContactFormExtensionsService extends Component
             $submission->message = ['message' => $submission->message];
         }
 
-        $message = array_map('utf8_encode', $submission->message);
+        $message = $this->utf8AllTheThings($submission->message);
         $contactFormSubmission->message = json_encode($message);
 
         if (Craft::$app->elements->saveElement($contactFormSubmission)) {
@@ -87,5 +88,31 @@ class ContactFormExtensionsService extends Component
         ];
 
         return new \AlbertCht\InvisibleReCaptcha\InvisibleReCaptcha($siteKey, $secretKey, $options);
+    }
+
+    /**
+     * @param array $things
+     * @return array
+     */
+    public function utf8AllTheThings(array $things): array
+    {
+        foreach ($things as $key => $value) {
+            $things[$key] = $this->utf8Value($value);
+        }
+
+        return $things;
+    }
+
+    /**
+     * @param array|string $value
+     * @return array|string
+     */
+    public function utf8Value($value)
+    {
+        if (is_array($value)) {
+            return $this->utf8AllTheThings($value);
+        }
+
+        return StringHelper::convertToUtf8($value);
     }
 }

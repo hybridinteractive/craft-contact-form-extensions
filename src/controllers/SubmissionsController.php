@@ -3,6 +3,7 @@
 namespace rias\contactformextensions\controllers;
 
 use craft\web\Controller;
+use rias\contactformextensions\ContactFormExtensions;
 use rias\contactformextensions\elements\ContactFormSubmission;
 use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
 
@@ -22,7 +23,7 @@ class SubmissionsController extends Controller
         /* @var ContactFormSubmission $submission */
         $submission = $query->one();
 
-        $messageObject = array_map('utf8_decode', (array) json_decode($submission->message));
+        $messageObject = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings((array) json_decode($submission->message));
         $variables = [
             'submission'    => $submission,
             'siteHandle'    => $siteHandle,
