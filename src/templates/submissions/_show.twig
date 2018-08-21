@@ -31,10 +31,10 @@
             <h3>{{ key|ucfirst }}</h3>
             {% if value is iterable %}
                 {% for item in value %}
-                    <p>{{ item }}</p>
+                    <p>{{ item|nl2br }}</p>
                 {% endfor %}
             {% else %}
-                <p>{{ value }}</p>
+                <p>{{ value|nl2br }}</p>
             {% endif %}
         {% endfor %}
     </div>
