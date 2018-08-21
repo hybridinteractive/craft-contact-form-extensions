@@ -92,6 +92,7 @@ class ContactFormExtensionsService extends Component
 
     /**
      * @param array $things
+     *
      * @return array
      */
     public function utf8AllTheThings(array $things): array
@@ -105,6 +106,7 @@ class ContactFormExtensionsService extends Component
 
     /**
      * @param array|string $value
+     *
      * @return array|string
      */
     public function utf8Value($value)
