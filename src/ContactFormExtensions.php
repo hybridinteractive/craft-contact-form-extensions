@@ -154,7 +154,7 @@ class ContactFormExtensions extends Plugin
                 // Create the confirmation email
                 $message = new Message();
                 $message->setTo($e->submission->fromEmail);
-                $message->setFrom($e->message->getFrom());
+                $message->setFrom($e->message->getTo());
                 $message->setHtmlBody($html);
                 $message->setSubject($this->settings->getConfirmationSubject());
 
