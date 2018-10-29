@@ -35,7 +35,7 @@ class ContactFormExtensionsVariable
 
         return '';
     }
-    
+
     public function submissions($criteria = null): ContactFormSubmissionQuery
     {
         $query = ContactFormSubmission::find();
