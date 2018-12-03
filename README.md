@@ -60,7 +60,7 @@ When saving submissions to the database the default form name will be "Contact".
 ## Adding invisible reCAPTCHA
 
 Before you set your config, remember to choose `invisible reCAPTCHA` while applying for keys.
- 
+
 ![Screenshot](resources/recaptcha.jpg)
 
 Enable reCAPTCHA in the Contact Form Extensions settings and fill in your `siteKey` and `secretKey`.
@@ -69,6 +69,14 @@ Then use the following code in your forms:
 
 ```twig
 {{ craft.contactFormExtensions.recaptcha | raw }}
+```
+
+## Display form submissions in your template files
+
+```twig
+{% for submission in craft.contactFormExtensions.submissions %}
+   {{ item.dateCreated|date('d-m-Y H:i') }} - {{ item.fromEmail }} - {{ item.fromName }}
+{% endfor %}
 ```
 
 Brought to you by [Rias](https://rias.be)
