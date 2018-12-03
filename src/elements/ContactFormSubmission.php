@@ -15,6 +15,7 @@ use Craft;
 use craft\base\Element;
 use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
+use craft\helpers\UrlHelper;
 use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
 
 /**
@@ -99,7 +100,7 @@ class ContactFormSubmission extends Element
 
     public function getCpEditUrl()
     {
-        return 'contact-form-extensions/submissions/'.$this->id;
+        return UrlHelper::cpUrl('contact-form-extensions/submissions/'.$this->id);
     }
 
     protected static function defineSources(string $context = null): array
