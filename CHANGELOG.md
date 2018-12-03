@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - Contact Form Extensions now checks if the submission was marked as spam before handling anything itself. This might solve issues with other plugins that mark it first.
 
+### Added
+- Added a `craft.contactForms.submissions` variable to display submissions in your templates (thanks @Floriswijgergangs)
+
 ## 1.0.11 - 2018-09-26
 ### Fixed
 - Confirmation email sender shoul be the system admin, thanks @Pinchcliffe
