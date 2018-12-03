@@ -12,11 +12,9 @@
 namespace rias\contactformextensions\variables;
 
 use Craft;
-use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use rias\contactformextensions\ContactFormExtensions;
 use rias\contactformextensions\elements\ContactFormSubmission;
-use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
 
 /**
  * @author    Rias
