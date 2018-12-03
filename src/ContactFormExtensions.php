@@ -105,6 +105,10 @@ class ContactFormExtensions extends Plugin
         });
 
         Event::on(Mailer::class, Mailer::EVENT_BEFORE_SEND, function (SendEvent $e) {
+            if ($e->isSpam) {
+                return;
+            }
+
             if ($this->settings->recaptcha) {
                 $recaptcha = $this->contactFormExtensionsService->recaptcha;
                 $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
@@ -119,7 +123,7 @@ class ContactFormExtensions extends Plugin
 
             $submission = $e->submission;
             if ($this->settings->enableDatabase) {
-                $submission = $this->contactFormExtensionsService->saveSubmission($submission);
+                $this->contactFormExtensionsService->saveSubmission($submission);
             }
 
             if ($this->settings->enableTemplateOverwrite) {
