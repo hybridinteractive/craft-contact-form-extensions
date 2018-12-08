@@ -75,7 +75,7 @@ Then use the following code in your forms:
 
 ```twig
 {% for submission in craft.contactFormExtensions.submissions %}
-   {{ item.dateCreated|date('d-m-Y H:i') }} - {{ item.fromEmail }} - {{ item.fromName }}
+   {{ submission.dateCreated|date('d-m-Y H:i') }} - {{ submission.fromEmail }} - {{ submission.fromName }}
 {% endfor %}
 ```
 
