@@ -80,7 +80,7 @@ class ContactFormExtensions extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        if (!Craft::$app->plugins->isPluginInstalled('contact-form')) {
+        if (!Craft::$app->plugins->isPluginInstalled('contact-form') && !Craft::$app->request->getIsConsoleRequest()) {
             Craft::$app->session->setNotice(Craft::t('contact-form-extensions', 'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.'));
         }
 
