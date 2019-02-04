@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0-RC1",
+        "craftcms/cms": "^3.1",
         "craftcms/contact-form": "^2.1",
         "albertcht/invisible-recaptcha": "^1.8"
     },

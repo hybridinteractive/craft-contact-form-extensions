@@ -78,8 +78,8 @@ class ContactFormExtensionsService extends Component
 
     public function getRecaptcha()
     {
-        $siteKey = ContactFormExtensions::$plugin->settings->recaptchaSiteKey;
-        $secretKey = ContactFormExtensions::$plugin->settings->recaptchaSecretKey;
+        $siteKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSiteKey);
+        $secretKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSecretKey);
         $options = [
             'hideBadge' => ContactFormExtensions::$plugin->settings->recaptchaHideBadge,
             'dataBadge' => ContactFormExtensions::$plugin->settings->recaptchaDataBadge,

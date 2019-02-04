@@ -105,7 +105,7 @@
     }) }}
 
     <div id="recaptchaSettings" {% if not settings.recaptcha %}class="hidden"{% endif %}>
-        {{ forms.textField({
+        {{ forms.autosuggestField({
             label: 'Site Key',
             instructions: 'Recaptcha Site Key',
             id: 'recaptchaSiteKey',
@@ -113,16 +113,18 @@
             disabled:     'recaptchaSiteKey' in overrides,
             warning:      'recaptchaSiteKey' in overrides ? configWarning('recaptchaSiteKey'),
             value: settings.recaptchaSiteKey,
+            suggestEnvVars: true,
         }) }}
 
-        {{ forms.textField({
+        {{ forms.autosuggestField({
             label: 'Secret Key',
-            instructions: 'Recaptcha Site Key',
+            instructions: 'Recaptcha Secret Key',
             id: 'recaptchaSecretKey',
             name: 'recaptchaSecretKey',
             disabled:     'recaptchaSecretKey' in overrides,
             warning:      'recaptchaSecretKey' in overrides ? configWarning('recaptchaSecretKey'),
             value: settings.recaptchaSecretKey,
+            suggestEnvVars: true,
         }) }}
 
         {{ forms.lightswitchField({
