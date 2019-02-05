@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] - 2019-02-05
+### Added
+- Added support for Craft 3.1 env vars (thanks @benface)
+
 ## 1.0.13 - 2019-01-18
 ### Fixed
 - Fixed an issue with project config in 3.1
