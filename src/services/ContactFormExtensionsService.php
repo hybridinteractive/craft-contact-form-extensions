@@ -17,6 +17,7 @@ use craft\contactform\models\Submission;
 use craft\helpers\StringHelper;
 use rias\contactformextensions\ContactFormExtensions;
 use rias\contactformextensions\elements\ContactFormSubmission;
+use rias\contactformextensions\models\RecaptchaV3;
 use yii\base\Exception;
 
 /**
@@ -80,6 +81,17 @@ class ContactFormExtensionsService extends Component
     {
         $siteKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSiteKey);
         $secretKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSecretKey);
+
+        if (ContactFormExtensions::$plugin->settings->recaptchaVersion === '3') {
+            $recaptcha = new RecaptchaV3(
+                $siteKey,
+                $secretKey,
+                ContactFormExtensions::$plugin->settings->recaptchaThreshold,
+                ContactFormExtensions::$plugin->settings->recaptchaTimeout
+            );
+            return $recaptcha;
+        }
+
         $options = [
             'hideBadge' => ContactFormExtensions::$plugin->settings->recaptchaHideBadge,
             'dataBadge' => ContactFormExtensions::$plugin->settings->recaptchaDataBadge,

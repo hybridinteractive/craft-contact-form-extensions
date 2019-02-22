@@ -45,12 +45,14 @@ class Settings extends Model
     public $confirmationSubject = '';
 
     public $recaptcha = false;
+    public $recaptchaVersion = '';
     public $recaptchaSiteKey = '';
     public $recaptchaSecretKey = '';
     public $recaptchaHideBadge = false;
     public $recaptchaDataBadge = 'bottomright';
     public $recaptchaTimeout = 5;
     public $recaptchaDebug = false;
+    public $recaptchaThreshold = 0.5;
 
     // Public Methods
     // =========================================================================
@@ -92,6 +94,7 @@ class Settings extends Model
             ['recaptchaHideBadge', 'boolean'],
             ['recaptchaDataBadge', 'string'],
             ['recaptchaTimeout', 'integer'],
+            ['recaptchaThreshold', 'double', 'max' => 1, 'min' => 0],
             ['recaptchaDebug', 'boolean'],
         ];
     }

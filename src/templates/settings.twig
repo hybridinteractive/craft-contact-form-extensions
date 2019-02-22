@@ -105,6 +105,22 @@
     }) }}
 
     <div id="recaptchaSettings" {% if not settings.recaptcha %}class="hidden"{% endif %}>
+        {{ forms.selectField({
+            label: 'ReCaptcha version',
+            instructions: 'ReCaptcha v2 (challenge) or v3 (score)',
+            id: 'recaptchaVersion',
+            name: 'recaptchaVersion',
+            options: [
+                {label: 'V2', value: null},
+                {label: 'V3', value: '3'},
+            ],
+            value: settings.recaptchaVersion,
+            toggle: true,
+            targetPrefix: 'version-',
+            disabled:     'recaptchaVersion' in overrides,
+            warning:      'recaptchaVersion' in overrides ? configWarning('recaptchaVersion'),
+        }) }}
+
         {{ forms.autosuggestField({
             label: 'Site Key',
             instructions: 'Recaptcha Site Key',
@@ -127,31 +143,6 @@
             suggestEnvVars: true,
         }) }}
 
-        {{ forms.lightswitchField({
-            label: 'Hide Badge',
-            instructions: 'Hide the recaptcha badge. Make sure to inform your users in a different way that you\'re [using the reCAPTCHA service](https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge/44543771#44543771)',
-            id: 'recaptchaHideBadge',
-            name: 'recaptchaHideBadge',
-            disabled:     'recaptchaHideBadge' in overrides,
-            warning:      'recaptchaHideBadge' in overrides ? configWarning('recaptchaHideBadge'),
-            on: settings.recaptchaHideBadge == true,
-        }) }}
-
-        {{ forms.selectField({
-            label: 'Badge position',
-            instructions: 'Reposition the reCAPTCHA badge. "inline" allows you to control the CSS.',
-            id: 'recaptchaDataBadge',
-            name: 'recaptchaDataBadge',
-            options: [
-                {label: 'Bottom Right', value: 'bottomright'},
-                {label: 'Bottom Left', value: 'bottomleft'},
-                {label: 'Inline', value: 'inline'},
-            ],
-            value: settings.recaptchaDataBadge,
-            disabled:     'recaptchaDataBadge' in overrides,
-            warning:      'recaptchaDataBadge' in overrides ? configWarning('recaptchaDataBadge'),
-        }) }}
-
         {{ forms.textField({
             label: 'Timeout',
             instructions: 'How long before the reCAPTCHA session times out.',
@@ -163,15 +154,56 @@
             value: settings.recaptchaTimeout,
         }) }}
 
-        {{ forms.lightswitchField({
-            label: 'Debug',
-            instructions: 'Enable the reCAPTCHA debug mode.',
-            id: 'recaptchaDebug',
-            name: 'recaptchaDebug',
-            disabled:     'recaptchaDebug' in overrides,
-            warning:      'recaptchaDebug' in overrides ? configWarning('recaptchaDebug'),
-            on: settings.recaptchaDebug == true,
-        }) }}
+        <div id="version-3" class="{{ settings.recaptchaVersion == '3' ? '' : 'hidden' }}">
+            {{ forms.textField({
+                label: 'Threshold',
+                instructions: 'reCAPTCHA v3 returns a score (1.0 is very likely a good interaction, 0.0 is very likely a bot). Based on the score, you can take variable action in the context of your site.',
+                id: 'recaptchaThreshold',
+                name: 'recaptchaThreshold',
+                disabled: 'recaptchaThreshold' in overrides,
+                warning: 'recaptchaThreshold' in overrides ? configWarning('recaptchaThreshold'),
+                type: 'number',
+                value: settings.recaptchaThreshold,
+                placeholder: 'A number between 0 and 1',
+            }) }}
+        </div>
+
+        <div id="version-" class="{{ settings.recaptchaVersion == '' ? '' : 'hidden' }}">
+            {{ forms.lightswitchField({
+                label: 'Hide Badge',
+                instructions: 'Hide the recaptcha badge. Make sure to inform your users in a different way that you\'re [using the reCAPTCHA service](https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge/44543771#44543771)',
+                id: 'recaptchaHideBadge',
+                name: 'recaptchaHideBadge',
+                disabled:     'recaptchaHideBadge' in overrides,
+                warning:      'recaptchaHideBadge' in overrides ? configWarning('recaptchaHideBadge'),
+                on: settings.recaptchaHideBadge == true,
+            }) }}
+
+            {{ forms.selectField({
+                label: 'Badge position',
+                instructions: 'Reposition the reCAPTCHA badge. "inline" allows you to control the CSS.',
+                id: 'recaptchaDataBadge',
+                name: 'recaptchaDataBadge',
+                options: [
+                    {label: 'Bottom Right', value: 'bottomright'},
+                    {label: 'Bottom Left', value: 'bottomleft'},
+                    {label: 'Inline', value: 'inline'},
+                ],
+                value: settings.recaptchaDataBadge,
+                disabled:     'recaptchaDataBadge' in overrides,
+                warning:      'recaptchaDataBadge' in overrides ? configWarning('recaptchaDataBadge'),
+            }) }}
+
+            {{ forms.lightswitchField({
+                label: 'Debug',
+                instructions: 'Enable the reCAPTCHA debug mode.',
+                id: 'recaptchaDebug',
+                name: 'recaptchaDebug',
+                disabled:     'recaptchaDebug' in overrides,
+                warning:      'recaptchaDebug' in overrides ? configWarning('recaptchaDebug'),
+                on: settings.recaptchaDebug == true,
+            }) }}
+        </div>
     </div>
 </div>
 

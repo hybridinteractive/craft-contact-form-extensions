@@ -28,10 +28,10 @@ class ContactFormExtensionsVariable
         return ContactFormExtensions::$plugin->name;
     }
 
-    public function recaptcha()
+    public function recaptcha(string $localeOrAction = null)
     {
         if (ContactFormExtensions::$plugin->settings->recaptcha) {
-            return ContactFormExtensions::$plugin->contactFormExtensionsService->getRecaptcha()->render();
+            return ContactFormExtensions::$plugin->contactFormExtensionsService->getRecaptcha()->render($localeOrAction);
         }
 
         return '';

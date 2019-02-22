@@ -110,7 +110,7 @@ class ContactFormExtensions extends Plugin
             }
 
             if ($this->settings->recaptcha) {
-                $recaptcha = $this->contactFormExtensionsService->recaptcha;
+                $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
                 $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
 
                 if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
