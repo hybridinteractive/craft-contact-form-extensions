@@ -89,6 +89,7 @@ class ContactFormExtensionsService extends Component
                 ContactFormExtensions::$plugin->settings->recaptchaThreshold,
                 ContactFormExtensions::$plugin->settings->recaptchaTimeout
             );
+
             return $recaptcha;
         }
 
