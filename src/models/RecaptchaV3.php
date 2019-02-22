@@ -23,7 +23,7 @@ class RecaptchaV3
         $this->siteKey = $siteKey;
         $this->secretKey = $secretKey;
         $this->client = new Client([
-            'timeout' => $timeout
+            'timeout' => $timeout,
         ]);
         $this->threshold = $threshold;
     }
@@ -55,9 +55,9 @@ HTML;
         }
 
         $response = $this->sendVerifyRequest([
-            'secret' => $this->secretKey,
+            'secret'   => $this->secretKey,
             'remoteip' => $clientIp,
-            'response' => $response
+            'response' => $response,
         ]);
 
         if (!isset($response['success']) || $response['success'] !== true) {
