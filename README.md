@@ -57,6 +57,13 @@ When saving submissions to the database the default form name will be "Contact".
 <input type="hidden" name="message[formName]" value="myFormName">
 ```
 
+## Overriding the confirmation template
+When sending confirmation option is enabled and custom templates per form are needed, override the template with a hidden field. The template needs to be placed under templates\\_emails folder. Add a hash for safety. The same data is passed as in the default overridden template.
+
+```
+<input type="hidden" name="message[template]" value="{{ 'contact'|hash }}">
+```
+
 ## Adding invisible reCAPTCHA
 
 Before you set your config, remember to choose `invisible reCAPTCHA` while applying for keys.
