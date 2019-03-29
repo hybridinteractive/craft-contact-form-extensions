@@ -12,6 +12,7 @@
 namespace rias\contactformextensions;
 
 use Craft;
+use craft\helpers\App;
 use craft\base\Plugin;
 use craft\contactform\events\SendEvent;
 use craft\contactform\Mailer;
@@ -151,8 +152,8 @@ class ContactFormExtensions extends Plugin
 
                 // Check if tempplate is overridden in form
                 $template = null;
-                if(array_key_exists("template", $e->submission->message)) {
-                    $template = "_emails\\" . Craft::$app->security->validateData($e->submission->message['template']);
+                if(array_key_exists('template', $e->submission->message)) {
+                    $template = '_emails\\' . Craft::$app->security->validateData($e->submission->message['template']);
                 } else {
                     // Render the set template
                     $template = $this->settings->confirmationTemplate;
@@ -165,10 +166,11 @@ class ContactFormExtensions extends Plugin
                 // Create the confirmation email
                 $message = new Message();
                 $message->setTo($e->submission->fromEmail);
-                if(isset(App::mailSettings()->fromEmail))
+                if(isset(App::mailSettings()->fromEmail)) {
                     $message->setFrom(App::mailSettings()->fromEmail);
-                else
+                } else {
                     $message->setFrom($e->message->getTo());
+                }
                 $message->setHtmlBody($html);
                 $message->setSubject($this->settings->getConfirmationSubject());
 
