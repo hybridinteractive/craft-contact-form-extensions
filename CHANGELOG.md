@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.4] - 2019-04-01
+### Fixed
+- Fix utf8 issue
+
 ## [1.1.3] - 2019-04-01
 ### Fixed
 - Fix overriding `toEmail`

@@ -63,7 +63,7 @@ class ContactFormExtensionsService extends Component
         $contactFormSubmission->subject = $submission->subject;
 
         if (!is_array($submission->message)) {
-            $submission->message = ['message' => $this->utf8AllTheThings($submission->message)];
+            $submission->message = ['message' => $this->utf8Value($submission->message)];
         }
 
         $message = $this->utf8AllTheThings($submission->message);
