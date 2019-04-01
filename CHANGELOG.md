@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.4] - 2019-04-01
+### Fixed
+- Fix utf8 issue
+
+## [1.1.3] - 2019-04-01
+### Fixed
+- Fix overriding `toEmail`
+
+## [1.1.2] - 2019-04-01
+### Added
+- Ability to override `toEmail` inside your form
+- Ability to override `template` inside your form (thanks @helderdb)
+- Ability to hide the badge when using ReCaptcha V3 
+
+### Fixed
+- Fixed an issue with email being sent from the wrong address (thanks @helderdb)
+
 ## [1.1.1] - 2019-02-05
 ### Added
 - Added support for ReCaptcha V3
