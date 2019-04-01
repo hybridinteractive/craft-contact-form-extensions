@@ -18,6 +18,7 @@ use craft\contactform\Mailer;
 use craft\contactform\models\Submission;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
+use craft\helpers\App;
 use craft\mail\Message;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
@@ -149,16 +150,27 @@ class ContactFormExtensions extends Plugin
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-                // Render the set template
+                // Check if tempplate is overridden in form
+                $template = null;
+                if (array_key_exists('template', $e->submission->message)) {
+                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['template']);
+                } else {
+                    // Render the set template
+                    $template = $this->settings->confirmationTemplate;
+                }
                 $html = Craft::$app->view->renderTemplate(
-                    $this->settings->confirmationTemplate,
+                    $template,
                     ['submission' => $e->submission]
                 );
 
                 // Create the confirmation email
                 $message = new Message();
                 $message->setTo($e->submission->fromEmail);
-                $message->setFrom($e->message->getTo());
+                if (isset(App::mailSettings()->fromEmail)) {
+                    $message->setFrom(App::mailSettings()->fromEmail);
+                } else {
+                    $message->setFrom($e->message->getTo());
+                }
                 $message->setHtmlBody($html);
                 $message->setSubject($this->settings->getConfirmationSubject());
 
