@@ -17,8 +17,9 @@ class RecaptchaV3
     private $siteKey;
     private $secretKey;
     private $threshold;
+    private $hideBadge;
 
-    public function __construct(string $siteKey, string $secretKey, float $threshold, int $timeout = 5)
+    public function __construct(string $siteKey, string $secretKey, float $threshold, int $timeout = 5, bool $hideBadge = false)
     {
         $this->siteKey = $siteKey;
         $this->secretKey = $secretKey;
@@ -26,6 +27,7 @@ class RecaptchaV3
             'timeout' => $timeout,
         ]);
         $this->threshold = $threshold;
+        $this->hideBadge = $hideBadge;
     }
 
     public function render($action = 'homepage')
@@ -44,6 +46,10 @@ class RecaptchaV3
                 </script>
                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" value="">
 HTML;
+
+        if ($this->hideBadge) {
+            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>' . PHP_EOL;
+        }
 
         return $html;
     }

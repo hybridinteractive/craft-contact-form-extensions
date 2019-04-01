@@ -140,6 +140,12 @@ class ContactFormExtensions extends Plugin
                 // Update the message body
                 $e->message->setHtmlBody($html);
 
+                // Set the overridden "toEmail" setting
+                if (array_key_exists('toEmail', $e->submission->message)) {
+                    $email = Craft::$app->security->validateData($e->submission->message['toEmail']);
+                    $e->message->setTo($email);
+                }
+
                 // Set the template mode back to Control Panel
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
             }
@@ -150,7 +156,7 @@ class ContactFormExtensions extends Plugin
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-                // Check if tempplate is overridden in form
+                // Check if template is overridden in form
                 $template = null;
                 if (array_key_exists('template', $e->submission->message)) {
                     $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['template']);

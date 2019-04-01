@@ -64,6 +64,12 @@ When sending confirmation option is enabled and custom templates per form are ne
 <input type="hidden" name="message[template]" value="{{ 'contact'|hash }}">
 ```
 
+## Overriding where the message is sent
+
+```
+<input type="hidden" name="message[toEmail]" value="{{ 'hello@rias.be'|hash }}">
+```
+
 ## Adding invisible reCAPTCHA
 
 Before you set your config, remember to choose `invisible reCAPTCHA` while applying for keys.

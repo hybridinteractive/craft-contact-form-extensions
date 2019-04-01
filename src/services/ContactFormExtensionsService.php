@@ -48,12 +48,10 @@ class ContactFormExtensionsService extends Component
      *
      * @param Submission $submission
      *
+     * @return mixed
+     * @throws Exception
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
-     * @throws \yii\base\ExitException
-     *
-     * @return mixed
      */
     public function saveSubmission(Submission $submission)
     {
@@ -64,7 +62,7 @@ class ContactFormExtensionsService extends Component
         $contactFormSubmission->subject = $submission->subject;
 
         if (!is_array($submission->message)) {
-            $submission->message = ['message' => $submission->message];
+            $submission->message = ['message' => $this->utf8AllTheThings($submission->message)];
         }
 
         $message = $this->utf8AllTheThings($submission->message);
@@ -87,7 +85,8 @@ class ContactFormExtensionsService extends Component
                 $siteKey,
                 $secretKey,
                 ContactFormExtensions::$plugin->settings->recaptchaThreshold,
-                ContactFormExtensions::$plugin->settings->recaptchaTimeout
+                ContactFormExtensions::$plugin->settings->recaptchaTimeout,
+                ContactFormExtensions::$plugin->settings->recaptchaHideBadge
             );
 
             return $recaptcha;
