@@ -70,6 +70,9 @@ When sending confirmation option is enabled and custom templates per form are ne
 <input type="hidden" name="message[toEmail]" value="{{ 'hello@rias.be'|hash }}">
 ```
 
+## Saving attachments to volumes
+By setting the volume handle in settings, the plugin will automatically save any uploaded attachments to that volume.
+
 ## Adding invisible reCAPTCHA
 
 Before you set your config, remember to choose `invisible reCAPTCHA` while applying for keys.
