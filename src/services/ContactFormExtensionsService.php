@@ -54,13 +54,13 @@ class ContactFormExtensionsService extends Component
      *
      * @return mixed
      */
-    public function saveSubmission(Submission $submission, string $attachments = "")
+    public function saveSubmission(Submission $submission, string $attachments = '')
     {
         $contactFormSubmission = new ContactFormSubmission();
         $contactFormSubmission->form = $submission->message['formName'] ?? 'contact';
         $contactFormSubmission->fromName = $submission->fromName;
         $contactFormSubmission->fromEmail = $submission->fromEmail;
-        $contactFormSubmission->attachments = $attachments === "" ? null : $attachments;
+        $contactFormSubmission->attachments = $attachments === '' ? null : $attachments;
         $contactFormSubmission->subject = $submission->subject;
 
         if (!is_array($submission->message)) {

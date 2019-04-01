@@ -42,7 +42,6 @@ class ContactFormSubmissionQuery extends ElementQuery
         return $this;
     }
 
-
     public function attachments($value)
     {
         $this->attachments = $value;

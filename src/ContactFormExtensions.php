@@ -145,7 +145,7 @@ class ContactFormExtensions extends Plugin
             }
 
             if ($this->settings->enableDatabase) {
-                $this->contactFormExtensionsService->saveSubmission($submission, implode(", ", $attNames));
+                $this->contactFormExtensionsService->saveSubmission($submission, implode(', ', $attNames));
             }
 
             // Set the overridden "toEmail" setting
@@ -157,7 +157,7 @@ class ContactFormExtensions extends Plugin
             if ($this->settings->enableTemplateOverwrite) {
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-                
+
                 // Render the set template
                 $html = Craft::$app->view->renderTemplate(
                     $this->settings->notificationTemplate,
