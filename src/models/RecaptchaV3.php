@@ -48,7 +48,7 @@ class RecaptchaV3
 HTML;
 
         if ($this->hideBadge) {
-            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>' . PHP_EOL;
+            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
         }
 
         return $html;
