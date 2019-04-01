@@ -48,10 +48,11 @@ class ContactFormExtensionsService extends Component
      *
      * @param Submission $submission
      *
-     * @return mixed
      * @throws Exception
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
+     *
+     * @return mixed
      */
     public function saveSubmission(Submission $submission)
     {
