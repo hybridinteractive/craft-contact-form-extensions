@@ -42,6 +42,7 @@ class Settings extends Model
     public $enableConfirmationEmail = true;
     public $notificationTemplate = '';
     public $confirmationTemplate = '';
+    public $attachmentVolumeHandle = '';
     public $confirmationSubject = '';
 
     public $recaptcha = false;
@@ -87,6 +88,7 @@ class Settings extends Model
             ['enableConfirmationEmail', 'boolean'],
             ['notificationTemplate', 'string'],
             ['confirmationTemplate', 'string'],
+            ['attachmentVolumeHandle', 'string'],
             ['confirmationSubject', 'string'],
             ['recaptcha', 'boolean'],
             ['recaptchaSiteKey', 'string'],

@@ -91,6 +91,16 @@
             value: settings.notificationTemplate,
         }) }}
     </div>
+
+    {{ forms.textField({
+        label: 'Set the volume handle for attachments',
+        instructions: 'The template will show the names of the uploaded attachments, and the attachments will be saved in the specified volume',
+        id: 'attachmentVolumeHandle',
+        name: 'attachmentVolumeHandle',
+        disabled:     'attachmentVolumeHandle' in overrides,
+        warning:      'attachmentVolumeHandle' in overrides ? configWarning('attachmentVolumeHandle'),
+        value: settings.attachmentVolumeHandle
+    }) }}
 </div>
 <div id="tab-recaptcha" class="hidden">
     {{ forms.lightswitchField({

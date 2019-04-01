@@ -71,6 +71,7 @@ class ContactFormSubmission extends Element
     public $fromName;
     public $fromEmail;
     public $subject;
+    public $attachments;
     public $message;
 
     public static function hasContent(): bool
@@ -149,6 +150,7 @@ class ContactFormSubmission extends Element
             'subject'     => Craft::t('contact-form-extensions', 'Subject'),
             'fromName'    => Craft::t('contact-form-extensions', 'From Name'),
             'fromEmail'   => Craft::t('contact-form-extensions', 'From Email'),
+            'attachments' => Craft::t('contact-form-extensions', 'Attachments'),
             'message'     => Craft::t('contact-form-extensions', 'Message'),
             'dateCreated' => Craft::t('contact-form-extensions', 'Date Created'),
         ];
@@ -164,6 +166,7 @@ class ContactFormSubmission extends Element
             'subject',
             'fromName',
             'fromEmail',
+            'attachments',
             'message',
             'dateCreated',
         ];
@@ -207,22 +210,24 @@ class ContactFormSubmission extends Element
         if ($isNew) {
             Craft::$app->db->createCommand()
                 ->insert('{{%contactform_submissions}}', [
-                    'id'        => $this->id,
-                    'form'      => $this->form,
-                    'subject'   => $this->subject,
-                    'fromName'  => $this->fromName,
-                    'fromEmail' => $this->fromEmail,
-                    'message'   => $this->message,
+                    'id'          => $this->id,
+                    'form'        => $this->form,
+                    'subject'     => $this->subject,
+                    'fromName'    => $this->fromName,
+                    'fromEmail'   => $this->fromEmail,
+                    'attachments' => $this->attachments,
+                    'message'     => $this->message,
                 ])
                 ->execute();
         } else {
             Craft::$app->db->createCommand()
                 ->update('{{%contactform_submissions}}', [
-                    'form'      => $this->form,
-                    'subject'   => $this->subject,
-                    'fromName'  => $this->fromName,
-                    'fromEmail' => $this->fromEmail,
-                    'message'   => $this->message,
+                    'form'        => $this->form,
+                    'subject'     => $this->subject,
+                    'fromName'    => $this->fromName,
+                    'fromEmail'   => $this->fromEmail,
+                    'attachments' => $this->attachments,
+                    'message'     => $this->message,
                 ], ['id' => $this->id])
                 ->execute();
         }

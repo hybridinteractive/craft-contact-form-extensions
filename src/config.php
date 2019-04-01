@@ -29,6 +29,7 @@ return [
     'enableTemplateOverwrite' => true,
     'notificationTemplate'    => '',
     'confirmationTemplate'    => '',
+    'attachmentVolumeHandle'  => '',
 
     'recaptcha'               => false,
     'recaptchaSiteKey'        => '',

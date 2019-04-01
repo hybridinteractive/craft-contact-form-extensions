@@ -106,6 +106,7 @@ class Install extends Migration
                     'subject'     => $this->string()->null(),
                     'fromName'    => $this->string()->null(),
                     'fromEmail'   => $this->string()->null(),
+                    'attachments' => $this->string()->null(),
                     'message'     => $this->text()->notNull(),
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),

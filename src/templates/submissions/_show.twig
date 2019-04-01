@@ -27,6 +27,10 @@
         <p>{{ submission.fromName }}</p>
         <h3>{{ "From email"|t('contact-form-extensions') }}</h3>
         <p>{{ submission.fromEmail }}</p>
+        {% if submission.attachments %}
+            <h3>{{ "Attachment names"|t('contact-form-extensions') }}</h3>
+            <p>{{submission.attachments}}</p>
+        {% endif %}
         {% for key, value in messageObject %}
             <h3>{{ key|ucfirst }}</h3>
             {% if value is iterable %}

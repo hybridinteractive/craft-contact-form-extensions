@@ -11,6 +11,7 @@ class ContactFormSubmissionQuery extends ElementQuery
     public $subject;
     public $fromName;
     public $fromEmail;
+    public $attachments;
     public $message;
 
     public function form($value)
@@ -41,6 +42,14 @@ class ContactFormSubmissionQuery extends ElementQuery
         return $this;
     }
 
+
+    public function attachments($value)
+    {
+        $this->attachments = $value;
+
+        return $this;
+    }
+
     public function message($value)
     {
         $this->message = $value;
@@ -59,6 +68,7 @@ class ContactFormSubmissionQuery extends ElementQuery
             'contactform_submissions.subject',
             'contactform_submissions.fromName',
             'contactform_submissions.fromEmail',
+            'contactform_submissions.attachments',
             'contactform_submissions.message',
         ]);
 
@@ -76,6 +86,10 @@ class ContactFormSubmissionQuery extends ElementQuery
 
         if ($this->fromEmail) {
             $this->subQuery->andWhere(Db::parseParam('contactform_submissions.fromEmail', $this->fromEmail));
+        }
+
+        if ($this->attachments) {
+            $this->subQuery->andWhere(Db::parseParam('contactform_submissions.attachments', $this->attachments));
         }
 
         if ($this->message) {
