@@ -183,7 +183,6 @@ class ContactFormSubmission extends Element
             }
             $html .= '</ul>';
 
-
             return StringHelper::convertToUtf8($html);
         }
 
