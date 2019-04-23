@@ -28,7 +28,7 @@
 <div id="tab-settings">
     {{ forms.lightswitchField({
         label: 'Save submissions to the database',
-        instructions: 'Save the submissions to the database so they can be viewed in the control panel',
+        instructions: 'Save the submissions to the database so they can be viewed in the control panel.',
         id: 'enableDatabase',
         name: 'enableDatabase',
         disabled:     'enableDatabase' in overrides,
@@ -50,7 +50,7 @@
     <div id="confirmationTemplate" style="margin-bottom: 20px;">
         {{ forms.textField({
             label: 'Set the template for the confirmation email',
-            instructions: 'The template will receive a `submission` variable',
+            instructions: 'The template will receive a `submission` variable.',
             id: 'confirmationTemplate',
             name: 'confirmationTemplate',
             disabled:     'confirmationTemplate' in overrides,
@@ -60,7 +60,7 @@
 
         {{ forms.textField({
             label: 'Confirmation Subject',
-            instructions: 'The subject for the confirmation email',
+            instructions: 'The subject for the confirmation email.',
             id: 'confirmationSubject',
             name: 'confirmationSubject',
             disabled:     'confirmationSubject' in overrides,
@@ -83,7 +83,7 @@
     <div id="templateSettings">
         {{ forms.textField({
             label: 'Set a template for the notification email',
-            instructions: 'The template will receive a `submission` variable',
+            instructions: 'The template will receive a `submission` variable.',
             id: 'notificationTemplate',
             name: 'notificationTemplate',
             disabled:     'notificationTemplate' in overrides,
@@ -94,7 +94,7 @@
 
     {{ forms.textField({
         label: 'Set the volume handle for attachments',
-        instructions: 'The template will show the names of the uploaded attachments, and the attachments will be saved in the specified volume',
+        instructions: 'The attachments will be saved in the specified volume, and the submission will show the names of the uploaded attachments.',
         id: 'attachmentVolumeHandle',
         name: 'attachmentVolumeHandle',
         disabled:     'attachmentVolumeHandle' in overrides,

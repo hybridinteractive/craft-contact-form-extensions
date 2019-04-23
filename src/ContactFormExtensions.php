@@ -199,7 +199,11 @@ class ContactFormExtensions extends Plugin
                     $message->setFrom($e->message->getTo());
                 }
                 $message->setHtmlBody($html);
-                $message->setSubject($this->settings->getConfirmationSubject());
+                if (array_key_exists('subject', $e->submission)) {
+                    $message->setSubject($e->submission->subject);
+                } else {
+                    $message->setSubject($this->settings->getConfirmationSubject());
+                }
 
                 // Send the mail
                 Craft::$app->mailer->send($message);
