@@ -29,7 +29,7 @@
         <p>{{ submission.fromEmail }}</p>
         {% if submission.attachments %}
             <h3>{{ "Attachment names"|t('contact-form-extensions') }}</h3>
-            <p>{{submission.attachments}}</p>
+            <a target="_blank" download href="{{volumeRoot}}/{{submission.attachments}}">{{submission.attachments}}</a>
         {% endif %}
         {% for key, value in messageObject %}
             <h3>{{ key|ucfirst }}</h3>
