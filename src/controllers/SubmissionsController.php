@@ -28,11 +28,12 @@ class SubmissionsController extends Controller
 
         $volume = Craft::$app->getVolumes()->getVolumeByHandle(ContactFormExtensions::$plugin->settings->attachmentVolumeHandle);
         $messageObject = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings((array) json_decode($submission->message));
-
+        $attachments = explode(", ", $submission->attachments);
         $variables = [
             'submission'    => $submission,
             'siteHandle'    => $siteHandle,
             'messageObject' => $messageObject,
+            'attachments'   => $attachments,
             'volumeRoot'    => $this->sanitizeUrl($volume->getRootPath())
         ];
 
