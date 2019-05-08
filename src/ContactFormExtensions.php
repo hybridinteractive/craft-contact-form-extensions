@@ -128,7 +128,7 @@ class ContactFormExtensions extends Plugin
             }
 
             // Set the overridden "toEmail" setting
-            if (array_key_exists('toEmail', $e->submission->message)) {
+            if (is_array($e->submission->message) && array_key_exists('toEmail', $e->submission->message)) {
                 $email = Craft::$app->security->validateData($e->submission->message['toEmail']);
                 $e->toEmails = explode(',', $email);
             }
@@ -158,7 +158,7 @@ class ContactFormExtensions extends Plugin
 
                 // Check if template is overridden in form
                 $template = null;
-                if (array_key_exists('template', $e->submission->message)) {
+                if (is_array($e->submission->message) && array_key_exists('template', $e->submission->message)) {
                     $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['template']);
                 } else {
                     // Render the set template
