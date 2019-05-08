@@ -23,12 +23,12 @@
  */
 return [
  'Form Submissions' => 'Innsendelser',
- 'All submissions' => 'Alle innsendelser',
- 'Form' => 'Skjema',
- 'Subject' => 'Emne',
- 'From Name' => 'Fra navn',
- 'From Email' => 'Fra e-post',
- 'Message' => 'Melding',
- 'Date Created' => 'Innsendt',
- 'Back to overview' => 'Tilbake til oversikt'
+ 'All submissions'  => 'Alle innsendelser',
+ 'Form'             => 'Skjema',
+ 'Subject'          => 'Emne',
+ 'From Name'        => 'Fra navn',
+ 'From Email'       => 'Fra e-post',
+ 'Message'          => 'Melding',
+ 'Date Created'     => 'Innsendt',
+ 'Back to overview' => 'Tilbake til oversikt',
 ];
