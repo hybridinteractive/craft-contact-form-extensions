@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.6] - 2019-05-08
+### Fixed
+- Fixed array key check
+- Added Norwegian translations
+
 ## [1.1.5] - 2019-04-15
 ### Fixed
 - Finally fix the element index UTF8 issue.
