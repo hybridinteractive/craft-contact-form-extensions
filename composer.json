@@ -10,8 +10,8 @@
         "craft contact form extensions"
     ],
     "support": {
-        "docs": "https://github.com/Rias500/craft-contact-form-extensions/blob/master/README.md",
-        "issues": "https://github.com/Rias500/craft-contact-form-extensions/issues"
+        "docs": "https://github.com/riasvdv/craft-contact-form-extensions/blob/master/README.md",
+        "issues": "https://github.com/riasvdv/craft-contact-form-extensions/issues"
     },
     "license": "MIT",
     "authors": [
@@ -36,7 +36,7 @@
         "schemaVersion": "1.0.0",
         "hasCpSettings": true,
         "hasCpSection": true,
-        "changelogUrl": "https://raw.githubusercontent.com/Rias500/craft-contact-form-extensions/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/riasvdv/craft-contact-form-extensions/master/CHANGELOG.md",
         "components": {
             "contactFormExtensionsService": "rias\\contactformextensions\\services\\ContactFormExtensionsService"
         },
