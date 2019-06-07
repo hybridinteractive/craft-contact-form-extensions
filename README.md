@@ -20,7 +20,7 @@ Adds extensions to the Craft CMS contact form plugin.
 
 This plugin is licensed under a MIT license, which means that it's completely free open source software, and you can use it for whatever and however you wish. If you're using it and want to support the development, buy me a beer over at Beerpay!
 
-[![Beerpay](https://beerpay.io/Rias500/craft-contact-form-extensions/badge.svg?style=beer-square)](https://beerpay.io/Rias500/craft-contact-form-extensions)
+[![Beerpay](https://beerpay.io/riasvdv/craft-contact-form-extensions/badge.svg?style=beer-square)](https://beerpay.io/riasvdv/craft-contact-form-extensions)
 
 ## Requirements
 
