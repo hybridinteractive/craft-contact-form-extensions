@@ -15,7 +15,6 @@ use Craft;
 use craft\base\Plugin;
 use craft\contactform\events\SendEvent;
 use craft\contactform\Mailer;
-use craft\contactform\models\Submission;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
 use craft\helpers\App;
