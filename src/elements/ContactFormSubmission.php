@@ -106,7 +106,7 @@ class ContactFormSubmission extends Element
 
     protected static function defineSources(string $context = null): array
     {
-        $forms = array_unique(array_map(function (ContactFormSubmission $submission) {
+        $forms = array_unique(array_map(function (self $submission) {
             return $submission->form;
         }, self::find()->all()));
 
