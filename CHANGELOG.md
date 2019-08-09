@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.7] - 2019-08-09
+- Added Dutch translations
+- Fixed a bug causing the Confirmation message sending to fail when using environment variables
+
 ## [1.1.6] - 2019-05-08
 ### Fixed
 - Fixed array key check
