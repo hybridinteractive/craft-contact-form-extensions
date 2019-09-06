@@ -177,7 +177,15 @@ class ContactFormExtensions extends Plugin
                     $message->setFrom($e->message->getTo());
                 }
                 $message->setHtmlBody($html);
-                $message->setSubject($this->settings->getConfirmationSubject());
+
+                // Check if subject is overridden in form
+                $subject = null;
+                if (is_array($e->submission->message) && array_key_exists('subject', $e->submission->message)) {
+                    $subject = Craft::$app->security->validateData($e->submission->message['subject']);
+                } else {
+                    $subject = $this->settings->getConfirmationSubject();
+                }
+                $message->setSubject($subject);
 
                 // Send the mail
                 Craft::$app->mailer->send($message);

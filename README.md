@@ -64,6 +64,13 @@ When sending confirmation option is enabled and custom templates per form are ne
 <input type="hidden" name="message[template]" value="{{ 'contact'|hash }}">
 ```
 
+## Overriding the confirmation subject
+When sending confirmation option is enabled and custom subjects per form are needed, override the subject with a hidden field. Add a hash for safety.
+
+```
+<input type="hidden" name="message[subject]" value="{{ 'subject'|hash }}">
+```
+
 ## Overriding where the message is sent
 
 ```
