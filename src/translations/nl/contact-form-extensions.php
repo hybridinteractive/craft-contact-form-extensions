@@ -21,13 +21,13 @@
  * @since     1.0.0
  */
 return [
- 'Form Submissions' => 'Inzendingen',
- 'All submissions'  => 'Alle inzendingen',
- 'Form'             => 'Van',
- 'Subject'          => 'Onderwerp',
- 'From Name'        => 'Afzender naam',
- 'From Email'       => 'Afzender email',
- 'Message'          => 'Melding',
- 'Date Created'     => 'Datum verstuurd',
- 'Back to overview' => 'Terug naar overzicht',
+    'Form Submissions' => 'Inzendingen',
+    'All submissions'  => 'Alle inzendingen',
+    'Form'             => 'Van',
+    'Subject'          => 'Onderwerp',
+    'From Name'        => 'Afzender naam',
+    'From Email'       => 'Afzender email',
+    'Message'          => 'Melding',
+    'Date Created'     => 'Datum verstuurd',
+    'Back to overview' => 'Terug naar overzicht',
 ];
