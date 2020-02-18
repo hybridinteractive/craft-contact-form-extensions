@@ -29,13 +29,16 @@ return [
     'enableTemplateOverwrite' => true,
     'notificationTemplate'    => '',
     'confirmationTemplate'    => '',
+    'confirmationSubject'     => '',
     'attachmentVolumeHandle'  => '',
 
     'recaptcha'               => false,
+    'recaptchaVersion'        => '',
     'recaptchaSiteKey'        => '',
     'recaptchaSecretKey'      => '',
     'recaptchaHideBadge'      => false,
     'recaptchaDataBadge'      => 'bottomright',
     'recaptchaTimeout'        => 5,
+    'recaptchaThreshold'      => .5,
     'recaptchaDebug'          => false,
 ];

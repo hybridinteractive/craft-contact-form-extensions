@@ -149,7 +149,7 @@ class ContactFormExtensions extends Plugin
             }
 
             // Set the overridden "toEmail" setting
-            if (array_key_exists('toEmail', $e->submission->message)) {
+            if (is_array($e->submission->message) && array_key_exists('toEmail', $e->submission->message)) {
                 $email = Craft::$app->security->validateData($e->submission->message['toEmail']);
                 $e->toEmails = explode(',', $email);
             }
@@ -179,7 +179,7 @@ class ContactFormExtensions extends Plugin
 
                 // Check if template is overridden in form
                 $template = null;
-                if (array_key_exists('template', $e->submission->message)) {
+                if (is_array($e->submission->message) && array_key_exists('template', $e->submission->message)) {
                     $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['template']);
                 } else {
                     // Render the set template
@@ -194,16 +194,20 @@ class ContactFormExtensions extends Plugin
                 $message = new Message();
                 $message->setTo($e->submission->fromEmail);
                 if (isset(App::mailSettings()->fromEmail)) {
-                    $message->setFrom(App::mailSettings()->fromEmail);
+                    $message->setFrom(Craft::parseEnv(App::mailSettings()->fromEmail));
                 } else {
                     $message->setFrom($e->message->getTo());
                 }
                 $message->setHtmlBody($html);
-                if (array_key_exists('subject', $e->submission)) {
-                    $message->setSubject($e->submission->subject);
+
+                // Check if subject is overridden in form
+                $subject = null;
+                if (is_array($e->submission->message) && array_key_exists('subject', $e->submission->message)) {
+                    $subject = Craft::$app->security->validateData($e->submission->message['subject']);
                 } else {
-                    $message->setSubject($this->settings->getConfirmationSubject());
+                    $subject = $this->settings->getConfirmationSubject();
                 }
+                $message->setSubject($subject);
 
                 // Send the mail
                 Craft::$app->mailer->send($message);

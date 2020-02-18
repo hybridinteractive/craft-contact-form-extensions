@@ -1,7 +1,7 @@
 ![Icon](./src/icon.svg)
 
-[![Latest Version](https://img.shields.io/github/release/rias500/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/rias500/craft-contact-form-extensions/releases)
-[![Quality Score](https://img.shields.io/scrutinizer/g/rias500/craft-contact-form-extensions.svg?style=flat-square)](https://scrutinizer-ci.com/g/rias500/craft-contact-form-extensions)
+[![Latest Version](https://img.shields.io/github/release/riasvdv/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/riasvdv/craft-contact-form-extensions/releases)
+[![Quality Score](https://img.shields.io/scrutinizer/g/riasvdv/craft-contact-form-extensions.svg?style=flat-square)](https://scrutinizer-ci.com/g/riasvdv/craft-contact-form-extensions)
 [![StyleCI](https://styleci.io/repos/132350120/shield)](https://styleci.io/repos/132350120)
 [![Total Downloads](https://img.shields.io/packagist/dt/rias/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/packages/rias/craft-contact-form-extensions)
 
@@ -20,7 +20,7 @@ Adds extensions to the Craft CMS contact form plugin.
 
 This plugin is licensed under a MIT license, which means that it's completely free open source software, and you can use it for whatever and however you wish. If you're using it and want to support the development, buy me a beer over at Beerpay!
 
-[![Beerpay](https://beerpay.io/Rias500/craft-contact-form-extensions/badge.svg?style=beer-square)](https://beerpay.io/Rias500/craft-contact-form-extensions)
+[![Beerpay](https://beerpay.io/riasvdv/craft-contact-form-extensions/badge.svg?style=beer-square)](https://beerpay.io/riasvdv/craft-contact-form-extensions)
 
 ## Requirements
 
@@ -62,6 +62,13 @@ When sending confirmation option is enabled and custom templates per form are ne
 
 ```
 <input type="hidden" name="message[template]" value="{{ 'contact'|hash }}">
+```
+
+## Overriding the confirmation subject
+When sending confirmation option is enabled and custom subjects per form are needed, override the subject with a hidden field. Add a hash for safety.
+
+```
+<input type="hidden" name="message[subject]" value="{{ 'subject'|hash }}">
 ```
 
 ## Overriding where the message is sent
