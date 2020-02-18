@@ -139,7 +139,7 @@ class ContactFormExtensions extends Plugin
                         $asset->avoidFilenameConflicts = true;
                         $asset->setScenario(Asset::SCENARIO_CREATE);
                         $result = Craft::$app->getElements()->saveElement($asset);
-                        array_push($attNames, $asset->filename);
+                        array_push($attNames, $asset->id . "-" . $asset->filename);
                     }
                 }
             }

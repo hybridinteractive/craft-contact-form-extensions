@@ -30,7 +30,7 @@
         {% if attachments %}
             <h3>{{ "Attachment names"|t('contact-form-extensions') }}</h3>
             {% for attachment in attachments %}    
-                <a target="_blank" download href="{{volumeRoot}}/{{attachment}}">{{attachment}}</a><br>
+                <a target="_blank" href="/admin/assets{{volumeRoot}}/{{attachment}}">{{attachment}}</a><br>
             {% endfor %}
         {% endif %}
         {% for key, value in messageObject %}
