@@ -1,9 +1,7 @@
 ![Icon](./src/icon.svg)
 
-[![Latest Version](https://img.shields.io/github/release/riasvdv/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/riasvdv/craft-contact-form-extensions/releases)
-[![Quality Score](https://img.shields.io/scrutinizer/g/riasvdv/craft-contact-form-extensions.svg?style=flat-square)](https://scrutinizer-ci.com/g/riasvdv/craft-contact-form-extensions)
-[![StyleCI](https://styleci.io/repos/132350120/shield)](https://styleci.io/repos/132350120)
-[![Total Downloads](https://img.shields.io/packagist/dt/rias/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/packages/rias/craft-contact-form-extensions)
+[![Latest Version](https://img.shields.io/github/release/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/hybridinteractive/craft-contact-form-extensions/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/users/hybridinteractive/packages/craft-contact-form-extensions)
 
 # Craft Contact Form Extensions
 
@@ -12,15 +10,13 @@ Adds extensions to the Craft CMS contact form plugin.
 - Save submissions to the database and view them in the Control Panel
 - Add a confirmation email that is sent to the submitting email
 - Overwrite the default e-mail template
-- Add an invisble reCAPTCHA
+- Add an invisible reCAPTCHA
 
 ![Screenshot](resources/screenshot.png)
 
-## Support Open Source. Buy beer.
+## Support Open Source.
 
-This plugin is licensed under a MIT license, which means that it's completely free open source software, and you can use it for whatever and however you wish. If you're using it and want to support the development, buy me a beer over at Beerpay!
-
-[![Beerpay](https://beerpay.io/riasvdv/craft-contact-form-extensions/badge.svg?style=beer-square)](https://beerpay.io/riasvdv/craft-contact-form-extensions)
+This plugin is licensed under a MIT license, which means that it's completely free open source software, and you can use it for whatever and however you wish.
 
 ## Requirements
 
@@ -36,7 +32,7 @@ Install this plugin through the Plugin Store or follow these instructions.
 
 2. Then tell Composer to load the plugin:
 
-        composer require rias/craft-contact-form-extensions
+        composer require hybridinteractive/craft-contact-form-extensions
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Craft Contact Form Extensions.
 
@@ -109,4 +105,4 @@ Then include the following code in your forms, for example for the `homepage` ac
 {% endfor %}
 ```
 
-Brought to you by [Rias](https://rias.be)
+Brought to you by [Hybrid Interative](https://hybridinteractive.io/)
