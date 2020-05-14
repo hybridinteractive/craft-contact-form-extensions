@@ -105,4 +105,4 @@ Then include the following code in your forms, for example for the `homepage` ac
 {% endfor %}
 ```
 
-Brought to you by [Hybrid Interative](https://hybridinteractive.io/)
+Brought to you by [Hybrid Interactive](https://hybridinteractive.io/)
