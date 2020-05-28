@@ -1,7 +1,7 @@
 ![Icon](./src/icon.svg)
 
 [![Latest Version](https://img.shields.io/github/release/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/hybridinteractive/craft-contact-form-extensions/releases)
-[![Total Downloads](https://img.shields.io/packagist/dt/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/users/hybridinteractive/packages/craft-contact-form-extensions)
+[![Total Downloads](https://img.shields.io/packagist/dt/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/packages/hybridinteractive/craft-contact-form-extensions)
 
 # Craft Contact Form Extensions
 
