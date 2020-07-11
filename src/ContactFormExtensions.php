@@ -146,7 +146,9 @@ class ContactFormExtensions extends Plugin
                 $e->message->setHtmlBody($html);
 
                 // Set the template mode back to Control Panel
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                if (Craft::$app->request->isCpRequest) {
+                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                }
             }
         });
 
@@ -191,7 +193,9 @@ class ContactFormExtensions extends Plugin
                 Craft::$app->mailer->send($message);
 
                 // Set the template mode back to Control Panel
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                if (Craft::$app->request->isCpRequest) {
+                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                }
             }
         });
 
