@@ -193,8 +193,6 @@ class ContactFormSubmission extends Element
     {
         $sortOptions = parent::defineSortOptions();
 
-        unset($sortOptions['dateCreated']);
-
         return $sortOptions;
     }
 
