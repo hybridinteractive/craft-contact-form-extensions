@@ -42,10 +42,10 @@ use yii\base\Event;
  *
  * @since     1.0.0
  *
- * @property  ContactFormExtensionsServiceService $contactFormExtensionsService
- * @property  Settings $settings
+ * @property ContactFormExtensionsServiceService $contactFormExtensionsService
+ * @property Settings                            $settings
  *
- * @method    Settings getSettings()
+ * @method Settings getSettings()
  */
 class ContactFormExtensions extends Plugin
 {
