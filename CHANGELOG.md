@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.3] - 2020-10-23
+- Added `Subject` to Submissions Detail page. 
+
 ## [1.2.2] - 2020-08-28
 - Added `fromName` for confirmation email - Thank you [@skoften](https://github.com/skoften) and [@jesuismaxime](https://github.com/jesuismaxime)
 - Update: Set template mode to CP only if a CP request - A big thank you to [@bencroker](https://github.com/bencroker) for the PR!
