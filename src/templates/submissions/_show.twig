@@ -23,6 +23,8 @@
 
 {% block content %}
     <div class="readable">
+        <h3>{{ "Subject"|t('contact-form-extensions') }}</h3>
+        <p>{{ submission.subject }}</p>
         <h3>{{ "From name"|t('contact-form-extensions') }}</h3>
         <p>{{ submission.fromName }}</p>
         <h3>{{ "From email"|t('contact-form-extensions') }}</h3>
@@ -60,4 +62,3 @@
     {# Give plugins a chance to add other stuff here #}
     {% hook "cp.contactFormSubmission.show.details" %}
 {% endblock %}
-
