@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.4] - 2020-10-23
+- Fixed a bug that was causing `lightSwitch` fields to be out of sync [#87](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/87)
+
 ## [1.2.3] - 2020-10-23
 - Added `Subject` to Submissions Detail page. 
 
