@@ -33,8 +33,8 @@
         name: 'enableDatabase',
         disabled:     'enableDatabase' in overrides,
         warning:      'enableDatabase' in overrides ? configWarning('enableDatabase'),
-        on: settings.enableDatabase == true })
-    }}
+        on: settings.enableDatabase == true
+    }) }}
 
     {{ forms.lightswitchField({
         label: 'Send confirmation email',
@@ -43,11 +43,11 @@
         name: 'enableConfirmationEmail',
         disabled:     'enableConfirmationEmail' in overrides,
         warning:      'enableConfirmationEmail' in overrides ? configWarning('enableConfirmationEmail'),
-        on: settings.enableConfirmationEmail == true,
+        on: settings.enableConfirmationEmail,
         toggle: "confirmationTemplate"
     }) }}
 
-    <div id="confirmationTemplate" style="margin-bottom: 20px;">
+    <div id="confirmationTemplate" class="hidden" style="margin-bottom: 20px;">
         {{ forms.textField({
             label: 'Set the template for the confirmation email',
             instructions: 'The template will receive a `submission` variable',
@@ -76,11 +76,11 @@
         name: 'enableTemplateOverwrite',
         disabled:     'enableTemplateOverwrite' in overrides,
         warning:      'enableTemplateOverwrite' in overrides ? configWarning('enableTemplateOverwrite'),
-        on: settings.enableTemplateOverwrite == true,
+        on: settings.enableTemplateOverwrite,
         toggle: "templateSettings"
     }) }}
 
-    <div id="templateSettings">
+    <div id="templateSettings" class="hidden">
         {{ forms.textField({
             label: 'Set a template for the notification email',
             instructions: 'The template will receive a `submission` variable',
@@ -206,5 +206,3 @@
         </div>
     </div>
 </div>
-
-
