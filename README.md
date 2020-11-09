@@ -89,7 +89,7 @@ Then use the following code in your forms:
 
 ### ReCaptcha V3
 
-To use ReCaptcha V3, choose the V3 option in the settings, make sure to enter a correct `siteKey` and `secretKey` and enter a `threshold`. [Learn more about ReCaptcha V3](https://developers.google.com/recaptcha/docs/v3)
+To use ReCaptcha V3, choose the V3 option in the settings, make sure to enter a correct `siteKey` and `secretKey`. [Learn more about ReCaptcha V3](https://developers.google.com/recaptcha/docs/v3)
 
 Then include the following code in your forms, for example for the `homepage` action:
 
