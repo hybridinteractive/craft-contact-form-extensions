@@ -39,9 +39,27 @@ class RecaptchaV3
                 <script src="${api_uri}?render=${siteKey}"></script>
                 <script>
                   grecaptcha.ready(function() {
-                      grecaptcha.execute('${siteKey}', {action: '${action}'}).then(function(token) {
-                         document.getElementById('g-recaptcha-response').value = token;
-                      });
+                      var input=document.getElementById('g-recaptcha-response');
+                      var form=input.parentElement;
+                      while(form && form.tagName.toLowerCase()!='form') {
+                          form = form.parentElement;
+                      }
+
+                      if (form) {
+                          form.addEventListener('submit',function(e) {
+                              e.preventDefault();  
+                              e.stopImmediatePropagation();
+
+                              if (input.value == '') {
+                                  grecaptcha.execute('${siteKey}', {action: '${action}'}).then(function(token) {
+                                      input.value = token;                                      
+                                      form.submit();
+                                  });
+                              }
+
+                              return false;
+                          },false);
+                      }
                   });
                 </script>
                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" value="">
