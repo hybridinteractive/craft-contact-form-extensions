@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.5] - 2021-06-27
+- Fixed a bug that would cause the Google ReCaptcha to time out after two minutes. HUGE shout out to [@danielratzinger](https://github.com/danielratzinger) for the PR!
+- For more information on this update, take a look at the [pull request #101](https://github.com/hybridinteractive/craft-contact-form-extensions/pull/101)
+
 ## [1.2.4] - 2020-10-23
 - Fixed a bug that was causing `lightSwitch` fields to be out of sync [#87](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/87)
 
