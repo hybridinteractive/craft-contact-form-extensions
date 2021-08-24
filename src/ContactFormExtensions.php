@@ -136,9 +136,17 @@ class ContactFormExtensions extends Plugin
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
+                // Check if template is overridden in form
+                if (is_array($e->submission->message) && array_key_exists('notificationTemplate', $e->submission->message)) {
+                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['notificationTemplate']);
+                } else {
+                    // Render the set template
+                    $template = $this->settings->notificationTemplate;
+                }
+
                 // Render the set template
                 $html = Craft::$app->view->renderTemplate(
-                    $this->settings->notificationTemplate,
+                    $template,
                     ['submission' => $e->submission]
                 );
 
