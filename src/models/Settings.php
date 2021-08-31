@@ -4,12 +4,9 @@
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
-namespace rias\contactformextensions\models;
+namespace hybridinteractive\contactformextensions\models;
 
 use Craft;
 use craft\base\Model;
@@ -24,9 +21,6 @@ use craft\base\Model;
  *
  * https://craftcms.com/docs/plugins/models
  *
- * @author    Rias
- *
- * @since     1.0.0
  */
 class Settings extends Model
 {

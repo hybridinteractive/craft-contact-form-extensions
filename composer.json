@@ -2,7 +2,7 @@
     "name": "hybridinteractive/craft-contact-form-extensions",
     "description": "Adds extensions to the Craft CMS contact form plugin.",
     "type": "craft-plugin",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "keywords": [
         "craft",
         "cms",
@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-          "rias\\contactformextensions\\": "src/"
+            "hybridinteractive\\contactformextensions\\": "src/"
         }
     },
     "extra": {
@@ -39,9 +39,9 @@
         "hasCpSection": true,
         "changelogUrl": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/CHANGELOG.md",
         "components": {
-            "contactFormExtensionsService": "rias\\contactformextensions\\services\\ContactFormExtensionsService"
+            "contactFormExtensionsService": "hybridinteractive\\contactformextensions\\services\\ContactFormExtensionsService"
         },
-        "class": "rias\\contactformextensions\\ContactFormExtensions"
+        "class": "hybridinteractive\\contactformextensions\\ContactFormExtensions"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master"

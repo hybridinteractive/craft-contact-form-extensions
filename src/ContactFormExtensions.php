@@ -4,12 +4,9 @@
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
-namespace rias\contactformextensions;
+namespace hybridinteractive\contactformextensions;
 
 use Craft;
 use craft\base\Plugin;
@@ -23,9 +20,9 @@ use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
-use rias\contactformextensions\models\Settings;
-use rias\contactformextensions\services\ContactFormExtensionsService as ContactFormExtensionsServiceService;
-use rias\contactformextensions\variables\ContactFormExtensionsVariable;
+use hybridinteractive\contactformextensions\models\Settings;
+use hybridinteractive\contactformextensions\services\ContactFormExtensionsService as ContactFormExtensionsServiceService;
+use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVariable;
 use yii\base\Event;
 
 /**
@@ -38,9 +35,6 @@ use yii\base\Event;
  *
  * https://craftcms.com/docs/plugins/introduction
  *
- * @author    Rias
- *
- * @since     1.0.0
  *
  * @property ContactFormExtensionsServiceService $contactFormExtensionsService
  * @property Settings                            $settings

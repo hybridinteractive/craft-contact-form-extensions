@@ -4,9 +4,6 @@
  *
  * Adds extensions to the Craft CMS contact form plugin.
  *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
 /**
@@ -17,9 +14,6 @@
  *
  * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
  *
- * @author    Rias
- *
- * @since     1.0.0
  */
 return [
     'Form Submissions' => 'Innsendelser',

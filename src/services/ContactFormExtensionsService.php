@@ -9,15 +9,15 @@
  * @copyright Copyright (c) 2018 Rias
  */
 
-namespace rias\contactformextensions\services;
+namespace hybridinteractive\contactformextensions\services;
 
 use Craft;
 use craft\base\Component;
 use craft\contactform\models\Submission;
 use craft\helpers\StringHelper;
-use rias\contactformextensions\ContactFormExtensions;
-use rias\contactformextensions\elements\ContactFormSubmission;
-use rias\contactformextensions\models\RecaptchaV3;
+use hybridinteractive\contactformextensions\ContactFormExtensions;
+use hybridinteractive\contactformextensions\elements\ContactFormSubmission;
+use hybridinteractive\contactformextensions\models\RecaptchaV3;
 use yii\base\Exception;
 
 /**

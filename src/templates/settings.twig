@@ -5,9 +5,6 @@
  *
  * Craft Contact Form Extensions Settings.twig
  *
- * @author    Rias
- * @copyright Copyright (c) 2018 Rias
- * @link      https://rias.be
  * @package   CraftContactFormExtensions
  * @since     1.0.0
  */
@@ -53,6 +50,7 @@
             instructions: 'The template will receive a `submission` variable',
             id: 'confirmationTemplate',
             name: 'confirmationTemplate',
+            required: true,
             disabled:     'confirmationTemplate' in overrides,
             warning:      'confirmationTemplate' in overrides ? configWarning('confirmationTemplate'),
             value: settings.confirmationTemplate,
@@ -63,6 +61,7 @@
             instructions: 'The subject for the confirmation email',
             id: 'confirmationSubject',
             name: 'confirmationSubject',
+            required: true,
             disabled:     'confirmationSubject' in overrides,
             warning:      'confirmationSubject' in overrides ? configWarning('confirmationSubject'),
             value: settings.getConfirmationSubject,
@@ -86,6 +85,7 @@
             instructions: 'The template will receive a `submission` variable',
             id: 'notificationTemplate',
             name: 'notificationTemplate',
+            required: true,
             disabled:     'notificationTemplate' in overrides,
             warning:      'notificationTemplate' in overrides ? configWarning('notificationTemplate'),
             value: settings.notificationTemplate,
@@ -126,6 +126,7 @@
             instructions: 'Recaptcha Site Key',
             id: 'recaptchaSiteKey',
             name: 'recaptchaSiteKey',
+            required: true,
             disabled:     'recaptchaSiteKey' in overrides,
             warning:      'recaptchaSiteKey' in overrides ? configWarning('recaptchaSiteKey'),
             value: settings.recaptchaSiteKey,
@@ -137,6 +138,7 @@
             instructions: 'Recaptcha Secret Key',
             id: 'recaptchaSecretKey',
             name: 'recaptchaSecretKey',
+            required: true,
             disabled:     'recaptchaSecretKey' in overrides,
             warning:      'recaptchaSecretKey' in overrides ? configWarning('recaptchaSecretKey'),
             value: settings.recaptchaSecretKey,
