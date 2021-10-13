@@ -81,7 +81,7 @@ Before you set your config, remember to choose `invisible reCAPTCHA` while apply
 
 Enable reCAPTCHA in the Contact Form Extensions settings and fill in your `siteKey` and `secretKey`.
 
-Then use the following code in your forms:
+Then use the following code in your forms inside of the <form> element:
 
 ```twig
 {{ craft.contactFormExtensions.recaptcha | raw }}
@@ -91,7 +91,7 @@ Then use the following code in your forms:
 
 To use ReCaptcha V3, choose the V3 option in the settings, make sure to enter a correct `siteKey` and `secretKey` and enter a `threshold`. [Learn more about ReCaptcha V3](https://developers.google.com/recaptcha/docs/v3)
 
-Then include the following code in your forms, for example for the `homepage` action:
+Then include the following code in your forms inside of the <form> element, for example for the `homepage` action (actions help separate out reCaptcha submissions within the reCaptcha console):
 
 ```twig
 {{ craft.contactFormExtensions.recaptcha('homepage') | raw }}
