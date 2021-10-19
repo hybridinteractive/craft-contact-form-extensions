@@ -77,23 +77,30 @@ class Settings extends Model
     public function rules()
     {
         return [
-            ['enableDatabase', 'boolean'],
-            ['enableTemplateOverwrite', 'boolean'],
-            ['enableConfirmationEmail', 'boolean'],
-            ['notificationTemplate', 'string'],
-            ['confirmationTemplate', 'string'],
-            ['confirmationSubject', 'string'],
-            ['recaptcha', 'boolean'],
-            ['enableRecaptchaOverride', 'boolean'],
-            ['recaptchaUrl', 'string'],
-            ['recaptchaVerificationUrl', 'string'],
-            ['recaptchaSiteKey', 'string'],
-            ['recaptchaSecretKey', 'string'],
-            ['recaptchaHideBadge', 'boolean'],
-            ['recaptchaDataBadge', 'string'],
+            [['enableDatabase', 'enableTemplateOverwrite', 'enableConfirmationEmail', 'recaptcha', 'enableRecaptchaOverride', 'recaptchaHideBadge', 'recaptchaDebug'], 'boolean'],
+
+            [['notificationTemplate', 'confirmationTemplate', 'confirmationSubject', 'recaptchaUrl', 'recaptchaVerificationUrl', 'recaptchaSiteKey', 'recaptchaSecretKey', 'recaptchaDataBadge'], 'string'],
+
             ['recaptchaTimeout', 'integer'],
             ['recaptchaThreshold', 'double', 'max' => 1, 'min' => 0],
-            ['recaptchaDebug', 'boolean'],
+
+
+            [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function ($model) {
+                return $model->enableConfirmationEmail == true;
+            }],
+
+            ['notificationTemplate', 'required', 'when' => static function ($model) {
+                return $model->enableTemplateOverwrite == true;
+            }],
+
+            [['recaptchaSiteKey', 'recaptchaSecretKey'], 'required', 'when' => static function ($model) {
+                return $model->recaptcha == true;
+            }],
+
+            [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function ($model) {
+                return $model->enableRecaptchaOverride == true;
+            }],    
+
         ];
     }
 }

@@ -12,6 +12,7 @@
 
 {% import "_includes/forms" as forms %}
 
+
 {% macro configWarning(setting) -%}
     {% set setting = '<code>'~setting~'</code>' %}
     {{ "This is being overridden by the {setting} config setting in your {file} config file."|t('contact-form-extensions', {
@@ -51,6 +52,7 @@
             id: 'confirmationTemplate',
             name: 'confirmationTemplate',
             required: true,
+            errors: settings.getErrors('confirmationTemplate'),
             disabled:     'confirmationTemplate' in overrides,
             warning:      'confirmationTemplate' in overrides ? configWarning('confirmationTemplate'),
             value: settings.confirmationTemplate,
@@ -62,6 +64,7 @@
             id: 'confirmationSubject',
             name: 'confirmationSubject',
             required: true,
+            errors: settings.getErrors('confirmationSubject'),
             disabled:     'confirmationSubject' in overrides,
             warning:      'confirmationSubject' in overrides ? configWarning('confirmationSubject'),
             value: settings.getConfirmationSubject,
@@ -86,6 +89,7 @@
             id: 'notificationTemplate',
             name: 'notificationTemplate',
             required: true,
+            errors: settings.getErrors('notificationTemplate'),
             disabled:     'notificationTemplate' in overrides,
             warning:      'notificationTemplate' in overrides ? configWarning('notificationTemplate'),
             value: settings.notificationTemplate,
@@ -139,6 +143,7 @@
                 id: 'recaptchaUrl',
                 name: 'recaptchaUrl',
                 required: true,
+                errors: settings.getErrors('recaptchaUrl'),
                 disabled:     'recaptchaUrl' in overrides,
                 warning:      'recaptchaUrl' in overrides ? configWarning('recaptchaUrl'),
                 value: settings.recaptchaUrl,
@@ -151,6 +156,7 @@
                 id: 'recaptchaVerificationUrl',
                 name: 'recaptchaVerificationUrl',
                 required: true,
+                errors: settings.getErrors('recaptchaVerificationUrl'),
                 disabled:     'recaptchaVerificationUrl' in overrides,
                 warning:      'recaptchaVerificationUrl' in overrides ? configWarning('recaptchaVerificationUrl'),
                 value: settings.recaptchaVerificationUrl,
@@ -164,6 +170,7 @@
             id: 'recaptchaSiteKey',
             name: 'recaptchaSiteKey',
             required: true,
+            errors: settings.getErrors('recaptchaSiteKey'),
             disabled:     'recaptchaSiteKey' in overrides,
             warning:      'recaptchaSiteKey' in overrides ? configWarning('recaptchaSiteKey'),
             value: settings.recaptchaSiteKey,
@@ -176,6 +183,7 @@
             id: 'recaptchaSecretKey',
             name: 'recaptchaSecretKey',
             required: true,
+            errors: settings.getErrors('recaptchaSecretKey'),
             disabled:     'recaptchaSecretKey' in overrides,
             warning:      'recaptchaSecretKey' in overrides ? configWarning('recaptchaSecretKey'),
             value: settings.recaptchaSecretKey,
