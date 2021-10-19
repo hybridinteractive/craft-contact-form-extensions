@@ -81,10 +81,20 @@ class ContactFormExtensionsService extends Component
         $siteKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSiteKey);
         $secretKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSecretKey);
 
+        $recaptchaUrl = 'https://www.google.com/recaptcha/api.js';
+        $recaptchaVerificationUrl = 'https://www.google.com/recaptcha/api/siteverify';
+
+        if (ContactFormExtensions::$plugin->settings->enableRecaptchaOverride === true) {
+            $recaptchaUrl = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaUrl);
+            $recaptchaVerificationUrl = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaVerificationUrl);
+        }
+
         if (ContactFormExtensions::$plugin->settings->recaptchaVersion === '3') {
             $recaptcha = new RecaptchaV3(
                 $siteKey,
                 $secretKey,
+                $recaptchaUrl,
+                $recaptchaVerificationUrl,
                 ContactFormExtensions::$plugin->settings->recaptchaThreshold,
                 ContactFormExtensions::$plugin->settings->recaptchaTimeout,
                 ContactFormExtensions::$plugin->settings->recaptchaHideBadge

@@ -29,6 +29,9 @@ return [
     'confirmationSubject'     => '',
 
     'recaptcha'               => false,
+    'enableRecaptchaOverride' => false,
+    'recaptchaUrl'            => '',
+    'recaptchaVerificationUrl'=> '',
     'recaptchaVersion'        => '',
     'recaptchaSiteKey'        => '',
     'recaptchaSecretKey'      => '',
