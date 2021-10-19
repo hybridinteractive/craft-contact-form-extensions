@@ -7,14 +7,6 @@ use GuzzleHttp\Client;
 class RecaptchaV3
 {
 
-    // Standard reCAPTCHA
-    // const API_URI = 'https://www.google.com/recaptcha/api.js';
-    // const VERIFY_URI = 'https://www.google.com/recaptcha/api/siteverify';
-
-    // Need to add check for option of using recaptcha.net instead.
-    // const API_URI = 'https://www.recaptcha.net/recaptcha/api.js';
-    // const VERIFY_URI = 'https://www.recaptcha.net/recaptcha/api/siteverify';
-
     /**
      * @var \GuzzleHttp\Client
      */
