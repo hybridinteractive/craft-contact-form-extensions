@@ -36,15 +36,16 @@ class RecaptchaV3
     public function render($action = 'homepage')
     {
         $siteKey = $this->siteKey;
-        // $api_uri = static::API_URI;
         $api_uri = $this->recaptchaUrl;
 
+        $uniqueId = uniqid();
+
         $html = <<<HTML
-                <script src="${api_uri}?onload=onloadRecaptcha&render=${siteKey}" async defer></script>
+                <script src="${api_uri}?onload=onloadRecaptcha${uniqueId}&render=${siteKey}" async defer></script>
                 <script>
-                    var onloadRecaptcha = function() {
+                    var onloadRecaptcha${uniqueId} = function() {
                         grecaptcha.ready(function() {
-                            var input=document.getElementById('g-recaptcha-response');
+                            var input=document.getElementById('g-recaptcha-response${uniqueId}');
                             var form=input.parentElement;
                             while(form && form.tagName.toLowerCase()!='form') {
                                 form = form.parentElement;
@@ -69,7 +70,7 @@ class RecaptchaV3
                     };
                 </script>
 
-                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" value="">
+                <input type="hidden" id="g-recaptcha-response${uniqueId}" name="g-recaptcha-response" value="">
 HTML;
 
         if ($this->hideBadge) {
