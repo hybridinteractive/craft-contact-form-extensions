@@ -84,7 +84,6 @@ class Settings extends Model
             ['recaptchaTimeout', 'integer'],
             ['recaptchaThreshold', 'double', 'max' => 1, 'min' => 0],
 
-
             [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function ($model) {
                 return $model->enableConfirmationEmail == true;
             }],
@@ -99,7 +98,7 @@ class Settings extends Model
 
             [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function ($model) {
                 return $model->enableRecaptchaOverride == true;
-            }],    
+            }],
 
         ];
     }
