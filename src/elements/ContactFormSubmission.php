@@ -3,13 +3,9 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
-namespace rias\contactformextensions\elements;
+namespace hybridinteractive\contactformextensions\elements;
 
 use Craft;
 use craft\base\Element;
@@ -17,7 +13,7 @@ use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
-use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
+use hybridinteractive\contactformextensions\elements\db\ContactFormSubmissionQuery;
 
 /**
  *  Element.

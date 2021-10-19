@@ -3,13 +3,9 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
-namespace rias\contactformextensions\migrations;
+namespace hybridinteractive\contactformextensions\migrations;
 
 use Craft;
 use craft\db\Migration;
@@ -23,10 +19,6 @@ use craft\db\Migration;
  *
  * If you need to perform any additional actions on install/uninstall, override the
  * safeUp() and safeDown() methods.
- *
- * @author    Rias
- *
- * @since     1.0.0
  */
 class Install extends Migration
 {

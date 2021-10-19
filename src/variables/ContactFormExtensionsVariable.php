@@ -3,24 +3,15 @@
  * schema plugin for Craft CMS 3.x.
  *
  * A fluent builder Schema.org types and ld+json generator based on Spatie's schema-org package
- *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2017 Rias
  */
 
-namespace rias\contactformextensions\variables;
+namespace hybridinteractive\contactformextensions\variables;
 
 use Craft;
 use craft\elements\db\ElementQueryInterface;
-use rias\contactformextensions\ContactFormExtensions;
-use rias\contactformextensions\elements\ContactFormSubmission;
+use hybridinteractive\contactformextensions\ContactFormExtensions;
+use hybridinteractive\contactformextensions\elements\ContactFormSubmission;
 
-/**
- * @author    Rias
- *
- * @since     1.0.0
- */
 class ContactFormExtensionsVariable
 {
     public function name()

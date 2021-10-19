@@ -1,11 +1,11 @@
 <?php
 
-namespace rias\contactformextensions\controllers;
+namespace hybridinteractive\contactformextensions\controllers;
 
 use craft\web\Controller;
-use rias\contactformextensions\ContactFormExtensions;
-use rias\contactformextensions\elements\ContactFormSubmission;
-use rias\contactformextensions\elements\db\ContactFormSubmissionQuery;
+use hybridinteractive\contactformextensions\ContactFormExtensions;
+use hybridinteractive\contactformextensions\elements\ContactFormSubmission;
+use hybridinteractive\contactformextensions\elements\db\ContactFormSubmissionQuery;
 
 class SubmissionsController extends Controller
 {

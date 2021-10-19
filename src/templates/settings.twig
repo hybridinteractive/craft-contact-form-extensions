@@ -5,9 +5,6 @@
  *
  * Craft Contact Form Extensions Settings.twig
  *
- * @author    Rias
- * @copyright Copyright (c) 2018 Rias
- * @link      https://rias.be
  * @package   CraftContactFormExtensions
  * @since     1.0.0
  */
@@ -53,6 +50,7 @@
             instructions: 'The template will receive a `submission` variable',
             id: 'confirmationTemplate',
             name: 'confirmationTemplate',
+            required: true,
             disabled:     'confirmationTemplate' in overrides,
             warning:      'confirmationTemplate' in overrides ? configWarning('confirmationTemplate'),
             value: settings.confirmationTemplate,
@@ -63,6 +61,7 @@
             instructions: 'The subject for the confirmation email',
             id: 'confirmationSubject',
             name: 'confirmationSubject',
+            required: true,
             disabled:     'confirmationSubject' in overrides,
             warning:      'confirmationSubject' in overrides ? configWarning('confirmationSubject'),
             value: settings.getConfirmationSubject,
@@ -86,6 +85,7 @@
             instructions: 'The template will receive a `submission` variable',
             id: 'notificationTemplate',
             name: 'notificationTemplate',
+            required: true,
             disabled:     'notificationTemplate' in overrides,
             warning:      'notificationTemplate' in overrides ? configWarning('notificationTemplate'),
             value: settings.notificationTemplate,
@@ -94,7 +94,7 @@
 </div>
 <div id="tab-recaptcha" class="hidden">
     {{ forms.lightswitchField({
-        label: 'Enable Invisible Recaptcha',
+        label: 'Enable Invisible reCAPTCHA',
         instructions: 'Make sure to render the captcha with `{{ craft.contactFormExtensions.recaptcha | raw }}` in your forms.',
         id: 'recaptcha',
         name: 'recaptcha',
@@ -106,8 +106,8 @@
 
     <div id="recaptchaSettings" {% if not settings.recaptcha %}class="hidden"{% endif %}>
         {{ forms.selectField({
-            label: 'ReCaptcha version',
-            instructions: 'ReCaptcha v2 (challenge) or v3 (score)',
+            label: 'reCAPTCHA version',
+            instructions: 'reCAPTCHA v2 (challenge) or v3 (score)',
             id: 'recaptchaVersion',
             name: 'recaptchaVersion',
             options: [
@@ -121,11 +121,49 @@
             warning:      'recaptchaVersion' in overrides ? configWarning('recaptchaVersion'),
         }) }}
 
+        {{ forms.lightswitchField({
+            label: 'Override reCAPTCHA URLs',
+            instructions: 'Override the urls used for the reCAPTCHA API and Verification API',
+            id: 'enableRecaptchaOverride',
+            name: 'enableRecaptchaOverride',
+            disabled:     'enableRecaptchaOverride' in overrides,
+            warning:      'enableRecaptchaOverride' in overrides ? configWarning('enableRecaptchaOverride'),
+            on: settings.enableRecaptchaOverride,
+            toggle: "recaptchaUrlSettings"
+        }) }}
+
+        <div id="recaptchaUrlSettings" class="hidden" style="margin-bottom: 20px;">
+            {{ forms.autosuggestField({
+                label: 'reCAPTCHA URL',
+                instructions: 'This will override the reCAPTCHA API URL',
+                id: 'recaptchaUrl',
+                name: 'recaptchaUrl',
+                required: true,
+                disabled:     'recaptchaUrl' in overrides,
+                warning:      'recaptchaUrl' in overrides ? configWarning('recaptchaUrl'),
+                value: settings.recaptchaUrl,
+                suggestEnvVars: true,
+            }) }}
+
+            {{ forms.autosuggestField({
+                label: 'reCAPTCHA Verification URL',
+                instructions: 'This will override the reCAPTCHA API Verification URL',
+                id: 'recaptchaVerificationUrl',
+                name: 'recaptchaVerificationUrl',
+                required: true,
+                disabled:     'recaptchaVerificationUrl' in overrides,
+                warning:      'recaptchaVerificationUrl' in overrides ? configWarning('recaptchaVerificationUrl'),
+                value: settings.recaptchaVerificationUrl,
+                suggestEnvVars: true,
+            }) }}
+        </div>
+
         {{ forms.autosuggestField({
             label: 'Site Key',
-            instructions: 'Recaptcha Site Key',
+            instructions: 'reCAPTCHA Site Key',
             id: 'recaptchaSiteKey',
             name: 'recaptchaSiteKey',
+            required: true,
             disabled:     'recaptchaSiteKey' in overrides,
             warning:      'recaptchaSiteKey' in overrides ? configWarning('recaptchaSiteKey'),
             value: settings.recaptchaSiteKey,
@@ -134,9 +172,10 @@
 
         {{ forms.autosuggestField({
             label: 'Secret Key',
-            instructions: 'Recaptcha Secret Key',
+            instructions: 'reCAPTCHA Secret Key',
             id: 'recaptchaSecretKey',
             name: 'recaptchaSecretKey',
+            required: true,
             disabled:     'recaptchaSecretKey' in overrides,
             warning:      'recaptchaSecretKey' in overrides ? configWarning('recaptchaSecretKey'),
             value: settings.recaptchaSecretKey,
@@ -156,7 +195,7 @@
 
         {{ forms.lightswitchField({
             label: 'Hide Badge',
-            instructions: 'Hide the recaptcha badge. Make sure to inform your users in a different way that you\'re [using the reCAPTCHA service](https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge/44543771#44543771)',
+            instructions: 'Hide the reCAPTCHA badge. Make sure to inform your users in a different way that you\'re [using the reCAPTCHA service](https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge/44543771#44543771)',
             id: 'recaptchaHideBadge',
             name: 'recaptchaHideBadge',
             disabled:     'recaptchaHideBadge' in overrides,
@@ -204,5 +243,10 @@
                 on: settings.recaptchaDebug == true,
             }) }}
         </div>
+
+
+
+
+
     </div>
 </div>

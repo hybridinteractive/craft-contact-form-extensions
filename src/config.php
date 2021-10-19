@@ -3,10 +3,6 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
 /**
@@ -32,6 +28,9 @@ return [
     'confirmationSubject'     => '',
 
     'recaptcha'               => false,
+    'enableRecaptchaOverride' => false,
+    'recaptchaUrl'            => '',
+    'recaptchaVerificationUrl'=> '',
     'recaptchaVersion'        => '',
     'recaptchaSiteKey'        => '',
     'recaptchaSecretKey'      => '',

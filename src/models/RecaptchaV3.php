@@ -1,14 +1,11 @@
 <?php
 
-namespace rias\contactformextensions\models;
+namespace hybridinteractive\contactformextensions\models;
 
 use GuzzleHttp\Client;
 
 class RecaptchaV3
 {
-    const API_URI = 'https://www.google.com/recaptcha/api.js';
-    const VERIFY_URI = 'https://www.google.com/recaptcha/api/siteverify';
-
     /**
      * @var \GuzzleHttp\Client
      */
@@ -16,13 +13,18 @@ class RecaptchaV3
 
     private $siteKey;
     private $secretKey;
+    private $recaptchaUrl;
+    private $recaptchaVerificationUrl;
     private $threshold;
     private $hideBadge;
 
-    public function __construct(string $siteKey, string $secretKey, float $threshold, int $timeout = 5, bool $hideBadge = false)
+    public function __construct(string $siteKey, string $secretKey, string $recaptchaUrl, string $recaptchaVerificationUrl, float $threshold, int $timeout = 5, bool $hideBadge = false)
     {
         $this->siteKey = $siteKey;
         $this->secretKey = $secretKey;
+        $this->recaptchaUrl = $recaptchaUrl;
+        $this->recaptchaVerificationUrl = $recaptchaVerificationUrl;
+
         $this->client = new Client([
             'timeout' => $timeout,
         ]);
@@ -33,36 +35,41 @@ class RecaptchaV3
     public function render($action = 'homepage')
     {
         $siteKey = $this->siteKey;
-        $api_uri = static::API_URI;
+        $api_uri = $this->recaptchaUrl;
+
+        $uniqueId = uniqid();
 
         $html = <<<HTML
-                <script src="${api_uri}?render=${siteKey}"></script>
+                <script src="${api_uri}?onload=onloadRecaptcha${uniqueId}&render=${siteKey}" async defer></script>
                 <script>
-                  grecaptcha.ready(function() {
-                      var input=document.getElementById('g-recaptcha-response');
-                      var form=input.parentElement;
-                      while(form && form.tagName.toLowerCase()!='form') {
-                          form = form.parentElement;
-                      }
+                    var onloadRecaptcha${uniqueId} = function() {
+                        grecaptcha.ready(function() {
+                            var input=document.getElementById('g-recaptcha-response${uniqueId}');
+                            var form=input.parentElement;
+                            while(form && form.tagName.toLowerCase()!='form') {
+                                form = form.parentElement;
+                            }
 
-                      if (form) {
-                          form.addEventListener('submit',function(e) {
-                              e.preventDefault();  
-                              e.stopImmediatePropagation();
+                            if (form) {
+                                form.addEventListener('submit',function(e) {
+                                    e.preventDefault();  
+                                    e.stopImmediatePropagation();
 
-                              if (input.value == '') {
-                                  grecaptcha.execute('${siteKey}', {action: '${action}'}).then(function(token) {
-                                      input.value = token;                                      
-                                      form.submit();
-                                  });
-                              }
+                                    if (input.value == '') {
+                                        grecaptcha.execute('${siteKey}', {action: '${action}'}).then(function(token) {
+                                            input.value = token;
+                                            form.submit();
+                                        });
+                                    }
 
-                              return false;
-                          },false);
-                      }
-                  });
+                                    return false;
+                                },false);
+                            }
+                        });
+                    };
                 </script>
-                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" value="">
+
+                <input type="hidden" id="g-recaptcha-response${uniqueId}" name="g-recaptcha-response" value="">
 HTML;
 
         if ($this->hideBadge) {
@@ -97,7 +104,7 @@ HTML;
 
     protected function sendVerifyRequest(array $query = [])
     {
-        $response = $this->client->post(static::VERIFY_URI, [
+        $response = $this->client->post($this->recaptchaVerificationUrl, [
             'form_params' => $query,
         ]);
 

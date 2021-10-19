@@ -3,13 +3,9 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
-namespace rias\contactformextensions\models;
+namespace hybridinteractive\contactformextensions\models;
 
 use Craft;
 use craft\base\Model;
@@ -23,10 +19,6 @@ use craft\base\Model;
  * between services, controllers, and templates in Craft, it’s passed via a model.
  *
  * https://craftcms.com/docs/plugins/models
- *
- * @author    Rias
- *
- * @since     1.0.0
  */
 class Settings extends Model
 {
@@ -45,6 +37,9 @@ class Settings extends Model
     public $confirmationSubject = '';
 
     public $recaptcha = false;
+    public $enableRecaptchaOverride = false;
+    public $recaptchaUrl = '';
+    public $recaptchaVerificationUrl = '';
     public $recaptchaVersion = '';
     public $recaptchaSiteKey = '';
     public $recaptchaSecretKey = '';
@@ -89,6 +84,9 @@ class Settings extends Model
             ['confirmationTemplate', 'string'],
             ['confirmationSubject', 'string'],
             ['recaptcha', 'boolean'],
+            ['enableRecaptchaOverride', 'boolean'],
+            ['recaptchaUrl', 'string'],
+            ['recaptchaVerificationUrl', 'string'],
             ['recaptchaSiteKey', 'string'],
             ['recaptchaSecretKey', 'string'],
             ['recaptchaHideBadge', 'boolean'],

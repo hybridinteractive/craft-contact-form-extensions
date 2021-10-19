@@ -1,6 +1,6 @@
 <?php
 
-namespace rias\contactformextensions\elements\db;
+namespace hybridinteractive\contactformextensions\elements\db;
 
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
