@@ -6,8 +6,6 @@ use GuzzleHttp\Client;
 
 class RecaptchaV3
 {
-
-
     const API_URI = 'https://www.google.com/recaptcha/api.js';
     const VERIFY_URI = 'https://www.google.com/recaptcha/api/siteverify';
 
