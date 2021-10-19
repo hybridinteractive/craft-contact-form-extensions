@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.7] - 2021-10-13
+- Update readme for additional clarity on reCaptcha placement. Cheers to [@jamiematrix](https://github.com/jamiematrix) for the [assist](https://github.com/hybridinteractive/craft-contact-form-extensions/pull/124)!
+
+## [1.2.6] - 2021-09-27
+- Add overwrite field for the notification template. Thanks go to [@mathiashelin](https://github.com/mathiashelin) for the [PR](https://github.com/hybridinteractive/craft-contact-form-extensions/pull/122)!
+
 ## [1.2.5] - 2021-06-27
 - Fixed a bug that would cause the Google ReCaptcha to time out after two minutes. HUGE shout out to [@danielratzinger](https://github.com/danielratzinger) for the PR!
 - For more information on this update, take a look at the [pull request #101](https://github.com/hybridinteractive/craft-contact-form-extensions/pull/101)

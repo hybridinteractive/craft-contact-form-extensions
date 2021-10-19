@@ -7,9 +7,9 @@ use GuzzleHttp\Client;
 class RecaptchaV3
 {
 
-
-    const API_URI = 'https://www.google.com/recaptcha/api.js';
-    const VERIFY_URI = 'https://www.google.com/recaptcha/api/siteverify';
+    // Standard reCAPTCHA
+    // const API_URI = 'https://www.google.com/recaptcha/api.js';
+    // const VERIFY_URI = 'https://www.google.com/recaptcha/api/siteverify';
 
     // Need to add check for option of using recaptcha.net instead.
     // const API_URI = 'https://www.recaptcha.net/recaptcha/api.js';
@@ -22,13 +22,18 @@ class RecaptchaV3
 
     private $siteKey;
     private $secretKey;
+    private $recaptchaUrl;
+    private $recaptchaVerificationUrl;
     private $threshold;
     private $hideBadge;
 
-    public function __construct(string $siteKey, string $secretKey, float $threshold, int $timeout = 5, bool $hideBadge = false)
+    public function __construct(string $siteKey, string $secretKey, string $recaptchaUrl, string $recaptchaVerificationUrl, float $threshold, int $timeout = 5, bool $hideBadge = false)
     {
         $this->siteKey = $siteKey;
         $this->secretKey = $secretKey;
+        $this->recaptchaUrl = $recaptchaUrl;
+        $this->recaptchaVerificationUrl = $recaptchaVerificationUrl;
+
         $this->client = new Client([
             'timeout' => $timeout,
         ]);
@@ -39,7 +44,8 @@ class RecaptchaV3
     public function render($action = 'homepage')
     {
         $siteKey = $this->siteKey;
-        $api_uri = static::API_URI;
+        // $api_uri = static::API_URI;
+        $api_uri = $this->recaptchaUrl;
 
         $html = <<<HTML
                 <script src="${api_uri}?onload=onloadRecaptcha&render=${siteKey}" async defer></script>
@@ -106,7 +112,7 @@ HTML;
 
     protected function sendVerifyRequest(array $query = [])
     {
-        $response = $this->client->post(static::VERIFY_URI, [
+        $response = $this->client->post($this->recaptchaVerificationUrl, [
             'form_params' => $query,
         ]);
 

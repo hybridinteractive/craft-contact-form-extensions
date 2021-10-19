@@ -39,6 +39,9 @@ class Settings extends Model
     public $confirmationSubject = '';
 
     public $recaptcha = false;
+    public $enableRecaptchaOverride = false;
+    public $recaptchaUrl = '';
+    public $recaptchaVerificationUrl = '';
     public $recaptchaVersion = '';
     public $recaptchaSiteKey = '';
     public $recaptchaSecretKey = '';
@@ -83,6 +86,9 @@ class Settings extends Model
             ['confirmationTemplate', 'string'],
             ['confirmationSubject', 'string'],
             ['recaptcha', 'boolean'],
+            ['enableRecaptchaOverride', 'boolean'],
+            ['recaptchaUrl', 'string'],
+            ['recaptchaVerificationUrl', 'string'],
             ['recaptchaSiteKey', 'string'],
             ['recaptchaSecretKey', 'string'],
             ['recaptchaHideBadge', 'boolean'],

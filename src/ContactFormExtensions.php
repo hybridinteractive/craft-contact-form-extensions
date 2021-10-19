@@ -132,10 +132,7 @@ class ContactFormExtensions extends Plugin
 
                 // Check if template is overridden in form
                 if (is_array($e->submission->message) && array_key_exists('notificationTemplate', $e->submission->message)) {
-                    // $template = '_emails\\'. Craft::$app->security->validateData($e->submission->message['notificationTemplate']);
-                    $template = Craft::$app->security->validateData($e->submission->message['notificationTemplate']);
-                    // $template = '_emails/contact/notification2';
-                    
+                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['notificationTemplate']);
                 } else {
                     // Render the set template
                     $template = $this->settings->notificationTemplate;
@@ -144,7 +141,6 @@ class ContactFormExtensions extends Plugin
                 // Render the set template
                 $html = Craft::$app->view->renderTemplate(
                     $template,
-                    // $this->settings->notificationTemplate,
                     ['submission' => $e->submission]
                 );
 
