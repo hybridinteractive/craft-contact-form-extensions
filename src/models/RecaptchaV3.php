@@ -6,7 +6,6 @@ use GuzzleHttp\Client;
 
 class RecaptchaV3
 {
-
     /**
      * @var \GuzzleHttp\Client
      */
