@@ -3,7 +3,6 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
  */
 
 /**

@@ -3,7 +3,6 @@
  * schema plugin for Craft CMS 3.x.
  *
  * A fluent builder Schema.org types and ld+json generator based on Spatie's schema-org package
- *
  */
 
 namespace hybridinteractive\contactformextensions\variables;

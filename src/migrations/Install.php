@@ -3,7 +3,6 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
  */
 
 namespace hybridinteractive\contactformextensions\migrations;
@@ -20,7 +19,6 @@ use craft\db\Migration;
  *
  * If you need to perform any additional actions on install/uninstall, override the
  * safeUp() and safeDown() methods.
- *
  */
 class Install extends Migration
 {

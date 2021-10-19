@@ -3,7 +3,6 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
  */
 
 namespace hybridinteractive\contactformextensions\models;
@@ -20,7 +19,6 @@ use craft\base\Model;
  * between services, controllers, and templates in Craft, it’s passed via a model.
  *
  * https://craftcms.com/docs/plugins/models
- *
  */
 class Settings extends Model
 {

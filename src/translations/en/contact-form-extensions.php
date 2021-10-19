@@ -3,7 +3,6 @@
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
  */
 
 /**
@@ -13,7 +12,6 @@
  * the key, and the translation as the value.
  *
  * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
- *
  */
 return [
 
