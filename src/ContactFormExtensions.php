@@ -103,10 +103,10 @@ class ContactFormExtensions extends Plugin
                 //TODO: You could add here a submission to a spam table.
             }
 
+            // Recaptcha override
             $recaptchaTemplateOverride = false;
             if (is_array($e->submission->message) && array_key_exists('recaptchaTemplateOverride', $e->submission->message)) {
                 $recaptchaTemplateOverride = filter_var($e->submission->message['recaptchaTemplateOverride'], FILTER_VALIDATE_BOOLEAN);
-                // ray($recaptchaTemplateOverride);
             }
 
             if ($this->settings->recaptcha && $recaptchaTemplateOverride != true) {
@@ -121,10 +121,10 @@ class ContactFormExtensions extends Plugin
                 }
             }
 
+            // Save to DB override
             $saveSubmissionOverride = false;
             if (is_array($e->submission->message) && array_key_exists('saveSubmissionOverride', $e->submission->message)) {
                 $saveSubmissionOverride = filter_var($e->submission->message['saveSubmissionOverride'], FILTER_VALIDATE_BOOLEAN);
-                // ray($saveSubmissionOverride);
             }
 
             $submission = $e->submission;
@@ -138,6 +138,7 @@ class ContactFormExtensions extends Plugin
                 $e->toEmails = explode(',', $email);
             }
 
+            // Override template (Notification)
             if ($this->settings->enableTemplateOverwrite) {
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
@@ -167,7 +168,14 @@ class ContactFormExtensions extends Plugin
         });
 
         Event::on(Mailer::class, Mailer::EVENT_AFTER_SEND, function (SendEvent $e) {
-            if ($this->settings->enableConfirmationEmail) {
+
+            $disableConfirmation = false;
+            if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
+                $disableConfirmation = filter_var($e->submission->message['disableConfirmation'], FILTER_VALIDATE_BOOLEAN);
+            }
+
+
+            if ($this->settings->enableConfirmationEmail && $disableConfirmation != true) {
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
