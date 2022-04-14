@@ -100,9 +100,16 @@ class ContactFormExtensions extends Plugin
         Event::on(Mailer::class, Mailer::EVENT_BEFORE_SEND, function (SendEvent $e) {
             if ($e->isSpam) {
                 return;
+                //TODO: You could add here a submission to a spam table.
             }
 
-            if ($this->settings->recaptcha) {
+            $recaptchaTemplateOverride = false;
+            if (is_array($e->submission->message) && array_key_exists('recaptchaTemplateOverride', $e->submission->message)) {
+                $recaptchaTemplateOverride = filter_var($e->submission->message['recaptchaTemplateOverride'], FILTER_VALIDATE_BOOLEAN);
+                // ray($recaptchaTemplateOverride);
+            }
+
+            if ($this->settings->recaptcha && $recaptchaTemplateOverride != true) {
                 $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
                 $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
 

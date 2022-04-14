@@ -73,6 +73,12 @@ When sending confirmation option is enabled and custom subjects per form are nee
 <input type="hidden" name="message[toEmail]" value="{{ 'hello@rias.be'|hash }}">
 ```
 
+## Overriding recaptcha on a per form basis
+
+```
+<input type="hidden" name="message[recaptchaTemplateOverride]" value="true">
+```
+
 ## Adding invisible reCAPTCHA
 
 Before you set your config, remember to choose `invisible reCAPTCHA` while applying for keys.
