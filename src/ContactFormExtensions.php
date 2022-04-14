@@ -168,12 +168,10 @@ class ContactFormExtensions extends Plugin
         });
 
         Event::on(Mailer::class, Mailer::EVENT_AFTER_SEND, function (SendEvent $e) {
-
             $disableConfirmation = false;
             if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
                 $disableConfirmation = filter_var($e->submission->message['disableConfirmation'], FILTER_VALIDATE_BOOLEAN);
             }
-
 
             if ($this->settings->enableConfirmationEmail && $disableConfirmation != true) {
                 // First set the template mode to the Site templates
