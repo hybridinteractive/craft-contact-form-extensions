@@ -121,8 +121,14 @@ class ContactFormExtensions extends Plugin
                 }
             }
 
+            $saveSubmissionOverride = false;
+            if (is_array($e->submission->message) && array_key_exists('saveSubmissionOverride', $e->submission->message)) {
+                $saveSubmissionOverride = filter_var($e->submission->message['saveSubmissionOverride'], FILTER_VALIDATE_BOOLEAN);
+                // ray($saveSubmissionOverride);
+            }
+
             $submission = $e->submission;
-            if ($this->settings->enableDatabase) {
+            if ($this->settings->enableDatabase && $saveSubmissionOverride != true) {
                 $this->contactFormExtensionsService->saveSubmission($submission);
             }
 
