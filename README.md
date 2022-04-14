@@ -79,7 +79,7 @@ When sending confirmation option is enabled and custom subjects per form are nee
 <input type="hidden" name="message[recaptchaTemplateOverride]" value="true">
 ```
 
-## Overriding saving to databse on a per form basis
+## Overriding saving to database on a per form basis
 
 ```
 <input type="hidden" name="message[saveSubmissionOverride]" value="true">

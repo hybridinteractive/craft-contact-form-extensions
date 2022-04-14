@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0] - 2022-04-14
+- Adding ability to override recaptcha on a per form basis. [#108](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/108)
+- Override for saving to db on a per form basis
+- Add ability to disable the email confirmation should be sent on a specific form. 
+
 ## [1.2.8] - 2021-10-19
 - Fixed Second form on page does not send [#78](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/78) - Added unique id's to the functions and id tags to make the recaptcha separate for each form.
 - Can the recaptcha script be defer / async? [#100](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/100) - Added a callback function off the async script loading that keeps everything loading together correctly.
