@@ -236,7 +236,7 @@ class ContactFormExtensions extends Plugin
     public function getCpNavItem()
     {
         if (!$this->settings->enableDatabase) {
-            return;
+            return null;
         }
 
         $navItem = parent::getCpNavItem();
