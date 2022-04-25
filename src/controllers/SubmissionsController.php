@@ -36,8 +36,8 @@ class SubmissionsController extends Controller
         } else {
             $variables = [
                 'submission'    => null,
-                'siteHandle'    => "",
-                'messageObject' => "",
+                'siteHandle'    => '',
+                'messageObject' => '',
             ];
 
             return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
