@@ -88,7 +88,7 @@ class Install extends Migration
 
         // contactform_submissions table
         $tableSchema = Craft::$app->db->schema->getTableSchema('{{%contactform_submissions}}');
-        if ($tableSchema === null) {
+        if ($tableSchema == null) {
             $tablesCreated = true;
             $this->createTable(
                 '{{%contactform_submissions}}',

@@ -95,7 +95,7 @@ class ContactFormSubmission extends Element
         return true;
     }
 
-    public function getCpEditUrl()
+    public function getCpEditUrl(): ?string
     {
         return UrlHelper::cpUrl('contact-form-extensions/submissions/'.$this->id);
     }
@@ -197,7 +197,7 @@ class ContactFormSubmission extends Element
      *
      * @throws \yii\db\Exception
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         if ($isNew) {
             Craft::$app->db->createCommand()

@@ -18,7 +18,7 @@ class SubmissionsController extends Controller
     public function actionShowSubmission(string $submissionId = null, string $siteHandle = null)
     {
         $query = new ContactFormSubmissionQuery(ContactFormSubmission::class);
-        $query->id = $submissionId;
+        // $query->id = $submissionId;
 
         /* @var ContactFormSubmission $submission */
         $submission = $query->one();

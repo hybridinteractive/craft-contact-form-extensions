@@ -15,7 +15,6 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
 use craft\helpers\App;
 use craft\mail\Message;
-use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
@@ -53,7 +52,25 @@ class ContactFormExtensions extends Plugin
      */
     public static $plugin;
 
-    public $name;
+    public ?string $name;
+
+
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @var string
+     */
+    public string $schemaVersion = '1.0.1';
+
+    /**
+     * @var bool
+     */
+    public bool $hasCpSettings = true;
+    /**
+     * @var bool
+     */
+    public bool $hasCpSection = true;
 
     // Public Methods
     // =========================================================================
@@ -68,7 +85,7 @@ class ContactFormExtensions extends Plugin
      * If you have a '/vendor/autoload.php' file, it will be loaded for you automatically;
      * you do not need to load it in your init() method.
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
@@ -128,6 +145,7 @@ class ContactFormExtensions extends Plugin
             }
 
             $submission = $e->submission;
+            ray($submission);
             if ($this->settings->enableDatabase && $saveSubmissionOverride != true) {
                 $this->contactFormExtensionsService->saveSubmission($submission);
             }
@@ -233,7 +251,7 @@ class ContactFormExtensions extends Plugin
     /**
      * {@inheritdoc}
      */
-    public function getCpNavItem()
+    public function getCpNavItem(): ?array
     {
         if (!$this->settings->enableDatabase) {
             return null;
@@ -254,7 +272,7 @@ class ContactFormExtensions extends Plugin
      *
      * @return \craft\base\Model|null
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?\craft\base\Model
     {
         return new Settings();
     }
@@ -263,12 +281,12 @@ class ContactFormExtensions extends Plugin
      * Returns the rendered settings HTML, which will be inserted into the content
      * block on the settings page.
      *
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      *
      * @return string The rendered settings HTML
      */
-    protected function settingsHtml(): string
+    protected function settingsHtml(): ?string
     {
         // Get and pre-validate the settings
         $settings = $this->getSettings();
