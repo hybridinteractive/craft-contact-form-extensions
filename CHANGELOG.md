@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.1] - 2022-05-04
+- Added Graceful handling of visiting URLs of deleted forms. [#140](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/140)
+- Final preparation for Craft 4
+
 ## [1.3.0] - 2022-04-14
 - Adding ability to override recaptcha on a per form basis. [#108](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/108)
 - Override for saving to db on a per form basis
