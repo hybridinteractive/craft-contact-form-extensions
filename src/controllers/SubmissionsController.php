@@ -23,13 +23,24 @@ class SubmissionsController extends Controller
         /* @var ContactFormSubmission $submission */
         $submission = $query->one();
 
-        $messageObject = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings((array) json_decode($submission->message));
-        $variables = [
-            'submission'    => $submission,
-            'siteHandle'    => $siteHandle,
-            'messageObject' => $messageObject,
-        ];
+        if ($submission) {
+            $messageObject = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings((array) json_decode($submission->message));
 
-        return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
+            $variables = [
+                'submission'    => $submission,
+                'siteHandle'    => $siteHandle,
+                'messageObject' => $messageObject,
+            ];
+
+            return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
+        } else {
+            $variables = [
+                'submission'    => null,
+                'siteHandle'    => '',
+                'messageObject' => '',
+            ];
+
+            return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
+        }
     }
 }

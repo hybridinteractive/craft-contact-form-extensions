@@ -1,55 +1,69 @@
 {
-    "name": "hybridinteractive/craft-contact-form-extensions",
-    "description": "Adds extensions to the Craft CMS contact form plugin.",
-    "type": "craft-plugin",
-    "version": "1.3.0",
-    "keywords": [
-        "craft",
-        "cms",
-        "craftcms",
-        "craft-plugin",
-        "craft contact form extensions"
-    ],
-    "support": {
-        "docs": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/README.md",
-        "issues": "https://github.com/hybridinteractive/craft-contact-form-extensions/issues"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Hybrid Interactive",
-            "homepage": "https://hybridinteractive.io"
-        }
-    ],
-    "require": {
-        "craftcms/cms": "^3.1",
-        "craftcms/contact-form": "^2.1",
-        "albertcht/invisible-recaptcha": "^1.8"
-    },
-    "autoload": {
-        "psr-4": {
-            "hybridinteractive\\contactformextensions\\": "src/"
-        }
-    },
-    "extra": {
-        "name": "Contact Form Extensions",
-        "handle": "contact-form-extensions",
-        "schemaVersion": "1.0.1",
-        "hasCpSettings": true,
-        "hasCpSection": true,
-        "changelogUrl": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/CHANGELOG.md",
-        "components": {
-            "contactFormExtensionsService": "hybridinteractive\\contactformextensions\\services\\ContactFormExtensionsService"
-        },
-        "class": "hybridinteractive\\contactformextensions\\ContactFormExtensions"
-    },
-    "require-dev": {
-        "roave/security-advisories": "dev-master"
-    },
-    "config": {
-        "allow-plugins": {
-            "yiisoft/yii2-composer": true,
-            "craftcms/plugin-installer": true
-        }
+  "name": "hybridinteractive/craft-contact-form-extensions",
+  "description": "Adds extensions to the Craft CMS contact form plugin.",
+  "version": "1.3.0",
+  "type": "craft-plugin",
+  "keywords": [
+    "cms",
+    "craftcms",
+    "craft",
+    "craft-plugin",
+    "craft contact form extensions"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Hybrid Interactive",
+      "homepage": "https://hybridinteractive.io"
     }
+  ],
+  "support": {
+    "docs": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/README.md",
+    "issues": "https://github.com/hybridinteractive/craft-contact-form-extensions/issues"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.2.5|^8.0",
+    "albertcht/invisible-recaptcha": "^1.8",
+    "composer/composer": "^2.2.12",
+    "craftcms/cms": "^3.2.0",
+    "craftcms/contact-form": "^2.3.0"
+  },
+  "require-dev": {
+    "craftcms/ecs": "dev-main",
+    "craftcms/phpstan": "dev-main"
+  },
+  "autoload": {
+    "psr-4": {
+      "hybridinteractive\\contactformextensions\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Contact Form Extensions",
+    "handle": "contact-form-extensions",
+    "schemaVersion": "1.0.1",
+    "hasCpSettings": true,
+    "hasCpSection": true,
+    "changelogUrl": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/CHANGELOG.md",
+    "documentationUrl": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/README.md",
+    "components": {
+      "contactFormExtensionsService": "hybridinteractive\\contactformextensions\\services\\ContactFormExtensionsService"
+    },
+    "class": "hybridinteractive\\contactformextensions\\ContactFormExtensions"
+  },
+  "scripts": {
+    "check-cs": "ecs check --ansi",
+    "fix-cs": "ecs check --ansi --fix",
+    "phpstan": "phpstan --memory-limit=1G"
+  },
+  "config": {
+    "platform": {
+      "php": "7.2.5"
+    },
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
 }
