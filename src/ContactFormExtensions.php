@@ -54,7 +54,6 @@ class ContactFormExtensions extends Plugin
 
     public ?string $name;
 
-
     // Public Properties
     // =========================================================================
 
