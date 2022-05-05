@@ -1,6 +1,6 @@
 <?php
 /**
- * schema plugin for Craft CMS 3.x.
+ * schema plugin for Craft CMS 4.x.
  *
  * A fluent builder Schema.org types and ld+json generator based on Spatie's schema-org package
  */

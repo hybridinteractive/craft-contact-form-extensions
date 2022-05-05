@@ -1,6 +1,6 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x.
+ * Craft Contact Form Extensions plugin for Craft CMS 4.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */

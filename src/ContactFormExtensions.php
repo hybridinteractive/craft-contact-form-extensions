@@ -1,6 +1,6 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x.
+ * Craft Contact Form Extensions plugin for Craft CMS 4.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
@@ -90,10 +90,12 @@ class ContactFormExtensions extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        // Check that Craft Contact Form plugin is installed as this plugin adds to it
         if (!Craft::$app->plugins->isPluginInstalled('contact-form') && !Craft::$app->request->getIsConsoleRequest()) {
             Craft::$app->session->setNotice(Craft::t('contact-form-extensions', 'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.'));
         }
 
+        // Settings Template
         Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function (TemplateEvent $e) {
             if (
                 $e->template === 'settings/plugins/_settings' &&
@@ -107,6 +109,7 @@ class ContactFormExtensions extends Plugin
             }
         });
 
+        // Register URLS for CP
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules = array_merge($event->rules, [
                 'contact-form-extensions/submissions/<submissionId:\d+>'                       => 'contact-form-extensions/submissions/show-submission',
@@ -114,6 +117,7 @@ class ContactFormExtensions extends Plugin
             ]);
         });
 
+        // Capture Before Send Event from Craft Contact Form plugin
         Event::on(Mailer::class, Mailer::EVENT_BEFORE_SEND, function (SendEvent $e) {
             if ($e->isSpam) {
                 return;
@@ -145,7 +149,6 @@ class ContactFormExtensions extends Plugin
             }
 
             $submission = $e->submission;
-            ray($submission);
             if ($this->settings->enableDatabase && $saveSubmissionOverride != true) {
                 $this->contactFormExtensionsService->saveSubmission($submission);
             }
@@ -185,6 +188,7 @@ class ContactFormExtensions extends Plugin
             }
         });
 
+        // Capture After Send Event from Craft Contact Form plugin
         Event::on(Mailer::class, Mailer::EVENT_AFTER_SEND, function (SendEvent $e) {
             $disableConfirmation = false;
             if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
