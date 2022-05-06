@@ -10,7 +10,6 @@ namespace hybridinteractive\contactformextensions;
 use hybridinteractive\contactformextensions\base\Routes;
 use hybridinteractive\contactformextensions\models\Settings;
 use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVariable;
-// use hybridinteractive\contactformextensions\services\ContactFormExtensionsService as ContactFormExtensionsServiceService;
 
 use Craft;
 use craft\base\Plugin;
@@ -150,11 +149,6 @@ class ContactFormExtensions extends Plugin
     // Private Methods
     // =========================================================================
 
-    // private function _registerTwigExtensions(): void
-    // {
-    //     Craft::$app->getView()->registerTwigExtension(new Extension);
-    // }
-
     private function _registerSettings(): void
     {
         // Settings Template
@@ -187,16 +181,15 @@ class ContactFormExtensions extends Plugin
         Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function (CraftContactFormSendEvent $e) {
             if ($e->isSpam) {
                 return;
-                //TODO: You could add here a submission to a spam table.
             }
 
-            // Recaptcha override
-            $recaptchaTemplateOverride = false;
-            if (is_array($e->submission->message) && array_key_exists('recaptchaTemplateOverride', $e->submission->message)) {
-                $recaptchaTemplateOverride = filter_var($e->submission->message['recaptchaTemplateOverride'], FILTER_VALIDATE_BOOLEAN);
+            // Disable Recaptcha
+            $disableRecaptcha = false;
+            if (is_array($e->submission->message) && array_key_exists('disableRecaptcha', $e->submission->message)) {
+                $disableRecaptcha = filter_var($e->submission->message['disableRecaptcha'], FILTER_VALIDATE_BOOLEAN);
             }
 
-            if ($this->settings->recaptcha && $recaptchaTemplateOverride != true) {
+            if ($this->settings->recaptcha && $disableRecaptcha != true) {
                 $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
                 $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
 
@@ -208,24 +201,24 @@ class ContactFormExtensions extends Plugin
                 }
             }
 
-            // Save to DB override
-            $saveSubmissionOverride = false;
-            if (is_array($e->submission->message) && array_key_exists('saveSubmissionOverride', $e->submission->message)) {
-                $saveSubmissionOverride = filter_var($e->submission->message['saveSubmissionOverride'], FILTER_VALIDATE_BOOLEAN);
+            // Disable Saving Submission to DB
+            $disableSaveSubmission = false;
+            if (is_array($e->submission->message) && array_key_exists('disableSaveSubmission', $e->submission->message)) {
+                $disableSaveSubmission = filter_var($e->submission->message['disableSaveSubmission'], FILTER_VALIDATE_BOOLEAN);
             }
 
             $submission = $e->submission;
-            if ($this->settings->enableDatabase && $saveSubmissionOverride != true) {
+            if ($this->settings->enableDatabase && $disableSaveSubmission != true) {
                 $this->contactFormExtensionsService->saveSubmission($submission);
             }
 
-            // Set the overridden "toEmail" setting
+            // Override toEmail setting
             if (is_array($e->submission->message) && array_key_exists('toEmail', $e->submission->message)) {
                 $email = Craft::$app->security->validateData($e->submission->message['toEmail']);
                 $e->toEmails = explode(',', $email);
             }
 
-            // Override template (Notification)
+            // Notification Template and overrides
             if ($this->settings->enableTemplateOverwrite) {
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
@@ -256,38 +249,35 @@ class ContactFormExtensions extends Plugin
 
         // Capture After Send Event from Craft Contact Form plugin
         Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function (CraftContactFormSendEvent $e) {
+
+            // Disable confirmation
             $disableConfirmation = false;
             if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
                 $disableConfirmation = filter_var($e->submission->message['disableConfirmation'], FILTER_VALIDATE_BOOLEAN);
             }
 
-            // Confirmation Email
+            // Confirmation Template and overrides
             if ($this->settings->enableConfirmationEmail && $disableConfirmation != true) {
                 // First set the template mode to the Site templates
                 Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
                 // Check if template is overridden in form
                 $template = null;
-                if (is_array($e->submission->message) && array_key_exists('template', $e->submission->message)) {
-                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['template']);
+                if (is_array($e->submission->message) && array_key_exists('confirmationTemplate', $e->submission->message)) {
+                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['confirmationTemplate']);
                 } else {
                     // Render the set template
                     $template = $this->settings->confirmationTemplate;
                 }
+
                 $html = Craft::$app->view->renderTemplate(
                     $template,
                     ['submission' => $e->submission]
                 );
 
-
-                // TODO: Both of the below are piggy back on the craft contact form plugin
-
-                // TODO: Check fromEmail
-                ray($e->submission->fromEmail);
-
+                // Check fromEmail
                 $message = new Message();
                 $message->setTo($e->submission->fromEmail);
-                ray($message);
 
                 if (isset(App::mailSettings()->fromEmail)) {
                     $message->setFrom([Craft::parseEnv(App::mailSettings()->fromEmail) => Craft::parseEnv(App::mailSettings()->fromName)]);
@@ -296,21 +286,14 @@ class ContactFormExtensions extends Plugin
                 }
                 $message->setHtmlBody($html);
 
-
-                // TODO: Check subject
-                ray($e->submission->message['subject']);
-
-                Check if subject is overridden in form
-                $subject = null;
-                if (is_array($e->submission->message) && array_key_exists('subject', $e->submission->message)) {
-                    $subject = Craft::$app->security->validateData($e->submission->message['subject']);
+                // Check for subject override
+                $confirmationSubject = null;
+                if (is_array($e->submission->message) && array_key_exists('confirmationSubject', $e->submission->message)) {
+                    $confirmationSubject = Craft::$app->security->validateData($e->submission->message['confirmationSubject']);
                 } else {
-                    $subject = $this->settings->getConfirmationSubject();
+                    $confirmationSubject = $this->settings->getConfirmationSubject();
                 }
-                $message->setSubject($subject);
-
-
-
+                $message->setSubject($confirmationSubject);
 
                 // Send the mail
                 Craft::$app->mailer->send($message);
