@@ -4,8 +4,8 @@ namespace hybridinteractive\contactformextensions\controllers;
 
 use craft\web\Controller;
 use hybridinteractive\contactformextensions\ContactFormExtensions;
-use hybridinteractive\contactformextensions\elements\Submission;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
+use hybridinteractive\contactformextensions\elements\Submission;
 
 class SubmissionsController extends Controller
 {

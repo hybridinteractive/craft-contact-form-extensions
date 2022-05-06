@@ -9,14 +9,11 @@ namespace hybridinteractive\contactformextensions\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\base\ElementTrait;
-use craft\base\ElementInterface;
 use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
-
 
 class Submission extends Element
 {
