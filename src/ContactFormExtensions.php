@@ -7,10 +7,6 @@
 
 namespace hybridinteractive\contactformextensions;
 
-use hybridinteractive\contactformextensions\base\Routes;
-use hybridinteractive\contactformextensions\models\Settings;
-use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVariable;
-
 use Craft;
 use craft\base\Plugin;
 use craft\contactform\events\SendEvent as CraftContactFormSendEvent;
@@ -20,6 +16,9 @@ use craft\helpers\App;
 use craft\mail\Message;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
+use hybridinteractive\contactformextensions\base\Routes;
+use hybridinteractive\contactformextensions\models\Settings;
+use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVariable;
 use yii\base\Event;
 
 class ContactFormExtensions extends Plugin

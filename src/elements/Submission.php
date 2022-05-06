@@ -159,7 +159,7 @@ class Submission extends Element
             $message = (array) json_decode($this->message);
             $html = '<ul>';
             foreach ($message as $key => $value) {
-                if (is_string($value) && $key != "formName" && $key != "toEmail" && $key != "confirmationSubject" && $key != "confirmationTemplate" && $key != "notificationTemplate" && $key != "disableRecaptcha" && $key != "disableConfirmation" ) {
+                if (is_string($value) && $key != 'formName' && $key != 'toEmail' && $key != 'confirmationSubject' && $key != 'confirmationTemplate' && $key != 'notificationTemplate' && $key != 'disableRecaptcha' && $key != 'disableConfirmation') {
                     $shortened = trim(substr($value, 0, 30));
                     $html .= "<li><em>{$key}</em>: {$shortened}...</li>";
                 }
