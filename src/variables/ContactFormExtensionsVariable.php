@@ -10,7 +10,7 @@ namespace hybridinteractive\contactformextensions\variables;
 use Craft;
 use craft\elements\db\ElementQueryInterface;
 use hybridinteractive\contactformextensions\ContactFormExtensions;
-use hybridinteractive\contactformextensions\elements\ContactFormSubmission;
+use hybridinteractive\contactformextensions\elements\Submission;
 
 class ContactFormExtensionsVariable
 {
@@ -30,7 +30,7 @@ class ContactFormExtensionsVariable
 
     public function submissions($criteria = null): ElementQueryInterface
     {
-        $query = ContactFormSubmission::find();
+        $query = Submission::find();
 
         if ($criteria) {
             Craft::configure($query, $criteria);

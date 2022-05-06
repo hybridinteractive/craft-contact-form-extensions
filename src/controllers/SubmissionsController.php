@@ -4,8 +4,8 @@ namespace hybridinteractive\contactformextensions\controllers;
 
 use craft\web\Controller;
 use hybridinteractive\contactformextensions\ContactFormExtensions;
-use hybridinteractive\contactformextensions\elements\ContactFormSubmission;
-use hybridinteractive\contactformextensions\elements\db\ContactFormSubmissionQuery;
+use hybridinteractive\contactformextensions\elements\Submission;
+use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
 
 class SubmissionsController extends Controller
 {
@@ -17,10 +17,10 @@ class SubmissionsController extends Controller
      */
     public function actionShowSubmission(string $submissionId = null, string $siteHandle = null)
     {
-        $query = new ContactFormSubmissionQuery(ContactFormSubmission::class);
+        $query = new SubmissionQuery(Submission::class);
         $query->id = $submissionId;
 
-        /* @var ContactFormSubmission $submission */
+        /* @var Submission $submission */
         $submission = $query->one();
 
         if ($submission) {

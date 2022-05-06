@@ -42,9 +42,6 @@
   "extra": {
     "name": "Contact Form Extensions",
     "handle": "contact-form-extensions",
-    "schemaVersion": "1.0.1",
-    "hasCpSettings": true,
-    "hasCpSection": true,
     "changelogUrl": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/CHANGELOG.md",
     "documentationUrl": "https://github.com/hybridinteractive/craft-contact-form-extensions/blob/master/README.md",
     "components": {

@@ -4,22 +4,28 @@
 {% set fullPageForm = true %}
 {% set title = submission ? submission.dateCreated|date('d/m/Y H:i') : "" %}
 
+{# {% hook "cp.contactFormSubmission.show" %} #}
 
-{% hook "cp.contactFormSubmission.show" %}
+{% if crumbs is not defined %}
+    {% set crumbs = [
+        { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') },
+        { label: submission.subject, url: '' }
+    ] %}
+{% endif %}
+
 
 {% block header %}
     {{ block('pageTitle') }}
-    {{ block('contextMenu') }}
-    <div class="flex-grow"></div>
-    {{ block('actionButton') }}
+    {# {{ block('contextMenu') }} #}
+    {# <div class="flex-grow"></div> #}
+    {# {{ block('actionButton') }} #}
 {% endblock %}
 
-{% block contextMenu %}
+{# {% block contextMenu %}
 {% endblock %}
 
 {% block actionButton %}
-{% endblock %}
-
+{% endblock %} #}
 
 {% block content %}
     <div class="readable">
@@ -49,7 +55,7 @@
     <a href="{{ url('contact-form-extensions') }}" class="btn">{{ "Back to overview"|t('contact-form-extensions') }}</a>
 
     {# Give plugins a chance to add other things here #}
-    {% hook "cp.contactFormSubmission.show.content" %}
+    {# {% hook "cp.contactFormSubmission.show.content" %} #}
 {% endblock %}
 
 {% block details %}
@@ -64,5 +70,5 @@
     {% endif %}
 
     {# Give plugins a chance to add other stuff here #}
-    {% hook "cp.contactFormSubmission.show.details" %}
+    {# {% hook "cp.contactFormSubmission.show.details" %} #}
 {% endblock %}
