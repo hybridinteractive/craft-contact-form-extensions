@@ -15,7 +15,6 @@ use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
 
-
 class Submission extends Element
 {
     // Public Properties
