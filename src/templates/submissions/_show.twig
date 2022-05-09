@@ -7,10 +7,17 @@
 {# {% hook "cp.contactFormSubmission.show" %} #}
 
 {% if crumbs is not defined %}
-    {% set crumbs = [
-        { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') },
-        { label: submission.subject, url: '' }
-    ] %}
+    {% if submission %}
+        {% set crumbs = [
+            { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') },
+            { label: submission.subject, url: '' }
+        ] %}
+
+    {% else %}
+        {% set crumbs = [
+            { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') }
+        ] %}
+    {% endif %}
 {% endif %}
 
 
