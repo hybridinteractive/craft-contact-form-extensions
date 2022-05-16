@@ -1,6 +1,6 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x.
+ * Craft Contact Form Extensions plugin for Craft CMS 4.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
@@ -74,7 +74,7 @@ class Settings extends Model
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['enableDatabase', 'enableTemplateOverwrite', 'enableConfirmationEmail', 'recaptcha', 'enableRecaptchaOverride', 'recaptchaHideBadge', 'recaptchaDebug'], 'boolean'],

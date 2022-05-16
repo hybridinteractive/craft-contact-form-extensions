@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0-beta.3] - 2022-05-16
+There were many updates made for this plugin and cleaned up and adjusted many things. The 4 changes below will need to be updated in the templates in order for everything to work.
+
+```
+message['template'] -> message['confirmationTemplate']
+message['subject'] -> message['confirmationSubject']
+message['recaptchaTemplateOverride'] -> message['disableRecaptcha']
+message['saveSubmissionOverride'] -> message['disableSaveSubmission']
+```
+
 ## [1.3.0] - 2022-04-14
 - Adding ability to override recaptcha on a per form basis. [#108](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/108)
 - Override for saving to db on a per form basis

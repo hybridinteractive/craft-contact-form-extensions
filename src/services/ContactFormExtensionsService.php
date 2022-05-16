@@ -1,38 +1,21 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 3.x.
+ * Craft Contact Form Extensions plugin for Craft CMS 4.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
- *
- * @link      https://rias.be
- *
- * @copyright Copyright (c) 2018 Rias
  */
 
 namespace hybridinteractive\contactformextensions\services;
 
 use Craft;
 use craft\base\Component;
-use craft\contactform\models\Submission;
+use craft\contactform\models\Submission as CraftContactFormSubmission;
 use craft\helpers\StringHelper;
 use hybridinteractive\contactformextensions\ContactFormExtensions;
-use hybridinteractive\contactformextensions\elements\ContactFormSubmission;
+use hybridinteractive\contactformextensions\elements\Submission;
 use hybridinteractive\contactformextensions\models\RecaptchaV3;
 use yii\base\Exception;
 
-/**
- * CraftContactFormExtensionsService Service.
- *
- * All of your plugin’s business logic should go in services, including saving data,
- * retrieving data, etc. They provide APIs that your controllers, template variables,
- * and other plugins can interact with.
- *
- * https://craftcms.com/docs/plugins/services
- *
- * @author    Rias
- *
- * @since     1.0.0
- */
 class ContactFormExtensionsService extends Component
 {
     // Public Methods
@@ -54,9 +37,9 @@ class ContactFormExtensionsService extends Component
      *
      * @return mixed
      */
-    public function saveSubmission(Submission $submission)
+    public function saveSubmission(CraftContactFormSubmission $submission)
     {
-        $contactFormSubmission = new ContactFormSubmission();
+        $contactFormSubmission = new Submission();
         $contactFormSubmission->form = $submission->message['formName'] ?? 'contact';
         $contactFormSubmission->fromName = $submission->fromName;
         $contactFormSubmission->fromEmail = $submission->fromEmail;

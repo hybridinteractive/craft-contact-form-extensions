@@ -20,7 +20,7 @@ This plugin is licensed under a MIT license, which means that it's completely fr
 
 ## Requirements
 
-This plugin requires Craft CMS 3 and the [Contact Form](https://github.com/craftcms/contact-form) plugin.
+This plugin requires Craft CMS 4 and the [Contact Form](https://github.com/craftcms/contact-form) plugin.
 
 ## Installation
 
@@ -57,14 +57,21 @@ When saving submissions to the database the default form name will be "Contact".
 When sending confirmation option is enabled and custom templates per form are needed, override the template with a hidden field. The template needs to be placed under templates\\_emails folder. Add a hash for safety. The same data is passed as in the default overridden template.
 
 ```
-<input type="hidden" name="message[template]" value="{{ 'contact'|hash }}">
+<input type="hidden" name="message[confirmationTemplate]" value="{{ 'contact'|hash }}">
 ```
 
 ## Overriding the confirmation subject
 When sending confirmation option is enabled and custom subjects per form are needed, override the subject with a hidden field. Add a hash for safety.
 
 ```
-<input type="hidden" name="message[subject]" value="{{ 'subject'|hash }}">
+<input type="hidden" name="message[confirmationSubject]" value="{{ 'confirmationSubject'|hash }}">
+```
+
+## Overriding the notification template
+When sending notification option is enabled and custom templates per form are needed, override the template with a hidden field. The template needs to be placed under templates\\_emails folder. Add a hash for safety. The same data is passed as in the default overridden template.
+
+```
+<input type="hidden" name="message[notificationTemplate]" value="{{ 'contact'|hash }}">
 ```
 
 ## Overriding where the message is sent
@@ -73,19 +80,19 @@ When sending confirmation option is enabled and custom subjects per form are nee
 <input type="hidden" name="message[toEmail]" value="{{ 'hello@rias.be'|hash }}">
 ```
 
-## Overriding recaptcha on a per form basis
+## Disable recaptcha on a per form basis
 
 ```
-<input type="hidden" name="message[recaptchaTemplateOverride]" value="true">
+<input type="hidden" name="message[disableRecaptcha]" value="true">
 ```
 
-## Overriding saving to database on a per form basis
+## Disable saving to database on a per form basis
 
 ```
-<input type="hidden" name="message[saveSubmissionOverride]" value="true">
+<input type="hidden" name="message[disableSaveSubmission]" value="true">
 ```
 
-## Overriding confirmation email on a per form basis
+## Disable confirmation email on a per form basis
 
 ```
 <input type="hidden" name="message[disableConfirmation]" value="true">

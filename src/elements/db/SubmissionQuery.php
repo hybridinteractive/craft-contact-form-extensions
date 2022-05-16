@@ -5,7 +5,7 @@ namespace hybridinteractive\contactformextensions\elements\db;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 
-class ContactFormSubmissionQuery extends ElementQuery
+class SubmissionQuery extends ElementQuery
 {
     public $form;
     public $subject;
