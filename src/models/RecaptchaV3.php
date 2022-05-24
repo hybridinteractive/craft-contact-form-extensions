@@ -70,7 +70,7 @@ class RecaptchaV3
                 </script>
 
                 <input type="hidden" id="g-recaptcha-response${uniqueId}" name="g-recaptcha-response" value="">
-            HTML;
+        HTML;
 
         if ($this->hideBadge) {
             $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
