@@ -32,52 +32,52 @@ class RecaptchaV3
         $this->hideBadge = $hideBadge;
     }
 
-    public function render($action = 'homepage')
-    {
-        $siteKey = $this->siteKey;
-        $api_uri = $this->recaptchaUrl;
+public function render($action = 'homepage')
+{
+    $siteKey = $this->siteKey;
+    $api_uri = $this->recaptchaUrl;
 
-        $uniqueId = uniqid();
+    $uniqueId = uniqid();
 
-        $html = <<<HTML
-                <script src="${api_uri}?onload=onloadRecaptcha${uniqueId}&render=${siteKey}" async defer></script>
-                <script>
-                    var onloadRecaptcha${uniqueId} = function() {
-                        grecaptcha.ready(function() {
-                            var input=document.getElementById('g-recaptcha-response${uniqueId}');
-                            var form=input.parentElement;
-                            while(form && form.tagName.toLowerCase()!='form') {
-                                form = form.parentElement;
+$html = <<<HTML
+        <script src="${api_uri}?onload=onloadRecaptcha${uniqueId}&render=${siteKey}" async defer></script>
+        <script>
+            var onloadRecaptcha${uniqueId} = function() {
+                grecaptcha.ready(function() {
+                    var input=document.getElementById('g-recaptcha-response${uniqueId}');
+                    var form=input.parentElement;
+                    while(form && form.tagName.toLowerCase()!='form') {
+                        form = form.parentElement;
+                    }
+
+                    if (form) {
+                        form.addEventListener('submit',function(e) {
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+
+                            if (input.value == '') {
+                                grecaptcha.execute('${siteKey}', {action: '${action}'}).then(function(token) {
+                                    input.value = token;
+                                    form.submit();
+                                });
                             }
 
-                            if (form) {
-                                form.addEventListener('submit',function(e) {
-                                    e.preventDefault();
-                                    e.stopImmediatePropagation();
+                            return false;
+                        },false);
+                    }
+                });
+            };
+        </script>
 
-                                    if (input.value == '') {
-                                        grecaptcha.execute('${siteKey}', {action: '${action}'}).then(function(token) {
-                                            input.value = token;
-                                            form.submit();
-                                        });
-                                    }
+        <input type="hidden" id="g-recaptcha-response${uniqueId}" name="g-recaptcha-response" value="">
+HTML;
 
-                                    return false;
-                                },false);
-                            }
-                        });
-                    };
-                </script>
+if ($this->hideBadge) {
+    $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
+}
 
-                <input type="hidden" id="g-recaptcha-response${uniqueId}" name="g-recaptcha-response" value="">
-        HTML;
-
-        if ($this->hideBadge) {
-            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
-        }
-
-        return $html;
-    }
+    return $html;
+}
 
     public function verifyResponse($response, $clientIp)
     {
