@@ -32,14 +32,14 @@ class RecaptchaV3
         $this->hideBadge = $hideBadge;
     }
 
-public function render($action = 'homepage')
-{
-    $siteKey = $this->siteKey;
-    $api_uri = $this->recaptchaUrl;
+    public function render($action = 'homepage')
+    {
+        $siteKey = $this->siteKey;
+        $api_uri = $this->recaptchaUrl;
 
-    $uniqueId = uniqid();
+        $uniqueId = uniqid();
 
-$html = <<<HTML
+        $html = <<<HTML
         <script src="${api_uri}?onload=onloadRecaptcha${uniqueId}&render=${siteKey}" async defer></script>
         <script>
             var onloadRecaptcha${uniqueId} = function() {
@@ -72,12 +72,12 @@ $html = <<<HTML
         <input type="hidden" id="g-recaptcha-response${uniqueId}" name="g-recaptcha-response" value="">
 HTML;
 
-if ($this->hideBadge) {
-    $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
-}
+        if ($this->hideBadge) {
+            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
+        }
 
-    return $html;
-}
+        return $html;
+    }
 
     public function verifyResponse($response, $clientIp)
     {
