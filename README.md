@@ -1,9 +1,9 @@
+# Craft Contact Form Extensions
+
 ![Icon](./src/icon.svg)
 
 [![Latest Version](https://img.shields.io/github/release/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/hybridinteractive/craft-contact-form-extensions/releases)
 [![Total Downloads](https://img.shields.io/packagist/dt/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/packages/hybridinteractive/craft-contact-form-extensions)
-
-# Craft Contact Form Extensions
 
 Adds extensions to the Craft CMS contact form plugin.
 
@@ -14,7 +14,7 @@ Adds extensions to the Craft CMS contact form plugin.
 
 ![Screenshot](resources/screenshot.png)
 
-## Support Open Source.
+## Support Open Source
 
 This plugin is licensed under a MIT license, which means that it's completely free open source software, and you can use it for whatever and however you wish.
 
@@ -47,54 +47,58 @@ When you overwrite the email templates, your twig view will receive a `submissio
 - attachment
 
 ## Overriding the form name
+
 When saving submissions to the database the default form name will be "Contact". If you add a `message[formName]` hidden field you can override the form name. This can also used to create multiple form indexes in the Control Panel.
 
-```
+```html
 <input type="hidden" name="message[formName]" value="myFormName">
 ```
 
 ## Overriding the confirmation template
+
 When sending confirmation option is enabled and custom templates per form are needed, override the template with a hidden field. The template needs to be placed under templates\\_emails folder. Add a hash for safety. The same data is passed as in the default overridden template.
 
-```
+```html
 <input type="hidden" name="message[confirmationTemplate]" value="{{ 'contact'|hash }}">
 ```
 
 ## Overriding the confirmation subject
+
 When sending confirmation option is enabled and custom subjects per form are needed, override the subject with a hidden field. Add a hash for safety.
 
-```
+```html
 <input type="hidden" name="message[confirmationSubject]" value="{{ 'confirmationSubject'|hash }}">
 ```
 
 ## Overriding the notification template
+
 When sending notification option is enabled and custom templates per form are needed, override the template with a hidden field. The template needs to be placed under templates\\_emails folder. Add a hash for safety. The same data is passed as in the default overridden template.
 
-```
+```html
 <input type="hidden" name="message[notificationTemplate]" value="{{ 'contact'|hash }}">
 ```
 
 ## Overriding where the message is sent
 
-```
+```html
 <input type="hidden" name="message[toEmail]" value="{{ 'hello@rias.be'|hash }}">
 ```
 
 ## Disable recaptcha on a per form basis
 
-```
+```html
 <input type="hidden" name="message[disableRecaptcha]" value="true">
 ```
 
 ## Disable saving to database on a per form basis
 
-```
+```html
 <input type="hidden" name="message[disableSaveSubmission]" value="true">
 ```
 
 ## Disable confirmation email on a per form basis
 
-```
+```html
 <input type="hidden" name="message[disableConfirmation]" value="true">
 ```
 
