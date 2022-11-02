@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.0] - 2022-09-12
+Release beta label. Thank you all for helping us test this out so thoroughly! You all rock \m/!
+
 ## [4.0.0-beta.3] - 2022-05-16
 There were many updates made for this plugin and cleaned up and adjusted many things. The 4 changes below will need to be updated in the templates in order for everything to work.
 
