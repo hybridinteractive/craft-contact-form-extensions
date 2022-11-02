@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.1] - 2022-11-02
+Fixed an issue where you couldn't update the Recaptcha settings in the Dashboard. [#162](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/162)
+
 ## [4.2.0] - 2022-09-12
 Release beta label. Thank you all for helping us test this out so thoroughly! You all rock \m/!
 
