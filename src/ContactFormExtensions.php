@@ -8,7 +8,7 @@
 namespace hybridinteractive\contactformextensions;
 
 use Craft;
-use craft\base\Plugin as Plugin;
+use craft\base\Plugin;
 use craft\contactform\events\SendEvent as CraftContactFormSendEvent;
 use craft\contactform\Mailer as CraftContactFormMailer;
 use craft\events\TemplateEvent;
@@ -22,15 +22,10 @@ use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVaria
 use yii\base\Event;
 
 /**
- * Class ContactFormExtensions
- *
+ * Class ContactFormExtensions.
  */
 class ContactFormExtensions extends Plugin
 {
-
-
-
-
     // Static Properties
     // =========================================================================
 
