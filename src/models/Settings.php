@@ -30,23 +30,89 @@ class Settings extends Model
      */
     public $enableDatabase = true;
 
+    /**
+     * @var bool
+     */
     public $enableTemplateOverwrite = true;
+
+    /**
+     * @var bool
+     */
     public $enableConfirmationEmail = true;
+
+    /**
+     * @var string|null
+     */
     public $notificationTemplate = '';
+
+    /**
+     * @var string|null
+     */
     public $confirmationTemplate = '';
+
+    /**
+     * @var string|null
+     */
     public $confirmationSubject = '';
 
+    /**
+     * @var bool
+     */
     public $recaptcha = false;
+
+    /**
+     * @var bool
+     */
     public $enableRecaptchaOverride = false;
+
+    /**
+     * @var string|null
+     */
     public $recaptchaUrl = '';
+
+    /**
+     * @var string|null
+     */
     public $recaptchaVerificationUrl = '';
+
+    /**
+     * @var string|null
+     */
     public $recaptchaVersion = '';
+
+    /**
+     * @var string|null
+     */
     public $recaptchaSiteKey = '';
+
+    /**
+     * @var string|null
+     */
     public $recaptchaSecretKey = '';
+
+    /**
+     * @var bool
+     */
     public $recaptchaHideBadge = false;
+
+    /**
+     * @var string
+     */
     public $recaptchaDataBadge = 'bottomright';
+
+    /**
+     * @var int
+     */
     public $recaptchaTimeout = 5;
+
+    /**
+     * @var bool
+     */
     public $recaptchaDebug = false;
+
+    /**
+     * @var int
+     */
     public $recaptchaThreshold = 0.5;
 
     // Public Methods
@@ -65,16 +131,9 @@ class Settings extends Model
     }
 
     /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
+     * @inheritdoc
      */
-    public function rules(): array
+    public function defineRules(): array
     {
         return [
             [['enableDatabase', 'enableTemplateOverwrite', 'enableConfirmationEmail', 'recaptcha', 'enableRecaptchaOverride', 'recaptchaHideBadge', 'recaptchaDebug'], 'boolean'],
