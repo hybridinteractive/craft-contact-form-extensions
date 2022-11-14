@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [4.2.2] - 2022-11-14
 Fixed an issue where the settings tabs were not showing [#164](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/164)
+
 ## [4.2.1] - 2022-11-02
 Fixed an issue where you couldn't update the Recaptcha settings in the Dashboard. [#162](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/162)
 
