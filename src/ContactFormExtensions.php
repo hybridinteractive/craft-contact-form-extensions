@@ -8,7 +8,7 @@
 namespace hybridinteractive\contactformextensions;
 
 use Craft;
-use craft\base\Plugin;
+use craft\base\Plugin as Plugin;
 use craft\contactform\events\SendEvent as CraftContactFormSendEvent;
 use craft\contactform\Mailer as CraftContactFormMailer;
 use craft\events\TemplateEvent;
@@ -21,8 +21,16 @@ use hybridinteractive\contactformextensions\models\Settings;
 use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVariable;
 use yii\base\Event;
 
+/**
+ * Class ContactFormExtensions
+ *
+ */
 class ContactFormExtensions extends Plugin
 {
+
+
+
+
     // Static Properties
     // =========================================================================
 
@@ -39,8 +47,11 @@ class ContactFormExtensions extends Plugin
     // Public Properties
     // =========================================================================
 
-    public bool $hasCpSection = true;
+    /**
+     * @inheritdoc
+     */
     public bool $hasCpSettings = true;
+    public bool $hasCpSection = true;
     public string $schemaVersion = '1.0.1';
 
     // Traits
@@ -109,23 +120,15 @@ class ContactFormExtensions extends Plugin
     // =========================================================================
 
     /**
-     * Creates and returns the model used to store the plugin’s settings.
-     *
-     * @return \craft\base\Model|null
+     * @inheritdoc
      */
-    protected function createSettingsModel(): ?\craft\base\Model
+    protected function createSettingsModel(): ?Settings
     {
         return new Settings();
     }
 
     /**
-     * Returns the rendered settings HTML, which will be inserted into the content
-     * block on the settings page.
-     *
-     * @throws \Twig\Error\LoaderError
-     * @throws \yii\base\Exception
-     *
-     * @return string The rendered settings HTML
+     * @inheritdoc
      */
     protected function settingsHtml(): ?string
     {
@@ -136,13 +139,10 @@ class ContactFormExtensions extends Plugin
         // Get the settings that are being defined by the config file
         $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
 
-        return Craft::$app->view->renderTemplate(
-            'contact-form-extensions/settings',
-            [
-                'settings'  => $this->getSettings(),
-                'overrides' => array_keys($overrides),
-            ]
-        );
+        return Craft::$app->view->renderTemplate('contact-form-extensions/_settings', [
+            'settings'  => $settings,
+            'overrides' => array_keys($overrides),
+        ]);
     }
 
     // Private Methods
@@ -153,8 +153,8 @@ class ContactFormExtensions extends Plugin
         // Settings Template
         Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function (TemplateEvent $e) {
             if (
-                $e->template === 'settings/plugins/_settings' &&
-                $e->variables['plugin'] === $this
+                $e->template == 'settings/plugins/_settings.twig' &&
+                $e->variables['plugin']->name == 'Contact Form Extensions'
             ) {
                 // Add the tabs
                 $e->variables['tabs'] = [
