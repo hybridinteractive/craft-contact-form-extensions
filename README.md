@@ -46,6 +46,8 @@ When you overwrite the email templates, your twig view will receive a `submissio
 - message
 - attachment
 
+Note: All of the overrides will use the message as an array and therefore if you want a message field it would be `name=message[message]`. If a `name=message` is used it will wipe out the array of overrides.
+
 ## Overriding the form name
 
 When saving submissions to the database the default form name will be "Contact". If you add a `message[formName]` hidden field you can override the form name. This can also used to create multiple form indexes in the Control Panel.
