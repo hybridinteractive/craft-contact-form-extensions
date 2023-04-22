@@ -190,6 +190,7 @@ class Submission extends Element
     {
         $exporters = parent::defineExporters($source);
         $exporters[] = FlatExporter::class;
+
         return $exporters;
     }
 

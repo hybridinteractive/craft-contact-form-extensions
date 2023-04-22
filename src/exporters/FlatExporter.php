@@ -1,6 +1,5 @@
 <?php
 
-
 namespace hybridinteractive\contactformextensions\exporters;
 
 use Craft;
@@ -36,12 +35,12 @@ class FlatExporter extends ElementExporter
             }
 
             $results[] = [
-                'id' => $element['id'],
-                'uid' => $element['uid'],
-                'form' => $element['form'],
-                'fromName' => $element['fromName'],
+                'id'        => $element['id'],
+                'uid'       => $element['uid'],
+                'form'      => $element['form'],
+                'fromName'  => $element['fromName'],
                 'fromEmail' => $element['fromEmail'],
-                'subject' => $element['subject'],
+                'subject'   => $element['subject'],
                 ...$message,
                 'dateCreated' => $element['dateCreated'],
                 'dateUpdated' => $element['dateUpdated'],
