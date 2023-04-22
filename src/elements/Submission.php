@@ -14,6 +14,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
+use hybridinteractive\contactformextensions\exporters\FlatExporter;
 
 class Submission extends Element
 {
@@ -180,6 +181,16 @@ class Submission extends Element
         $sortOptions = parent::defineSortOptions();
 
         return $sortOptions;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected static function defineExporters(string $source): array
+    {
+        $exporters = parent::defineExporters($source);
+        $exporters[] = FlatExporter::class;
+        return $exporters;
     }
 
     /**

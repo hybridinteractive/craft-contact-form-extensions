@@ -4,7 +4,6 @@
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
-
 /**
  * Craft Contact Form Extensions en Translation.
  *
@@ -14,13 +13,14 @@
  * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
  */
 return [
-    'Form Submissions' => 'Innsendelser',
-    'All submissions'  => 'Alle innsendelser',
-    'Form'             => 'Skjema',
-    'Subject'          => 'Emne',
-    'From Name'        => 'Fra navn',
-    'From Email'       => 'Fra e-post',
-    'Message'          => 'Melding',
-    'Date Created'     => 'Innsendt',
-    'Flat'             => 'Flatt',
+    'Form Submissions' => 'Formulareinreichungen',
+    'All submissions'  => 'Alle Einreichungen',
+    'Form'             => 'Formular',
+    'Subject'          => 'Betreff',
+    'From Name'        => 'Absender Name',
+    'From Email'       => 'Absender E-Mail',
+    'Message'          => 'Nachricht',
+    'Date Created'     => 'Erstellungsdatum',
+    'Back to overview' => 'Zurück zur Übersicht',
+    'Flat'             => 'Flach',
 ];
