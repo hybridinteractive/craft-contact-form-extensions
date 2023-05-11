@@ -22,5 +22,6 @@ return [
     'From Email'       => 'Fra e-post',
     'Message'          => 'Melding',
     'Date Created'     => 'Innsendt',
+    'Back to overview' => 'Tilbake til oversikt',
     'Flat'             => 'Flatt',
 ];
