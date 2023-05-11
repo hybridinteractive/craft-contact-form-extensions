@@ -22,4 +22,5 @@ return [
     'Message'          => 'Melding',
     'Date Created'     => 'Datum verstuurd',
     'Back to overview' => 'Terug naar overzicht',
+    'Flat'             => 'Plat',
 ];
