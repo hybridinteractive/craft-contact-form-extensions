@@ -18,11 +18,14 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
 use hybridinteractive\contactformextensions\base\Routes;
 use hybridinteractive\contactformextensions\models\Settings;
+use hybridinteractive\contactformextensions\services\ContactFormExtensionsService;
 use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVariable;
 use yii\base\Event;
 
 /**
  * Class ContactFormExtensions.
+ * @property-read Settings $settings
+ * @property-read ContactFormExtensionsService $contactFormExtensionsService
  */
 class ContactFormExtensions extends Plugin
 {
