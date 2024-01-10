@@ -176,25 +176,21 @@ class ContactFormExtensions extends Plugin
     {
         // Capture Before Send Event from Craft Contact Form plugin
         Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function (CraftContactFormSendEvent $e) {
-            if ($e->isSpam) {
-                return;
-            }
+            if (!$e->isSpam) {
+                // Disable Recaptcha
+                $disableRecaptcha = false;
+                if (is_array($e->submission->message) && array_key_exists('disableRecaptcha', $e->submission->message)) {
+                    $disableRecaptcha = filter_var($e->submission->message['disableRecaptcha'], FILTER_VALIDATE_BOOLEAN);
+                }
 
-            // Disable Recaptcha
-            $disableRecaptcha = false;
-            if (is_array($e->submission->message) && array_key_exists('disableRecaptcha', $e->submission->message)) {
-                $disableRecaptcha = filter_var($e->submission->message['disableRecaptcha'], FILTER_VALIDATE_BOOLEAN);
-            }
+                if ($this->settings->recaptcha && $disableRecaptcha != true) {
+                    $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
+                    $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
 
-            if ($this->settings->recaptcha && $disableRecaptcha != true) {
-                $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
-                $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
-
-                if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
-                    $e->isSpam = true;
-                    $e->handled = true;
-
-                    return;
+                    if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
+                        $e->isSpam = true;
+                        $e->handled = true;
+                    }
                 }
             }
 
@@ -206,7 +202,11 @@ class ContactFormExtensions extends Plugin
 
             $submission = $e->submission;
             if ($this->settings->enableDatabase && $disableSaveSubmission != true) {
-                $this->contactFormExtensionsService->saveSubmission($submission);
+                $this->contactFormExtensionsService->saveSubmission($submission, $e->isSpam);
+            }
+
+            if ($e->isSpam) {
+                return;
             }
 
             // Override toEmail setting

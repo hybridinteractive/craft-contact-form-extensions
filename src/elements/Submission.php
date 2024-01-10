@@ -15,8 +15,14 @@ use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
 
+/**
+ * @method SubmissionQuery find()
+ */
 class Submission extends Element
 {
+    public const STATUS_IS_SPAM = 'spam';
+    public const STATUS_IS_NOT_SPAM = 'not-spam';
+
     // Public Properties
     // =========================================================================
 
@@ -25,6 +31,7 @@ class Submission extends Element
     public ?string $fromEmail;
     public ?string $subject;
     public $message;
+    public $isSpam;
 
     // Static Methods
     // =========================================================================
@@ -116,6 +123,24 @@ class Submission extends Element
         return $actions;
     }
 
+    public static function hasStatuses(): bool
+    {
+        return true;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->isSpam ? self::STATUS_IS_SPAM : self::STATUS_IS_NOT_SPAM;
+    }
+
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_IS_SPAM     => ['label' => Craft::t('contact-form-extensions', 'Spam'), 'color' => 'red'],
+            self::STATUS_IS_NOT_SPAM => ['label' => Craft::t('contact-form-extensions', 'Not spam'), 'color' => 'green'],
+        ];
+    }
+
     /**
      * @inheritDoc
      */
@@ -198,6 +223,7 @@ class Submission extends Element
                     'fromName'  => $this->fromName,
                     'fromEmail' => $this->fromEmail,
                     'message'   => $this->message,
+                    'isSpam'    => $this->isSpam,
                 ])
                 ->execute();
         } else {
@@ -208,6 +234,7 @@ class Submission extends Element
                     'fromName'  => $this->fromName,
                     'fromEmail' => $this->fromEmail,
                     'message'   => $this->message,
+                    'isSpam'    => $this->isSpam,
                 ], ['id' => $this->id])
                 ->execute();
         }

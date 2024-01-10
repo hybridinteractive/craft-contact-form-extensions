@@ -69,6 +69,15 @@
 
 {% block details %}
     {% if submission %}
+        <div class="pane meta">
+            <div class="field">
+                <div class="heading">{{ "Status"|t('app') }}</div>
+                <div class="input ltr">
+                    <span class="status {{ submission.status }}"></span>
+                    {{ "statuses.#{submission.status}"|t('contact-form-extensions') }}
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="meta read-only">
             <div class="data">
