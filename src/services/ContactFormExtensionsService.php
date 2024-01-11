@@ -37,13 +37,14 @@ class ContactFormExtensionsService extends Component
      *
      * @return mixed
      */
-    public function saveSubmission(CraftContactFormSubmission $submission)
+    public function saveSubmission(CraftContactFormSubmission $submission, bool $isSpam = false)
     {
         $contactFormSubmission = new Submission();
         $contactFormSubmission->form = $submission->message['formName'] ?? 'contact';
         $contactFormSubmission->fromName = $submission->fromName;
         $contactFormSubmission->fromEmail = $submission->fromEmail;
         $contactFormSubmission->subject = $submission->subject;
+        $contactFormSubmission->isSpam = $isSpam;
 
         if (!is_array($submission->message)) {
             $submission->message = ['message' => $this->utf8Value($submission->message)];

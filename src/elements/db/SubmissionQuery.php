@@ -4,6 +4,7 @@ namespace hybridinteractive\contactformextensions\elements\db;
 
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
+use hybridinteractive\contactformextensions\elements\Submission;
 
 class SubmissionQuery extends ElementQuery
 {
@@ -12,6 +13,7 @@ class SubmissionQuery extends ElementQuery
     public $fromName;
     public $fromEmail;
     public $message;
+    public $isSpam;
 
     public function form($value)
     {
@@ -48,6 +50,25 @@ class SubmissionQuery extends ElementQuery
         return $this;
     }
 
+    public function isSpam($value)
+    {
+        $this->isSpam = $value;
+
+        return $this;
+    }
+
+    protected function statusCondition(string $status): mixed
+    {
+        switch ($status) {
+            case Submission::STATUS_IS_SPAM:
+                return ['isSpam' => true];
+            case Submission::STATUS_IS_NOT_SPAM:
+                return ['isSpam' => false];
+            default:
+                return parent::statusCondition($status);
+        }
+    }
+
     protected function beforePrepare(): bool
     {
         // join in the products table
@@ -60,6 +81,7 @@ class SubmissionQuery extends ElementQuery
             'contactform_submissions.fromName',
             'contactform_submissions.fromEmail',
             'contactform_submissions.message',
+            'contactform_submissions.isSpam',
         ]);
 
         if ($this->form) {

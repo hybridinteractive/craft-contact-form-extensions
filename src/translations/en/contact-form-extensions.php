@@ -14,5 +14,6 @@
  * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
  */
 return [
-
+    'statuses.not-spam' => 'Not spam',
+    'statuses.spam'     => 'Spam',
 ];

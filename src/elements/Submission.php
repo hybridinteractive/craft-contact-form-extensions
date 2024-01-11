@@ -13,10 +13,19 @@ use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
+use craft\web\CpScreenResponseBehavior;
+use hybridinteractive\contactformextensions\ContactFormExtensions;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
+use yii\web\Response;
 
+/**
+ * @method SubmissionQuery find()
+ */
 class Submission extends Element
 {
+    public const STATUS_IS_SPAM = 'spam';
+    public const STATUS_IS_NOT_SPAM = 'not-spam';
+
     // Public Properties
     // =========================================================================
 
@@ -25,6 +34,7 @@ class Submission extends Element
     public ?string $fromEmail;
     public ?string $subject;
     public $message;
+    public $isSpam;
 
     // Static Methods
     // =========================================================================
@@ -68,6 +78,17 @@ class Submission extends Element
     public function getCpEditUrl(): ?string
     {
         return UrlHelper::cpUrl('contact-form-extensions/submissions/'.$this->id);
+    }
+
+    public function prepareEditScreen(Response $response, string $containerId): void
+    {
+        /** @var CpScreenResponseBehavior $response */
+        $response->addCrumb('Contact form submissions', '/contact-form-extensions');
+        $response->title($this->id);
+        $response->contentTemplate('contact-form-extensions/submissions/_show', [
+            'submission'    => $this,
+            'messageObject' => ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings(json_decode($this->message, true)),
+        ]);
     }
 
     /**
@@ -114,6 +135,24 @@ class Submission extends Element
         ]);
 
         return $actions;
+    }
+
+    public static function hasStatuses(): bool
+    {
+        return true;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->isSpam ? self::STATUS_IS_SPAM : self::STATUS_IS_NOT_SPAM;
+    }
+
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_IS_SPAM     => ['label' => Craft::t('contact-form-extensions', 'Spam'), 'color' => 'red'],
+            self::STATUS_IS_NOT_SPAM => ['label' => Craft::t('contact-form-extensions', 'Not spam'), 'color' => 'green'],
+        ];
     }
 
     /**
@@ -198,6 +237,7 @@ class Submission extends Element
                     'fromName'  => $this->fromName,
                     'fromEmail' => $this->fromEmail,
                     'message'   => $this->message,
+                    'isSpam'    => $this->isSpam,
                 ])
                 ->execute();
         } else {
@@ -208,6 +248,7 @@ class Submission extends Element
                     'fromName'  => $this->fromName,
                     'fromEmail' => $this->fromEmail,
                     'message'   => $this->message,
+                    'isSpam'    => $this->isSpam,
                 ], ['id' => $this->id])
                 ->execute();
         }
