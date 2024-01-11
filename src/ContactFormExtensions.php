@@ -173,7 +173,7 @@ class ContactFormExtensions extends Plugin
     private function _registerContactFormEventListeners(): void
     {
         // Wait until all plugins are initialized to bind CraftContactFormMailer events, to ensure their handlers will be executed after handlers from other plugins
-        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function() {
+        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function () {
             // Capture Before Send Event from Craft Contact Form plugin
             Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function (CraftContactFormSendEvent $e) {
                 if ($e->isSpam) {
