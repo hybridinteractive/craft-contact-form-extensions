@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 - Add statuses to Submission elements: the status indicates whether the submission is spam (fixes [#58](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/58))
+- Use unified element editor
 
 ## [4.2.2] - 2022-11-14
 Fixed an issue where the settings tabs were not showing [#164](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/164)

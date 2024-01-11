@@ -13,7 +13,10 @@ use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
+use craft\web\CpScreenResponseBehavior;
+use hybridinteractive\contactformextensions\ContactFormExtensions;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
+use yii\web\Response;
 
 /**
  * @method SubmissionQuery find()
@@ -75,6 +78,17 @@ class Submission extends Element
     public function getCpEditUrl(): ?string
     {
         return UrlHelper::cpUrl('contact-form-extensions/submissions/'.$this->id);
+    }
+
+    public function prepareEditScreen(Response $response, string $containerId): void
+    {
+        /** @var CpScreenResponseBehavior $response */
+        $response->addCrumb('Contact form submissions', '/contact-form-extensions');
+        $response->title($this->id);
+        $response->contentTemplate('contact-form-extensions/submissions/_show', [
+            'submission'    => $this,
+            'messageObject' => ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings(json_decode($this->message, true)),
+        ]);
     }
 
     /**

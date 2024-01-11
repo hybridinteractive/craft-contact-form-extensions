@@ -24,6 +24,7 @@ use yii\base\Event;
 
 /**
  * Class ContactFormExtensions.
+ *
  * @property-read Settings $settings
  * @property-read ContactFormExtensionsService $contactFormExtensionsService
  */
