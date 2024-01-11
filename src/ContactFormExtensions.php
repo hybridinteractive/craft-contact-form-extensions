@@ -14,6 +14,7 @@ use craft\contactform\Mailer as CraftContactFormMailer;
 use craft\events\TemplateEvent;
 use craft\helpers\App;
 use craft\mail\Message;
+use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
 use hybridinteractive\contactformextensions\base\Routes;
@@ -171,131 +172,134 @@ class ContactFormExtensions extends Plugin
 
     private function _registerContactFormEventListeners(): void
     {
-        // Capture Before Send Event from Craft Contact Form plugin
-        Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function (CraftContactFormSendEvent $e) {
-            if ($e->isSpam) {
-                return;
-            }
-
-            // Disable Recaptcha
-            $disableRecaptcha = false;
-            if (is_array($e->submission->message) && array_key_exists('disableRecaptcha', $e->submission->message)) {
-                $disableRecaptcha = filter_var($e->submission->message['disableRecaptcha'], FILTER_VALIDATE_BOOLEAN);
-            }
-
-            if ($this->settings->recaptcha && $disableRecaptcha != true) {
-                $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
-                $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
-
-                if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
-                    $e->isSpam = true;
-                    $e->handled = true;
-
+        // Wait until all plugins are initialized to bind CraftContactFormMailer events, to ensure their handlers will be executed after handlers from other plugins
+        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function() {
+            // Capture Before Send Event from Craft Contact Form plugin
+            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function (CraftContactFormSendEvent $e) {
+                if ($e->isSpam) {
                     return;
                 }
-            }
 
-            // Disable Saving Submission to DB
-            $disableSaveSubmission = false;
-            if (is_array($e->submission->message) && array_key_exists('disableSaveSubmission', $e->submission->message)) {
-                $disableSaveSubmission = filter_var($e->submission->message['disableSaveSubmission'], FILTER_VALIDATE_BOOLEAN);
-            }
+                // Disable Recaptcha
+                $disableRecaptcha = false;
+                if (is_array($e->submission->message) && array_key_exists('disableRecaptcha', $e->submission->message)) {
+                    $disableRecaptcha = filter_var($e->submission->message['disableRecaptcha'], FILTER_VALIDATE_BOOLEAN);
+                }
 
-            $submission = $e->submission;
-            if ($this->settings->enableDatabase && $disableSaveSubmission != true) {
-                $this->contactFormExtensionsService->saveSubmission($submission);
-            }
+                if ($this->settings->recaptcha && $disableRecaptcha != true) {
+                    $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
+                    $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
 
-            // Override toEmail setting
-            if (is_array($e->submission->message) && array_key_exists('toEmail', $e->submission->message)) {
-                $email = Craft::$app->security->validateData($e->submission->message['toEmail']);
-                $e->toEmails = explode(',', $email);
-            }
+                    if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
+                        $e->isSpam = true;
+                        $e->handled = true;
 
-            // Notification Template and overrides
-            if ($this->settings->enableTemplateOverwrite) {
-                // First set the template mode to the Site templates
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+                        return;
+                    }
+                }
 
-                // Check if template is overridden in form
-                if (is_array($e->submission->message) && array_key_exists('notificationTemplate', $e->submission->message)) {
-                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['notificationTemplate']);
-                } else {
+                // Disable Saving Submission to DB
+                $disableSaveSubmission = false;
+                if (is_array($e->submission->message) && array_key_exists('disableSaveSubmission', $e->submission->message)) {
+                    $disableSaveSubmission = filter_var($e->submission->message['disableSaveSubmission'], FILTER_VALIDATE_BOOLEAN);
+                }
+
+                $submission = $e->submission;
+                if ($this->settings->enableDatabase && $disableSaveSubmission != true) {
+                    $this->contactFormExtensionsService->saveSubmission($submission);
+                }
+
+                // Override toEmail setting
+                if (is_array($e->submission->message) && array_key_exists('toEmail', $e->submission->message)) {
+                    $email = Craft::$app->security->validateData($e->submission->message['toEmail']);
+                    $e->toEmails = explode(',', $email);
+                }
+
+                // Notification Template and overrides
+                if ($this->settings->enableTemplateOverwrite) {
+                    // First set the template mode to the Site templates
+                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+
+                    // Check if template is overridden in form
+                    if (is_array($e->submission->message) && array_key_exists('notificationTemplate', $e->submission->message)) {
+                        $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['notificationTemplate']);
+                    } else {
+                        // Render the set template
+                        $template = $this->settings->notificationTemplate;
+                    }
+
                     // Render the set template
-                    $template = $this->settings->notificationTemplate;
+                    $html = Craft::$app->view->renderTemplate(
+                        $template,
+                        ['submission' => $e->submission]
+                    );
+
+                    // Update the message body
+                    $e->message->setHtmlBody($html);
+
+                    // Set the template mode back to Control Panel
+                    if (Craft::$app->request->isCpRequest) {
+                        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                    }
+                }
+            });
+
+            // Capture After Send Event from Craft Contact Form plugin
+            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function (CraftContactFormSendEvent $e) {
+                // Disable confirmation
+                $disableConfirmation = false;
+                if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
+                    $disableConfirmation = filter_var($e->submission->message['disableConfirmation'], FILTER_VALIDATE_BOOLEAN);
                 }
 
-                // Render the set template
-                $html = Craft::$app->view->renderTemplate(
-                    $template,
-                    ['submission' => $e->submission]
-                );
+                // Confirmation Template and overrides
+                if ($this->settings->enableConfirmationEmail && $disableConfirmation != true) {
+                    // First set the template mode to the Site templates
+                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-                // Update the message body
-                $e->message->setHtmlBody($html);
+                    // Check if template is overridden in form
+                    $template = null;
+                    if (is_array($e->submission->message) && array_key_exists('confirmationTemplate', $e->submission->message)) {
+                        $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['confirmationTemplate']);
+                    } else {
+                        // Render the set template
+                        $template = $this->settings->confirmationTemplate;
+                    }
 
-                // Set the template mode back to Control Panel
-                if (Craft::$app->request->isCpRequest) {
-                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                    $html = Craft::$app->view->renderTemplate(
+                        $template,
+                        ['submission' => $e->submission]
+                    );
+
+                    // Check fromEmail
+                    $message = new Message();
+                    $message->setTo($e->submission->fromEmail);
+
+                    if (isset(App::mailSettings()->fromEmail)) {
+                        $message->setFrom([Craft::parseEnv(App::mailSettings()->fromEmail) => Craft::parseEnv(App::mailSettings()->fromName)]);
+                    } else {
+                        $message->setFrom($e->message->getTo());
+                    }
+                    $message->setHtmlBody($html);
+
+                    // Check for subject override
+                    $confirmationSubject = null;
+                    if (is_array($e->submission->message) && array_key_exists('confirmationSubject', $e->submission->message)) {
+                        $confirmationSubject = Craft::$app->security->validateData($e->submission->message['confirmationSubject']);
+                    } else {
+                        $confirmationSubject = $this->settings->getConfirmationSubject();
+                    }
+                    $message->setSubject($confirmationSubject);
+
+                    // Send the mail
+                    Craft::$app->mailer->send($message);
+
+                    // Set the template mode back to Control Panel
+                    if (Craft::$app->request->isCpRequest) {
+                        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                    }
                 }
-            }
-        });
-
-        // Capture After Send Event from Craft Contact Form plugin
-        Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function (CraftContactFormSendEvent $e) {
-            // Disable confirmation
-            $disableConfirmation = false;
-            if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
-                $disableConfirmation = filter_var($e->submission->message['disableConfirmation'], FILTER_VALIDATE_BOOLEAN);
-            }
-
-            // Confirmation Template and overrides
-            if ($this->settings->enableConfirmationEmail && $disableConfirmation != true) {
-                // First set the template mode to the Site templates
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-
-                // Check if template is overridden in form
-                $template = null;
-                if (is_array($e->submission->message) && array_key_exists('confirmationTemplate', $e->submission->message)) {
-                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['confirmationTemplate']);
-                } else {
-                    // Render the set template
-                    $template = $this->settings->confirmationTemplate;
-                }
-
-                $html = Craft::$app->view->renderTemplate(
-                    $template,
-                    ['submission' => $e->submission]
-                );
-
-                // Check fromEmail
-                $message = new Message();
-                $message->setTo($e->submission->fromEmail);
-
-                if (isset(App::mailSettings()->fromEmail)) {
-                    $message->setFrom([Craft::parseEnv(App::mailSettings()->fromEmail) => Craft::parseEnv(App::mailSettings()->fromName)]);
-                } else {
-                    $message->setFrom($e->message->getTo());
-                }
-                $message->setHtmlBody($html);
-
-                // Check for subject override
-                $confirmationSubject = null;
-                if (is_array($e->submission->message) && array_key_exists('confirmationSubject', $e->submission->message)) {
-                    $confirmationSubject = Craft::$app->security->validateData($e->submission->message['confirmationSubject']);
-                } else {
-                    $confirmationSubject = $this->settings->getConfirmationSubject();
-                }
-                $message->setSubject($confirmationSubject);
-
-                // Send the mail
-                Craft::$app->mailer->send($message);
-
-                // Set the template mode back to Control Panel
-                if (Craft::$app->request->isCpRequest) {
-                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-                }
-            }
+            });
         });
     }
 
