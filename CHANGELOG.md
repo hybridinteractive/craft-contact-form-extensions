@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+- Fixed an issue where submissions flagged as spam by other plugins (eg: contact-form-honeypot) would still be saved in the database (fixes [#80](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/80), [#32](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/32))
+
 ## [4.2.2] - 2022-11-14
 Fixed an issue where the settings tabs were not showing [#164](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/164)
 
