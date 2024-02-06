@@ -272,8 +272,9 @@ class ContactFormExtensions extends Plugin
                 $message = new Message();
                 $message->setTo($e->submission->fromEmail);
 
-                if (isset(App::mailSettings()->fromEmail)) {
-                    $message->setFrom([Craft::parseEnv(App::mailSettings()->fromEmail) => Craft::parseEnv(App::mailSettings()->fromName)]);
+                $mailerComponent = Craft::$app->get('mailer');
+                if (isset($mailerComponent->from)) {
+                    $message->setFrom($mailerComponent->from);
                 } else {
                     $message->setFrom($e->message->getTo());
                 }
