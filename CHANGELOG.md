@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+Fixed an issue where the overridden Craft mailer component wasn't taken into account ([#187](https://github.com/hybridinteractive/craft-contact-form-extensions/pull/187))
+
 ## [4.2.2] - 2022-11-14
 Fixed an issue where the settings tabs were not showing [#164](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/164)
 
@@ -26,7 +29,7 @@ message['saveSubmissionOverride'] -> message['disableSaveSubmission']
 ## [1.3.0] - 2022-04-14
 - Adding ability to override recaptcha on a per form basis. [#108](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/108)
 - Override for saving to db on a per form basis
-- Add ability to disable the email confirmation should be sent on a specific form. 
+- Add ability to disable the email confirmation should be sent on a specific form.
 
 ## [1.2.8] - 2021-10-19
 - Fixed Second form on page does not send [#78](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/78) - Added unique id's to the functions and id tags to make the recaptcha separate for each form.
@@ -47,7 +50,7 @@ message['saveSubmissionOverride'] -> message['disableSaveSubmission']
 - Fixed a bug that was causing `lightSwitch` fields to be out of sync [#87](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/87)
 
 ## [1.2.3] - 2020-10-23
-- Added `Subject` to Submissions Detail page. 
+- Added `Subject` to Submissions Detail page.
 
 ## [1.2.2] - 2020-08-28
 - Added `fromName` for confirmation email - Thank you [@skoften](https://github.com/skoften) and [@jesuismaxime](https://github.com/jesuismaxime)
@@ -84,7 +87,7 @@ message['saveSubmissionOverride'] -> message['disableSaveSubmission']
 ### Added
 - Ability to override `toEmail` inside your form
 - Ability to override `template` inside your form (thanks @helderdb)
-- Ability to hide the badge when using ReCaptcha V3 
+- Ability to hide the badge when using ReCaptcha V3
 
 ### Fixed
 - Fixed an issue with email being sent from the wrong address (thanks @helderdb)
