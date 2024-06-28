@@ -93,7 +93,7 @@ class ContactFormExtensionsService extends Component
             'debug'     => ContactFormExtensions::$plugin->settings->recaptchaDebug,
         ];
 
-        return new \AlbertCht\InvisibleReCaptcha\InvisibleReCaptcha($siteKey, $secretKey, $options);
+        return new \hybridinteractive\contactformextensions\InvisibleReCaptcha($siteKey, $secretKey, $options);
     }
 
     /**
