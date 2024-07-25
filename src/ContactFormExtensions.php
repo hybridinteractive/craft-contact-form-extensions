@@ -243,7 +243,6 @@ class ContactFormExtensions extends Plugin
 
         // Capture After Send Event from Craft Contact Form plugin
         Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function (CraftContactFormSendEvent $e) {
-
             // Disable confirmation
             $disableConfirmation = false;
             if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
