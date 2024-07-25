@@ -84,6 +84,7 @@ When sending notification option is enabled and custom templates per form are ne
 <input type="hidden" name="message[toEmail]" value="{{ 'hello@rias.be'|hash }}">
 ```
 
+### Please note: Craft 5's version of this plugin does not support Recaptcha, we apologize for any inconvenience. 
 ## Disable recaptcha on a per form basis
 
 ```html

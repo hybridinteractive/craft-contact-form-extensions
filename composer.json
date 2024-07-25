@@ -1,7 +1,7 @@
 {
   "name": "hybridinteractive/craft-contact-form-extensions",
   "description": "Adds extensions to the Craft CMS contact form plugin.",
-  "version": "4.2.2",
+  "version": "5.0.0",
   "type": "craft-plugin",
   "keywords": [
     "cms",
@@ -24,10 +24,9 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": "^8.0.2",
-    "albertcht/invisible-recaptcha": "^1.9.1",
-    "composer/composer": "^2.2.12",
-    "craftcms/cms": "^4.0.0",
+    "php": "^8.2.0",
+    "composer/composer": "^2.2",
+    "craftcms/cms": "^5.0.0",
     "craftcms/contact-form": "^3.0.0"
   },
   "require-dev": {
