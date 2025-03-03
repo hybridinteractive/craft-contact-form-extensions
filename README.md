@@ -1,4 +1,13 @@
-# Craft Contact Form Extensions
+# Craft Contact Form Extensions 
+## Deprecated
+
+After much discussion, we have decided to deprecate this plugin. Originally developed by Rias, CFE came around at a time where there weren't that many Form options available. 
+
+Our recommendation would be to use either Formie or Freeform. Freeform has a free tier that should get most users the functionality required.
+
+We would like to thank all of those that have helped carry the CFE torch as far as we have.
+
+###
 
 ![Icon](./src/icon.svg)
 
