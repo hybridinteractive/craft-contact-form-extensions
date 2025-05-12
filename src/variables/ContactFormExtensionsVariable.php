@@ -1,4 +1,5 @@
 <?php
+
 /**
  * schema plugin for Craft CMS 3.x.
  *
@@ -19,7 +20,7 @@ class ContactFormExtensionsVariable
         return ContactFormExtensions::$plugin->name;
     }
 
-    public function recaptcha(string $localeOrAction = null)
+    public function recaptcha(?string $localeOrAction = null)
     {
         if (ContactFormExtensions::$plugin->settings->recaptcha) {
             return ContactFormExtensions::$plugin->contactFormExtensionsService->getRecaptcha()->render($localeOrAction);

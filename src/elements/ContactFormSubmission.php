@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
@@ -100,7 +101,7 @@ class ContactFormSubmission extends Element
         return UrlHelper::cpUrl('contact-form-extensions/submissions/'.$this->id);
     }
 
-    protected static function defineSources(string $context = null): array
+    protected static function defineSources(?string $context = null): array
     {
         $forms = array_unique(array_map(function (self $submission) {
             return $submission->form;
@@ -125,7 +126,7 @@ class ContactFormSubmission extends Element
         return $sources;
     }
 
-    protected static function defineActions(string $source = null): array
+    protected static function defineActions(?string $source = null): array
     {
         $actions = [];
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Craft Contact Form Extensions plugin for Craft CMS 3.x.
  *
