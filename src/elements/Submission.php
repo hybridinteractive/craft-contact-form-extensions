@@ -14,6 +14,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
+use yii\db\Query;
 
 class Submission extends Element
 {
@@ -75,9 +76,14 @@ class Submission extends Element
      */
     protected static function defineSources(string $context = null): array
     {
-        $forms = array_unique(array_map(function (self $submission) {
-            return $submission->form;
-        }, self::find()->all()));
+        $forms = (new Query())
+            ->select('form')
+            ->distinct()
+            ->from('{{%contactform_submissions}}')
+            ->where(['not', ['form' => null]])
+            ->andWhere(['!=', 'form', ''])
+            ->orderBy(['form' => SORT_ASC])
+            ->column();
 
         $sources = [
             [
