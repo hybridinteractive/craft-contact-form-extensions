@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 4.x.
+ * Contact Form Extensions plugin for Craft CMS 5.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
@@ -11,61 +12,77 @@ use Craft;
 use craft\base\Plugin;
 use craft\contactform\events\SendEvent as CraftContactFormSendEvent;
 use craft\contactform\Mailer as CraftContactFormMailer;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
 use craft\helpers\App;
 use craft\mail\Message;
+use craft\services\Plugins;
+use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
 use hybridinteractive\contactformextensions\base\Routes;
+use hybridinteractive\contactformextensions\controllers\SubmissionsController;
+use hybridinteractive\contactformextensions\controllers\ToolsController;
 use hybridinteractive\contactformextensions\models\Settings;
+use hybridinteractive\contactformextensions\services\ContactFormExtensionsService;
 use hybridinteractive\contactformextensions\variables\ContactFormExtensionsVariable;
 use yii\base\Event;
 
 /**
- * Class ContactFormExtensions.
+ * Contact Form Extensions plugin.
+ *
+ * @property-read Settings $settings
+ * @property-read ContactFormExtensionsService $contactFormExtensionsService
+ *
+ * @method Settings getSettings()
+ *
+ * @author Hybrid Interactive
+ *
+ * @since 5.0.0
  */
 class ContactFormExtensions extends Plugin
 {
-    // Static Properties
-    // =========================================================================
-
-    /**
-     * Static property that is an instance of this plugin class so that it can be accessed via
-     * ContactFormExtensions::$plugin.
-     *
-     * @var ContactFormExtensions
-     */
-    public static $plugin;
-
-    public ?string $name;
-
-    // Public Properties
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-    public bool $hasCpSettings = true;
-    public bool $hasCpSection = true;
-    public string $schemaVersion = '1.0.1';
-
     // Traits
     // =========================================================================
 
     use Routes;
 
+    // Static Properties
+    // =========================================================================
+
+    /**
+     * @var ContactFormExtensions
+     */
+    public static ContactFormExtensions $plugin;
+
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @var string|null
+     */
+    public ?string $name = null;
+
+    /**
+     * @inheritdoc
+     */
+    public bool $hasCpSettings = true;
+
+    /**
+     * @inheritdoc
+     */
+    public bool $hasCpSection = true;
+
+    /**
+     * @inheritdoc
+     */
+    public string $schemaVersion = '1.1.0';
+
     // Public Methods
     // =========================================================================
 
     /**
-     * Set our $plugin static property to this class so that it can be accessed via
-     * CraftContactFormExtensions::$plugin.
-     *
-     * Called after the plugin class is instantiated; do any one-time initialization
-     * here such as hooks and events.
-     *
-     * If you have a '/vendor/autoload.php' file, it will be loaded for you automatically;
-     * you do not need to load it in your init() method.
+     * @inheritdoc
      */
     public function init(): void
     {
@@ -73,10 +90,13 @@ class ContactFormExtensions extends Plugin
 
         self::$plugin = $this;
 
+        $this->controllerNamespace = 'hybridinteractive\\contactformextensions\\controllers';
+
         $this->_registerVariable();
         $this->_registerContactFormEventListeners();
         $this->_registerSettings();
         $this->_registerCraftContactFormCheck();
+        $this->_registerPermissions();
 
         if (Craft::$app->getRequest()->getIsCpRequest()) {
             $this->_registerCpRoutes();
@@ -84,29 +104,48 @@ class ContactFormExtensions extends Plugin
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getCpNavItem(): ?array
     {
-        if (!$this->settings->enableDatabase) {
+        /** @var Settings $settings */
+        $settings = $this->getSettings();
+        if (!$settings->enableDatabase) {
             return null;
         }
 
         $nav = parent::getCpNavItem();
+        if ($nav === null) {
+            return null;
+        }
+
+        /** @var \craft\web\User $currentUser */
+        $currentUser = Craft::$app->getUser();
+        $canView = $currentUser->checkPermission(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS);
+        $canDelete = $currentUser->checkPermission(ToolsController::PERMISSION_DELETE_SUBMISSIONS);
+
+        if (!$canView && !$canDelete) {
+            return null;
+        }
 
         $nav['label'] = Craft::t('contact-form-extensions', 'Form Submissions');
+        $nav['fontIcon'] = 'envelope';
+        $nav['url'] = $canView ? 'contact-form-extensions' : 'contact-form-extensions/tools';
+        $nav['subnav'] = [];
 
-        // $nav['subnav']['submissions'] = [
-        //     'label' => Craft::t('contact-form-extensions', 'Submissions'),
-        //     'url' => 'contact-form-extensions/',
-        // ];
+        if ($canView) {
+            $nav['subnav']['submissions'] = [
+                'label' => Craft::t('contact-form-extensions', 'Submissions'),
+                'url' => 'contact-form-extensions',
+            ];
+        }
 
-        // if (Craft::$app->getUser()->getIsAdmin()) {
-        //     $nav['subnav']['settings'] = [
-        //         'label' => Craft::t('contact-form-extensions', 'Settings'),
-        //         'url' => 'contact-form-extensions/settings',
-        //     ];
-        // }
+        if ($canDelete) {
+            $nav['subnav']['tools'] = [
+                'label' => Craft::t('contact-form-extensions', 'Tools'),
+                'url' => 'contact-form-extensions/tools',
+            ];
+        }
 
         return $nav;
     }
@@ -127,31 +166,34 @@ class ContactFormExtensions extends Plugin
      */
     protected function settingsHtml(): ?string
     {
-        // Get and pre-validate the settings
         $settings = $this->getSettings();
         $settings->validate();
 
-        // Get the settings that are being defined by the config file
-        $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
+        /** @var \craft\web\Application $app */
+        $app = Craft::$app;
+        $overrides = $app->getConfig()->getConfigFromFile(strtolower($this->handle));
 
-        return Craft::$app->view->renderTemplate('contact-form-extensions/_settings', [
-            'settings'  => $settings,
+        return $app->getView()->renderTemplate('contact-form-extensions/_settings', [
+            'settings' => $settings,
             'overrides' => array_keys($overrides),
+            'readOnly' => !Craft::$app->getConfig()->getGeneral()->allowAdminChanges,
         ]);
     }
 
     // Private Methods
     // =========================================================================
 
+    /**
+     * @return void
+     */
     private function _registerSettings(): void
     {
-        // Settings Template
-        Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function (TemplateEvent $e) {
+        Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function(TemplateEvent $e) {
             if (
-                $e->template == 'settings/plugins/_settings.twig' &&
-                $e->variables['plugin']->name == 'Contact Form Extensions'
+                $e->template === 'settings/plugins/_settings.twig' &&
+                isset($e->variables['plugin']) &&
+                $e->variables['plugin']->name === 'Contact Form Extensions'
             ) {
-                // Add the tabs
                 $e->variables['tabs'] = [
                     ['label' => 'Settings', 'url' => '#settings-tab-settings'],
                     ['label' => 'reCAPTCHA', 'url' => '#settings-tab-recaptcha'],
@@ -160,150 +202,208 @@ class ContactFormExtensions extends Plugin
         });
     }
 
+    /**
+     * @return void
+     */
     private function _registerVariable(): void
     {
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
             /** @var CraftVariable $variable */
             $variable = $event->sender;
             $variable->set('contactFormExtensions', ContactFormExtensionsVariable::class);
         });
     }
 
+    /**
+     * @return void
+     */
+    private function _registerPermissions(): void
+    {
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS,
+            function(RegisterUserPermissionsEvent $event) {
+                $event->permissions[] = [
+                    'heading' => Craft::t('contact-form-extensions', 'Contact Form Extensions'),
+                    'permissions' => [
+                        SubmissionsController::PERMISSION_VIEW_SUBMISSIONS => [
+                            'label' => Craft::t('contact-form-extensions', 'View form submissions'),
+                        ],
+                        ToolsController::PERMISSION_DELETE_SUBMISSIONS => [
+                            'label' => Craft::t('contact-form-extensions', 'Delete form submissions'),
+                        ],
+                    ],
+                ];
+            }
+        );
+    }
+
+    /**
+     * Registers Contact Form mailer listeners after all plugins have loaded
+     * so other spam plugins can mark submissions first.
+     *
+     * @return void
+     */
     private function _registerContactFormEventListeners(): void
     {
-        // Capture Before Send Event from Craft Contact Form plugin
-        Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function (CraftContactFormSendEvent $e) {
-            if ($e->isSpam) {
-                return;
-            }
+        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function() {
+            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function(CraftContactFormSendEvent $e) {
+                /** @var Settings $settings */
+                $settings = $this->getSettings();
+                /** @var \craft\web\Application|\craft\console\Application $app */
+                $app = Craft::$app;
 
-            // Disable Recaptcha
-            $disableRecaptcha = false;
-            if (is_array($e->submission->message) && array_key_exists('disableRecaptcha', $e->submission->message)) {
-                $disableRecaptcha = filter_var($e->submission->message['disableRecaptcha'], FILTER_VALIDATE_BOOLEAN);
-            }
+                if (!$e->isSpam) {
+                    $disableRecaptcha = false;
+                    if (is_array($e->submission->message) && array_key_exists('disableRecaptcha', $e->submission->message)) {
+                        $disableRecaptcha = filter_var($e->submission->message['disableRecaptcha'], FILTER_VALIDATE_BOOLEAN);
+                    }
 
-            if ($this->settings->recaptcha && $disableRecaptcha != true) {
-                $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
-                $captchaResponse = Craft::$app->request->getParam('g-recaptcha-response');
+                    if ($settings->recaptcha && $disableRecaptcha !== true) {
+                        $recaptcha = $this->contactFormExtensionsService->getRecaptcha();
+                        $captchaResponse = $app->getRequest()->getParam('g-recaptcha-response');
+                        $remoteIp = $app->getRequest()->getUserIP() ?? '';
 
-                if (!$recaptcha->verifyResponse($captchaResponse, $_SERVER['REMOTE_ADDR'])) {
-                    $e->isSpam = true;
-                    $e->handled = true;
+                        if (!$recaptcha->verifyResponse($captchaResponse, $remoteIp)) {
+                            $e->isSpam = true;
+                            $e->handled = true;
+                        }
+                    }
+                }
 
+                $disableSaveSubmission = false;
+                if (is_array($e->submission->message) && array_key_exists('disableSaveSubmission', $e->submission->message)) {
+                    $disableSaveSubmission = filter_var($e->submission->message['disableSaveSubmission'], FILTER_VALIDATE_BOOLEAN);
+                }
+
+                $shouldSave = $settings->enableDatabase && $disableSaveSubmission !== true;
+                if ($shouldSave && (!$e->isSpam || $settings->enableSaveSpam)) {
+                    $this->contactFormExtensionsService->saveSubmission($e->submission, (bool) $e->isSpam);
+                }
+
+                if ($e->isSpam) {
                     return;
                 }
-            }
 
-            // Disable Saving Submission to DB
-            $disableSaveSubmission = false;
-            if (is_array($e->submission->message) && array_key_exists('disableSaveSubmission', $e->submission->message)) {
-                $disableSaveSubmission = filter_var($e->submission->message['disableSaveSubmission'], FILTER_VALIDATE_BOOLEAN);
-            }
-
-            $submission = $e->submission;
-            if ($this->settings->enableDatabase && $disableSaveSubmission != true) {
-                $this->contactFormExtensionsService->saveSubmission($submission);
-            }
-
-            // Override toEmail setting
-            if (is_array($e->submission->message) && array_key_exists('toEmail', $e->submission->message)) {
-                $email = Craft::$app->security->validateData($e->submission->message['toEmail']);
-                $e->toEmails = explode(',', $email);
-            }
-
-            // Notification Template and overrides
-            if ($this->settings->enableTemplateOverwrite) {
-                // First set the template mode to the Site templates
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-
-                // Check if template is overridden in form
-                if (is_array($e->submission->message) && array_key_exists('notificationTemplate', $e->submission->message)) {
-                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['notificationTemplate']);
-                } else {
-                    // Render the set template
-                    $template = $this->settings->notificationTemplate;
+                $toEmail = $this->_validatedMessageOverride($e->submission->message, 'toEmail');
+                if ($toEmail !== null) {
+                    $e->toEmails = explode(',', $toEmail);
                 }
 
-                // Render the set template
-                $html = Craft::$app->view->renderTemplate(
-                    $template,
+                if ($settings->enableTemplateOverwrite) {
+                    $app->getView()->setTemplateMode(View::TEMPLATE_MODE_SITE);
+
+                    $notificationTemplate = $this->_validatedMessageOverride($e->submission->message, 'notificationTemplate');
+                    if ($notificationTemplate !== null) {
+                        $template = '_emails/' . $notificationTemplate;
+                    } else {
+                        $template = App::parseEnv($settings->notificationTemplate);
+                    }
+
+                    $html = $app->getView()->renderTemplate(
+                        (string) $template,
+                        ['submission' => $e->submission]
+                    );
+
+                    $e->message->setHtmlBody($html);
+
+                    if ($app->getRequest()->getIsCpRequest()) {
+                        $app->getView()->setTemplateMode(View::TEMPLATE_MODE_CP);
+                    }
+                }
+            });
+
+            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function(CraftContactFormSendEvent $e) {
+                /** @var Settings $settings */
+                $settings = $this->getSettings();
+                /** @var \craft\web\Application|\craft\console\Application $app */
+                $app = Craft::$app;
+
+                $disableConfirmation = false;
+                if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
+                    $disableConfirmation = filter_var($e->submission->message['disableConfirmation'], FILTER_VALIDATE_BOOLEAN);
+                }
+
+                if (!$settings->enableConfirmationEmail || $disableConfirmation === true) {
+                    return;
+                }
+
+                $app->getView()->setTemplateMode(View::TEMPLATE_MODE_SITE);
+
+                $confirmationTemplate = $this->_validatedMessageOverride($e->submission->message, 'confirmationTemplate');
+                if ($confirmationTemplate !== null) {
+                    $template = '_emails/' . $confirmationTemplate;
+                } else {
+                    $template = App::parseEnv($settings->confirmationTemplate);
+                }
+
+                $html = $app->getView()->renderTemplate(
+                    (string) $template,
                     ['submission' => $e->submission]
                 );
 
-                // Update the message body
-                $e->message->setHtmlBody($html);
-
-                // Set the template mode back to Control Panel
-                if (Craft::$app->request->isCpRequest) {
-                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-                }
-            }
-        });
-
-        // Capture After Send Event from Craft Contact Form plugin
-        Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function (CraftContactFormSendEvent $e) {
-            // Disable confirmation
-            $disableConfirmation = false;
-            if (is_array($e->submission->message) && array_key_exists('disableConfirmation', $e->submission->message)) {
-                $disableConfirmation = filter_var($e->submission->message['disableConfirmation'], FILTER_VALIDATE_BOOLEAN);
-            }
-
-            // Confirmation Template and overrides
-            if ($this->settings->enableConfirmationEmail && $disableConfirmation != true) {
-                // First set the template mode to the Site templates
-                Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-
-                // Check if template is overridden in form
-                $template = null;
-                if (is_array($e->submission->message) && array_key_exists('confirmationTemplate', $e->submission->message)) {
-                    $template = '_emails\\'.Craft::$app->security->validateData($e->submission->message['confirmationTemplate']);
-                } else {
-                    // Render the set template
-                    $template = $this->settings->confirmationTemplate;
-                }
-
-                $html = Craft::$app->view->renderTemplate(
-                    $template,
-                    ['submission' => $e->submission]
-                );
-
-                // Check fromEmail
                 $message = new Message();
                 $message->setTo($e->submission->fromEmail);
 
-                if (isset(App::mailSettings()->fromEmail)) {
-                    $message->setFrom([Craft::parseEnv(App::mailSettings()->fromEmail) => Craft::parseEnv(App::mailSettings()->fromName)]);
+                $mailer = $app->getMailer();
+                if (isset($mailer->from)) {
+                    $message->setFrom($mailer->from);
                 } else {
                     $message->setFrom($e->message->getTo());
                 }
+
                 $message->setHtmlBody($html);
 
-                // Check for subject override
-                $confirmationSubject = null;
-                if (is_array($e->submission->message) && array_key_exists('confirmationSubject', $e->submission->message)) {
-                    $confirmationSubject = Craft::$app->security->validateData($e->submission->message['confirmationSubject']);
-                } else {
-                    $confirmationSubject = $this->settings->getConfirmationSubject();
+                $confirmationSubject = $this->_validatedMessageOverride($e->submission->message, 'confirmationSubject');
+                if ($confirmationSubject === null) {
+                    $confirmationSubject = App::parseEnv($settings->getConfirmationSubject());
                 }
-                $message->setSubject($confirmationSubject);
+                $message->setSubject((string) $confirmationSubject);
 
-                // Send the mail
-                Craft::$app->mailer->send($message);
+                $app->getMailer()->send($message);
 
-                // Set the template mode back to Control Panel
-                if (Craft::$app->request->isCpRequest) {
-                    Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+                if ($app->getRequest()->getIsCpRequest()) {
+                    $app->getView()->setTemplateMode(View::TEMPLATE_MODE_CP);
                 }
-            }
+            });
         });
     }
 
+    /**
+     * Returns a validated hashed message override, or null when missing/invalid.
+     *
+     * @param mixed  $message
+     * @param string $key
+     *
+     * @return string|null
+     */
+    private function _validatedMessageOverride(mixed $message, string $key): ?string
+    {
+        if (!is_array($message) || !array_key_exists($key, $message)) {
+            return null;
+        }
+
+        $validated = Craft::$app->getSecurity()->validateData($message[$key]);
+        if ($validated === false || $validated === null || $validated === '') {
+            return null;
+        }
+
+        return (string) $validated;
+    }
+
+    /**
+     * @return void
+     */
     private function _registerCraftContactFormCheck(): void
     {
-        // Check that Craft Contact Form plugin is installed as this plugin adds to it
-        if (!Craft::$app->plugins->isPluginInstalled('contact-form') && !Craft::$app->request->getIsConsoleRequest()) {
-            Craft::$app->session->setNotice(Craft::t('contact-form-extensions', 'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.'));
+        /** @var \craft\web\Application|\craft\console\Application $app */
+        $app = Craft::$app;
+
+        if (!$app->getPlugins()->isPluginInstalled('contact-form') && !$app->getRequest()->getIsConsoleRequest()) {
+            $app->getSession()->setNotice(Craft::t(
+                'contact-form-extensions',
+                'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.'
+            ));
         }
     }
 }

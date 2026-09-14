@@ -1,42 +1,44 @@
 <?php
+
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 4.x.
+ * Contact Form Extensions plugin for Craft CMS 5.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
 
 /**
- * Craft Contact Form Extensions config.php.
+ * Contact Form Extensions config.php.
  *
- * This file exists only as a template for the Craft Contact Form Extensions settings.
+ * This file exists only as a template for the Contact Form Extensions settings.
  * It does nothing on its own.
  *
- * Don't edit this file, instead copy it to 'craft/config' as 'contact-form-extensions.php'
+ * Don't edit this file. Instead copy it to `config/contact-form-extensions.php`
  * and make your changes there to override default settings.
  *
- * Once copied to 'craft/config', this file will be multi-environment aware as
+ * Once copied to `config/`, this file will be multi-environment aware as
  * well, so you can have different settings groups for each environment, just as
- * you do for 'general.php'
+ * you do for `general.php`.
  */
 
 return [
-    'enableDatabase'          => true,
+    'enableDatabase' => true,
+    'enableSaveSpam' => false,
     'enableConfirmationEmail' => true,
     'enableTemplateOverwrite' => true,
-    'notificationTemplate'    => '',
-    'confirmationTemplate'    => '',
-    'confirmationSubject'     => '',
+    'notificationTemplate' => '',
+    'confirmationTemplate' => '',
+    'confirmationSubject' => '',
 
-    'recaptcha'               => false,
+    'recaptcha' => false,
     'enableRecaptchaOverride' => false,
-    'recaptchaUrl'            => '',
-    'recaptchaVerificationUrl'=> '',
-    'recaptchaVersion'        => '',
-    'recaptchaSiteKey'        => '',
-    'recaptchaSecretKey'      => '',
-    'recaptchaHideBadge'      => false,
-    'recaptchaDataBadge'      => 'bottomright',
-    'recaptchaTimeout'        => 5,
-    'recaptchaThreshold'      => .5,
-    'recaptchaDebug'          => false,
+    'recaptchaUrl' => '',
+    'recaptchaVerificationUrl' => '',
+    'recaptchaVersion' => '',
+    'recaptchaSiteKey' => '',
+    'recaptchaSecretKey' => '',
+    'recaptchaHideBadge' => false,
+    'recaptchaDataBadge' => 'bottomright',
+    'recaptchaTimeout' => 5,
+    'recaptchaThreshold' => .5,
+    'recaptchaDebug' => false,
 ];

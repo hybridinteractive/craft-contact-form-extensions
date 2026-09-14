@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 4.x.
+ * Contact Form Extensions plugin for Craft CMS 5.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
@@ -11,14 +12,11 @@ use Craft;
 use craft\db\Migration;
 
 /**
- * Craft Contact Form Extensions Install Migration.
+ * Contact Form Extensions Install Migration.
  *
- * If your plugin needs to create any custom database tables when it gets installed,
- * create a migrations/ folder within your plugin folder, and save an Install.php file
- * within it using the following template:
+ * @author Hybrid Interactive
  *
- * If you need to perform any additional actions on install/uninstall, override the
- * safeUp() and safeDown() methods.
+ * @since 5.0.0
  */
 class Install extends Migration
 {
@@ -93,18 +91,24 @@ class Install extends Migration
             $this->createTable(
                 '{{%contactform_submissions}}',
                 [
-                    'id'          => $this->integer()->notNull(),
-                    'form'        => $this->string()->null(),
-                    'subject'     => $this->string()->null(),
-                    'fromName'    => $this->string()->null(),
-                    'fromEmail'   => $this->string()->null(),
-                    'message'     => $this->text()->notNull(),
+                    'id' => $this->integer()->notNull(),
+                    'form' => $this->string()->null(),
+                    'subject' => $this->string()->null(),
+                    'fromName' => $this->string()->null(),
+                    'fromEmail' => $this->string()->null(),
+                    'message' => $this->text()->notNull(),
+                    'isSpam' => $this->boolean()->defaultValue(false)->notNull(),
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid'         => $this->uid(),
+                    'uid' => $this->uid(),
                     'PRIMARY KEY(id)',
                 ]
             );
+
+            $this->createIndexIfMissing('{{%contactform_submissions}}', ['form'], false);
+            $this->createIndexIfMissing('{{%contactform_submissions}}', ['dateCreated'], false);
+            $this->createIndexIfMissing('{{%contactform_submissions}}', ['fromEmail'], false);
+            $this->createIndexIfMissing('{{%contactform_submissions}}', ['isSpam'], false);
         }
 
         return $tablesCreated;
@@ -119,7 +123,7 @@ class Install extends Migration
     {
         // contactform_submissions table
         $this->addForeignKey(
-            $this->db->getForeignKeyName('{{%contactform_submissions}}', 'id'),
+            null,
             '{{%contactform_submissions}}',
             'id',
             '{{%elements}}',

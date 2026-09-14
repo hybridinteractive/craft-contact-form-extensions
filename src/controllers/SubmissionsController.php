@@ -1,46 +1,59 @@
 <?php
 
+/**
+ * Contact Form Extensions plugin for Craft CMS 5.x.
+ *
+ * Adds extensions to the Craft CMS contact form plugin.
+ */
+
 namespace hybridinteractive\contactformextensions\controllers;
 
 use craft\web\Controller;
-use hybridinteractive\contactformextensions\ContactFormExtensions;
-use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
-use hybridinteractive\contactformextensions\elements\Submission;
+use yii\web\ForbiddenHttpException;
+use yii\web\Response;
 
+/**
+ * Submissions controller.
+ *
+ * Gates the submissions index. Edit screens use Craft's unified element editor.
+ *
+ * @author Hybrid Interactive
+ *
+ * @since 5.0.0
+ */
 class SubmissionsController extends Controller
 {
+    // Const Properties
+    // =========================================================================
+
+    public const PERMISSION_VIEW_SUBMISSIONS = 'contact-form-extensions:view-submissions';
+
+    // Protected Properties
+    // =========================================================================
+
     /**
-     * @param string|null $submissionId
-     * @param string|null $siteHandle
-     *
-     * @return \yii\web\Response
+     * @inheritdoc
      */
-    public function actionShowSubmission(string $submissionId = null, string $siteHandle = null)
+    protected array|bool|int $allowAnonymous = false;
+
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * Renders the submissions element index.
+     *
+     * @throws ForbiddenHttpException
+     *
+     * @return Response
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.1.0
+     */
+    public function actionIndex(): Response
     {
-        $query = new SubmissionQuery(Submission::class);
-        $query->id = $submissionId;
+        $this->requirePermission(self::PERMISSION_VIEW_SUBMISSIONS);
 
-        /* @var Submission $submission */
-        $submission = $query->one();
-
-        if ($submission) {
-            $messageObject = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings((array) json_decode($submission->message));
-
-            $variables = [
-                'submission'    => $submission,
-                'siteHandle'    => $siteHandle,
-                'messageObject' => $messageObject,
-            ];
-
-            return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
-        } else {
-            $variables = [
-                'submission'    => null,
-                'siteHandle'    => '',
-                'messageObject' => '',
-            ];
-
-            return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
-        }
+        return $this->renderTemplate('contact-form-extensions/index');
     }
 }

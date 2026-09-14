@@ -5,6 +5,10 @@
 
 # COMPOSER
 /vendor
+composer.lock
+/tmp
+.phpunit.cache
+
 
 # BUILD FILES
 /bower_components/*

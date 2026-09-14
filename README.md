@@ -1,35 +1,29 @@
-# Craft Contact Form Extensions 
-## Deprecated
-
-After much discussion, we have decided to deprecate this plugin. Originally developed by Rias, CFE came around at a time where there weren't that many Form options available. 
-
-Our recommendation would be to use either Formie or Freeform. Freeform has a free tier that should get most users the functionality required.
-
-We would like to thank all of those that have helped carry the CFE torch as far as we have.
-
-###
+# Craft Contact Form Extensions
 
 ![Icon](./src/icon.svg)
 
 [![Latest Version](https://img.shields.io/github/release/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://github.com/hybridinteractive/craft-contact-form-extensions/releases)
 [![Total Downloads](https://img.shields.io/packagist/dt/hybridinteractive/craft-contact-form-extensions.svg?style=flat-square)](https://packagist.org/packages/hybridinteractive/craft-contact-form-extensions)
 
-Adds extensions to the Craft CMS contact form plugin.
+Adds extensions to the Craft CMS [Contact Form](https://github.com/craftcms/contact-form) plugin.
 
 - Save submissions to the database and view them in the Control Panel
-- Add a confirmation email that is sent to the submitting email
-- Overwrite the default e-mail template
-- Add an invisible reCAPTCHA
+- Filter submissions by spam status
+- Send a confirmation email to the submitting address
+- Overwrite the default notification email template
+- Export submissions as a flat CSV
+- Add invisible reCAPTCHA (v2 or v3)
+- Clear submissions by form from a Tools page
 
 ![Screenshot](resources/screenshot.png)
 
 ## Support Open Source
 
-This plugin is licensed under a MIT license, which means that it's completely free open source software, and you can use it for whatever and however you wish.
+This plugin is licensed under the MIT license.
 
 ## Requirements
 
-This plugin requires Craft CMS 4 and the [Contact Form](https://github.com/craftcms/contact-form) plugin.
+This plugin requires Craft CMS 5 and the [Contact Form](https://github.com/craftcms/contact-form) plugin (`craftcms/contact-form` ^3.0).
 
 ## Installation
 
@@ -47,7 +41,7 @@ Install this plugin through the Plugin Store or follow these instructions.
 
 ## Overwriting the email templates
 
-When you overwrite the email templates, your twig view will receive a `submission` variable which contains all the information that a default Contact Form submission contains:
+When you overwrite the email templates, your Twig view will receive a `submission` variable which contains all the information that a default Contact Form submission contains:
 
 - fromName
 - fromEmail
@@ -65,7 +59,7 @@ When saving submissions to the database the default form name will be "Contact".
 
 ## Overriding the confirmation template
 
-When sending confirmation option is enabled and custom templates per form are needed, override the template with a hidden field. The template needs to be placed under templates\\_emails folder. Add a hash for safety. The same data is passed as in the default overridden template.
+When the confirmation option is enabled and custom templates per form are needed, override the template with a hashed hidden field. The template needs to be placed under `templates/_emails`. The same data is passed as in the default overridden template.
 
 ```html
 <input type="hidden" name="message[confirmationTemplate]" value="{{ 'contact'|hash }}">
@@ -73,7 +67,7 @@ When sending confirmation option is enabled and custom templates per form are ne
 
 ## Overriding the confirmation subject
 
-When sending confirmation option is enabled and custom subjects per form are needed, override the subject with a hidden field. Add a hash for safety.
+When the confirmation option is enabled and custom subjects per form are needed, override the subject with a hashed hidden field.
 
 ```html
 <input type="hidden" name="message[confirmationSubject]" value="{{ 'confirmationSubject'|hash }}">
@@ -81,7 +75,7 @@ When sending confirmation option is enabled and custom subjects per form are nee
 
 ## Overriding the notification template
 
-When sending notification option is enabled and custom templates per form are needed, override the template with a hidden field. The template needs to be placed under templates\\_emails folder. Add a hash for safety. The same data is passed as in the default overridden template.
+When template overwrite is enabled and custom notification templates per form are needed, override the template with a hashed hidden field. The template needs to be placed under `templates/_emails`.
 
 ```html
 <input type="hidden" name="message[notificationTemplate]" value="{{ 'contact'|hash }}">
@@ -93,7 +87,6 @@ When sending notification option is enabled and custom templates per form are ne
 <input type="hidden" name="message[toEmail]" value="{{ 'hello@rias.be'|hash }}">
 ```
 
-### Please note: Craft 5's version of this plugin does not support Recaptcha, we apologize for any inconvenience. 
 ## Disable recaptcha on a per form basis
 
 ```html
@@ -114,7 +107,7 @@ When sending notification option is enabled and custom templates per form are ne
 
 ## Adding invisible reCAPTCHA
 
-Before you set your config, remember to choose `invisible reCAPTCHA` while applying for keys.
+Before you set your config, choose `invisible reCAPTCHA` while applying for keys (for v2).
 
 ![Screenshot](resources/recaptcha.jpg)
 
