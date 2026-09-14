@@ -56,13 +56,16 @@ class SubmissionQuery extends ElementQuery
      */
     public mixed $isSpam = null;
 
+    // Private Properties
+    // =========================================================================
+
     /**
      * When false, CP queries are not restricted to users with view permission.
-     * Used by Tools clear so delete-only users can still load rows to delete.
+     * Kept private so element-index/export criteria cannot disable the gate.
      *
      * @var bool
      */
-    public bool $enforceViewPermission = true;
+    private bool $_enforceViewPermission = true;
 
     // Public Methods
     // =========================================================================
@@ -174,7 +177,7 @@ class SubmissionQuery extends ElementQuery
      */
     public function withoutViewPermissionCheck(): static
     {
-        $this->enforceViewPermission = false;
+        $this->_enforceViewPermission = false;
 
         return $this;
     }
@@ -212,8 +215,9 @@ class SubmissionQuery extends ElementQuery
 
         // Element indexes/exports do not check canView() per row; deny unauthorized CP users here.
         // Tools clear uses withoutViewPermissionCheck() so delete-only users can load rows to delete.
+        // Flag is private so criteria cannot set it from the request.
         if (
-            $this->enforceViewPermission
+            $this->_enforceViewPermission
             && Craft::$app->getRequest()->getIsCpRequest()
         ) {
             $user = Craft::$app->getUser()->getIdentity();
