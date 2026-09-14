@@ -95,9 +95,10 @@ class ToolsController extends Controller
             return $this->redirectToPostedUrl();
         }
 
+        /** @var \hybridinteractive\contactformextensions\elements\db\SubmissionQuery $query */
         $query = Submission::find()->status(null);
+        $query->withoutViewPermissionCheck();
         if ($formName !== 'all') {
-            /** @var \hybridinteractive\contactformextensions\elements\db\SubmissionQuery $query */
             $query->form($formName);
         }
 

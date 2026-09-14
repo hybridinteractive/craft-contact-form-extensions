@@ -210,11 +210,13 @@ class RecaptchaV2
         $siteKey = json_encode($this->siteKey, JSON_THROW_ON_ERROR);
         $dataBadge = json_encode($this->dataBadge, JSON_THROW_ON_ERROR);
 
-        $html = '<script src="' . htmlspecialchars($apiUrl, ENT_QUOTES, 'UTF-8') . '" async defer></script>' . PHP_EOL;
-        $html .= '<script>' . PHP_EOL;
+        // Define onload before loading api.js — Google may invoke it as soon as the script arrives.
+        $html = '<script>' . PHP_EOL;
         $html .= 'var ' . $onload . '=function(){';
         $html .= 'var container=document.getElementById("' . $containerId . '");';
+        $html .= 'if(!container||typeof grecaptcha==="undefined"){return;}';
         $html .= 'var form=container.closest("form");';
+        $html .= 'if(!form){return;}';
         $html .= 'var execute=true;';
         $html .= 'var widgetId=grecaptcha.render(container,{sitekey:' . $siteKey . ',size:"invisible",badge:' . $dataBadge . ',callback:function(){';
         $html .= 'if(typeof _submitEvent==="function"){_submitEvent();grecaptcha.reset(widgetId);}else{form.submit();}}});';
@@ -225,6 +227,7 @@ class RecaptchaV2
             $html .= $this->_consoleLog('"reCAPTCHA widget bound for ' . $containerId . '"');
         }
         $html .= '};</script>' . PHP_EOL;
+        $html .= '<script src="' . htmlspecialchars($apiUrl, ENT_QUOTES, 'UTF-8') . '" async defer></script>' . PHP_EOL;
 
         return $html;
     }

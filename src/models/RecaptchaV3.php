@@ -111,11 +111,13 @@ class RecaptchaV3
         $safeAction = htmlspecialchars($action, ENT_QUOTES, 'UTF-8');
 
         $html = <<<HTML
-                <script src="{$api_uri}?onload=onloadRecaptcha{$uniqueId}&render={$siteKey}" async defer></script>
                 <script>
                     var onloadRecaptcha{$uniqueId} = function() {
                         grecaptcha.ready(function() {
                             var input=document.getElementById('g-recaptcha-response{$uniqueId}');
+                            if (!input) {
+                                return;
+                            }
                             var form=input.parentElement;
                             while(form && form.tagName.toLowerCase()!='form') {
                                 form = form.parentElement;
@@ -139,12 +141,13 @@ class RecaptchaV3
                         });
                     };
                 </script>
+                <script src="{$api_uri}?onload=onloadRecaptcha{$uniqueId}&render={$siteKey}" async defer></script>
 
                 <input type="hidden" id="g-recaptcha-response{$uniqueId}" name="g-recaptcha-response" value="">
             HTML;
 
         if ($this->hideBadge) {
-            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>' . PHP_EOL;
+            $html .= '<style>.grecaptcha-badge{display:none !important;}</style>' . PHP_EOL;
         }
 
         return $html;

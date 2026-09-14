@@ -60,6 +60,10 @@ class RecaptchaV2Test extends TestCase
         self::assertStringNotContainsString('polyfill.io', $html);
         self::assertMatchesRegularExpression('/id="_g-recaptcha[a-f0-9]+"/', $html);
         self::assertMatchesRegularExpression('/grecaptcha\.execute\(widgetId\)/', $html);
+        self::assertTrue(
+            strpos($html, 'var onloadRecaptcha') < strpos($html, 'api.js'),
+            'onload callback must be defined before the reCAPTCHA script tag'
+        );
 
         $second = $recaptcha->render();
         preg_match('/id="(_g-recaptcha[a-f0-9]+)"/', $html, $firstId);

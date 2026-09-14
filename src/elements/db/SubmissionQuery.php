@@ -56,6 +56,14 @@ class SubmissionQuery extends ElementQuery
      */
     public mixed $isSpam = null;
 
+    /**
+     * When false, CP queries are not restricted to users with view permission.
+     * Used by Tools clear so delete-only users can still load rows to delete.
+     *
+     * @var bool
+     */
+    public bool $enforceViewPermission = true;
+
     // Public Methods
     // =========================================================================
 
@@ -155,6 +163,22 @@ class SubmissionQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Allows CP queries without the view-submissions permission check.
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.1.0
+     */
+    public function withoutViewPermissionCheck(): static
+    {
+        $this->enforceViewPermission = false;
+
+        return $this;
+    }
+
     // Protected Methods
     // =========================================================================
 
@@ -187,7 +211,11 @@ class SubmissionQuery extends ElementQuery
         ]);
 
         // Element indexes/exports do not check canView() per row; deny unauthorized CP users here.
-        if (Craft::$app->getRequest()->getIsCpRequest()) {
+        // Tools clear uses withoutViewPermissionCheck() so delete-only users can load rows to delete.
+        if (
+            $this->enforceViewPermission
+            && Craft::$app->getRequest()->getIsCpRequest()
+        ) {
             $user = Craft::$app->getUser()->getIdentity();
             if ($user !== null && !$user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS)) {
                 $this->subQuery->andWhere('0=1');
