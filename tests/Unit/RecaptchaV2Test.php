@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
  * Unit tests for RecaptchaV2.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.1.0
  */
 class RecaptchaV2Test extends TestCase

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -14,6 +15,7 @@ use craft\base\Model;
  * Settings model for Contact Form Extensions.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.0.0
  */
 class Settings extends Model
@@ -127,6 +129,7 @@ class Settings extends Model
      * @return string
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function getConfirmationSubject(): string
@@ -134,10 +137,10 @@ class Settings extends Model
         if (is_array($this->confirmationSubject)) {
             $handle = Craft::$app->getSites()->getCurrentSite()->handle;
 
-            return (string)($this->confirmationSubject[$handle] ?? '');
+            return (string) ($this->confirmationSubject[$handle] ?? '');
         }
 
-        return (string)$this->confirmationSubject;
+        return (string) $this->confirmationSubject;
     }
 
     /**
@@ -150,16 +153,16 @@ class Settings extends Model
             [['notificationTemplate', 'confirmationTemplate', 'recaptchaUrl', 'recaptchaVerificationUrl', 'recaptchaSiteKey', 'recaptchaSecretKey', 'recaptchaDataBadge', 'recaptchaVersion'], 'string'],
             ['recaptchaTimeout', 'integer'],
             ['recaptchaThreshold', 'double', 'max' => 1, 'min' => 0],
-            [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function($model) {
+            [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function ($model) {
                 return $model->enableConfirmationEmail === true;
             }],
-            ['notificationTemplate', 'required', 'when' => static function($model) {
+            ['notificationTemplate', 'required', 'when' => static function ($model) {
                 return $model->enableTemplateOverwrite === true;
             }],
-            [['recaptchaSiteKey', 'recaptchaSecretKey'], 'required', 'when' => static function($model) {
+            [['recaptchaSiteKey', 'recaptchaSecretKey'], 'required', 'when' => static function ($model) {
                 return $model->recaptcha === true;
             }],
-            [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function($model) {
+            [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function ($model) {
                 return $model->enableRecaptchaOverride === true;
             }],
         ]);

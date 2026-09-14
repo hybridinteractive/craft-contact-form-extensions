@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -13,6 +14,7 @@ use craft\db\Migration;
  * Adds indexes and isSpam column for submissions.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.1.0
  */
 class m260314_000000_add_indexes_and_isSpam extends Migration

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -17,6 +18,7 @@ use hybridinteractive\contactformextensions\models\Settings;
  * Twig variable for Contact Form Extensions.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.0.0
  */
 class ContactFormExtensionsVariable
@@ -28,6 +30,7 @@ class ContactFormExtensionsVariable
      * @return string|null
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function name(): ?string
@@ -39,6 +42,7 @@ class ContactFormExtensionsVariable
      * @return Settings
      *
      * @author Hybrid Interactive
+     *
      * @since 5.1.0
      */
     public function settings(): Settings
@@ -51,9 +55,11 @@ class ContactFormExtensionsVariable
 
     /**
      * @param string|null $localeOrAction
+     *
      * @return string
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function recaptcha(?string $localeOrAction = null): string
@@ -70,9 +76,11 @@ class ContactFormExtensionsVariable
 
     /**
      * @param array $criteria
+     *
      * @return ElementQueryInterface
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function submissions(array $criteria = []): ElementQueryInterface

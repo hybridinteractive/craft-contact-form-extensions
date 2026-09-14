@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -15,6 +16,7 @@ use yii\base\Event;
  * CP URL route registration.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.0.0
  */
 trait Routes
@@ -28,11 +30,12 @@ trait Routes
      * @return void
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     protected function _registerCpRoutes(): void
     {
-        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules['contact-form-extensions'] = ['template' => 'contact-form-extensions/index'];
             $event->rules['contact-form-extensions/submissions/<elementId:\\d+>'] = 'elements/edit';
             $event->rules['contact-form-extensions/submissions/<elementId:\\d+>/<siteHandle:{handle}>'] = 'elements/edit';

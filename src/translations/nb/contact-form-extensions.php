@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Craft Contact Form Extensions plugin for Craft CMS 4.x.
  *
@@ -15,12 +16,12 @@
  */
 return [
     'Form Submissions' => 'Innsendelser',
-    'All submissions' => 'Alle innsendelser',
-    'Form' => 'Skjema',
-    'Subject' => 'Emne',
-    'From Name' => 'Fra navn',
-    'From Email' => 'Fra e-post',
-    'Message' => 'Melding',
-    'Date Created' => 'Innsendt',
+    'All submissions'  => 'Alle innsendelser',
+    'Form'             => 'Skjema',
+    'Subject'          => 'Emne',
+    'From Name'        => 'Fra navn',
+    'From Email'       => 'Fra e-post',
+    'Message'          => 'Melding',
+    'Date Created'     => 'Innsendt',
     'Back to overview' => 'Tilbake til oversikt',
 ];

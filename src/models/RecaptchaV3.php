@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -13,6 +14,7 @@ use GuzzleHttp\Client;
  * reCAPTCHA v3 helper with multi-form unique response field IDs.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.0.0
  */
 class RecaptchaV3
@@ -63,9 +65,9 @@ class RecaptchaV3
      * @param string $secretKey
      * @param string $recaptchaUrl
      * @param string $recaptchaVerificationUrl
-     * @param float $threshold
-     * @param int $timeout
-     * @param bool $hideBadge
+     * @param float  $threshold
+     * @param int    $timeout
+     * @param bool   $hideBadge
      */
     public function __construct(
         string $siteKey,
@@ -91,9 +93,11 @@ class RecaptchaV3
      * Renders the reCAPTCHA v3 script and hidden response input.
      *
      * @param string $action
+     *
      * @return string
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function render(string $action = 'homepage'): string
@@ -136,7 +140,7 @@ class RecaptchaV3
             HTML;
 
         if ($this->hideBadge) {
-            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>' . PHP_EOL;
+            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
         }
 
         return $html;
@@ -147,9 +151,11 @@ class RecaptchaV3
      *
      * @param string|null $response
      * @param string|null $clientIp
+     *
      * @return bool
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function verifyResponse(?string $response, ?string $clientIp): bool
@@ -159,7 +165,7 @@ class RecaptchaV3
         }
 
         $body = $this->_sendVerifyRequest([
-            'secret' => $this->secretKey,
+            'secret'   => $this->secretKey,
             'remoteip' => $clientIp,
             'response' => $response,
         ]);
@@ -180,6 +186,7 @@ class RecaptchaV3
 
     /**
      * @param array $query
+     *
      * @return array
      */
     private function _sendVerifyRequest(array $query = []): array
@@ -188,6 +195,6 @@ class RecaptchaV3
             'form_params' => $query,
         ]);
 
-        return json_decode((string)$response->getBody(), true) ?? [];
+        return json_decode((string) $response->getBody(), true) ?? [];
     }
 }

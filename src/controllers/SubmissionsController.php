@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -16,6 +17,7 @@ use craft\web\Controller;
  * Edit screens use Craft's unified element editor.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.0.0
  */
 class SubmissionsController extends Controller

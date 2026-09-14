@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -15,6 +16,7 @@ use craft\elements\db\ElementQueryInterface;
  * Flat CSV exporter for submissions.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.1.0
  */
 class FlatExporter extends ElementExporter
@@ -47,13 +49,13 @@ class FlatExporter extends ElementExporter
             }
 
             $results[] = [
-                'id' => $element['id'],
-                'uid' => $element['uid'],
-                'form' => $element['form'],
-                'fromName' => $element['fromName'],
+                'id'        => $element['id'],
+                'uid'       => $element['uid'],
+                'form'      => $element['form'],
+                'fromName'  => $element['fromName'],
                 'fromEmail' => $element['fromEmail'],
-                'subject' => $element['subject'],
-                'isSpam' => $element['isSpam'] ?? false,
+                'subject'   => $element['subject'],
+                'isSpam'    => $element['isSpam'] ?? false,
                 ...$message,
                 'dateCreated' => $element['dateCreated'],
                 'dateUpdated' => $element['dateUpdated'],
@@ -68,6 +70,7 @@ class FlatExporter extends ElementExporter
 
     /**
      * @param mixed $string
+     *
      * @return bool
      */
     private function _isJson(mixed $string): bool

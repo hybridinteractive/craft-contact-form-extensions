@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -23,6 +24,7 @@ use yii\base\Exception;
  * Contact Form Extensions service.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.0.0
  */
 class ContactFormExtensionsService extends Component
@@ -34,14 +36,17 @@ class ContactFormExtensionsService extends Component
      * Saves a Craft Contact Form submission as a CFE Submission element.
      *
      * @param CraftContactFormSubmission $submission
-     * @param bool $isSpam
-     * @return Submission
+     * @param bool                       $isSpam
+     *
      * @throws Exception
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\InvalidConfigException
      *
+     * @return Submission
+     *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function saveSubmission(CraftContactFormSubmission $submission, bool $isSpam = false): Submission
@@ -70,10 +75,12 @@ class ContactFormExtensionsService extends Component
     /**
      * Returns a RecaptchaV2 or RecaptchaV3 instance based on settings.
      *
-     * @return RecaptchaV2|RecaptchaV3
      * @throws \yii\base\InvalidConfigException
      *
+     * @return RecaptchaV2|RecaptchaV3
+     *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function getRecaptcha(): RecaptchaV2|RecaptchaV3
@@ -94,33 +101,35 @@ class ContactFormExtensionsService extends Component
 
         if ($settings->recaptchaVersion === '3') {
             return new RecaptchaV3(
-                (string)$siteKey,
-                (string)$secretKey,
-                (string)$recaptchaUrl,
-                (string)$recaptchaVerificationUrl,
-                (float)$settings->recaptchaThreshold,
-                (int)$settings->recaptchaTimeout,
-                (bool)$settings->recaptchaHideBadge
+                (string) $siteKey,
+                (string) $secretKey,
+                (string) $recaptchaUrl,
+                (string) $recaptchaVerificationUrl,
+                (float) $settings->recaptchaThreshold,
+                (int) $settings->recaptchaTimeout,
+                (bool) $settings->recaptchaHideBadge
             );
         }
 
         return new RecaptchaV2(
-            (string)$siteKey,
-            (string)$secretKey,
-            (string)$recaptchaUrl,
-            (string)$recaptchaVerificationUrl,
-            (bool)$settings->recaptchaHideBadge,
-            (string)$settings->recaptchaDataBadge,
-            (int)$settings->recaptchaTimeout,
-            (bool)$settings->recaptchaDebug
+            (string) $siteKey,
+            (string) $secretKey,
+            (string) $recaptchaUrl,
+            (string) $recaptchaVerificationUrl,
+            (bool) $settings->recaptchaHideBadge,
+            (string) $settings->recaptchaDataBadge,
+            (int) $settings->recaptchaTimeout,
+            (bool) $settings->recaptchaDebug
         );
     }
 
     /**
      * @param array $things
+     *
      * @return array
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function utf8AllTheThings(array $things): array
@@ -134,9 +143,11 @@ class ContactFormExtensionsService extends Component
 
     /**
      * @param array|string $value
+     *
      * @return array|string
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function utf8Value(array|string $value): array|string
