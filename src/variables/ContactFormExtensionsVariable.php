@@ -10,7 +10,9 @@ namespace hybridinteractive\contactformextensions\variables;
 
 use Craft;
 use craft\elements\db\ElementQueryInterface;
+use craft\helpers\App;
 use hybridinteractive\contactformextensions\ContactFormExtensions;
+use hybridinteractive\contactformextensions\controllers\SubmissionsController;
 use hybridinteractive\contactformextensions\elements\Submission;
 use hybridinteractive\contactformextensions\models\RecaptchaV3;
 use hybridinteractive\contactformextensions\models\Settings;
@@ -40,18 +42,42 @@ class ContactFormExtensionsVariable
     }
 
     /**
-     * @return Settings
+     * Returns public (non-secret) settings safe for site templates.
+     *
+     * @return array{
+     *     enableDatabase: bool,
+     *     enableConfirmationEmail: bool,
+     *     enableTemplateOverwrite: bool,
+     *     enableSaveSpam: bool,
+     *     recaptcha: bool,
+     *     recaptchaVersion: string|null,
+     *     recaptchaSiteKey: string|null,
+     *     recaptchaHideBadge: bool,
+     *     recaptchaDataBadge: string,
+     *     recaptchaThreshold: float
+     * }
      *
      * @author Hybrid Interactive
      *
      * @since 5.1.0
      */
-    public function settings(): Settings
+    public function settings(): array
     {
         /** @var Settings $settings */
         $settings = ContactFormExtensions::$plugin->getSettings();
 
-        return $settings;
+        return [
+            'enableDatabase' => $settings->enableDatabase,
+            'enableConfirmationEmail' => $settings->enableConfirmationEmail,
+            'enableTemplateOverwrite' => $settings->enableTemplateOverwrite,
+            'enableSaveSpam' => $settings->enableSaveSpam,
+            'recaptcha' => $settings->recaptcha,
+            'recaptchaVersion' => $settings->recaptchaVersion,
+            'recaptchaSiteKey' => App::parseEnv($settings->recaptchaSiteKey),
+            'recaptchaHideBadge' => $settings->recaptchaHideBadge,
+            'recaptchaDataBadge' => $settings->recaptchaDataBadge,
+            'recaptchaThreshold' => $settings->recaptchaThreshold,
+        ];
     }
 
     /**
@@ -92,6 +118,14 @@ class ContactFormExtensionsVariable
     public function submissions(array $criteria = []): ElementQueryInterface
     {
         $query = Submission::find();
+
+        // Site templates are trusted by the project owner; CP queries still require view permission.
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
+            $user = Craft::$app->getUser()->getIdentity();
+            if ($user === null || !$user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS)) {
+                return $query->id(false);
+            }
+        }
 
         if (!empty($criteria)) {
             Craft::configure($query, $criteria);

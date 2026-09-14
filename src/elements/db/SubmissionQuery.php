@@ -8,8 +8,10 @@
 
 namespace hybridinteractive\contactformextensions\elements\db;
 
+use Craft;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
+use hybridinteractive\contactformextensions\controllers\SubmissionsController;
 use hybridinteractive\contactformextensions\elements\Submission;
 
 /**
@@ -183,6 +185,14 @@ class SubmissionQuery extends ElementQuery
             'contactform_submissions.message',
             'contactform_submissions.isSpam',
         ]);
+
+        // Element indexes/exports do not check canView() per row; deny unauthorized CP users here.
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
+            $user = Craft::$app->getUser()->getIdentity();
+            if ($user !== null && !$user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS)) {
+                $this->subQuery->andWhere('0=1');
+            }
+        }
 
         if ($this->form) {
             $this->subQuery->andWhere(Db::parseParam('contactform_submissions.form', $this->form));

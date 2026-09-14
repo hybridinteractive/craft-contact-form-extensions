@@ -115,18 +115,37 @@ class ContactFormExtensions extends Plugin
         }
 
         $nav = parent::getCpNavItem();
+        if ($nav === null) {
+            return null;
+        }
+
+        /** @var \craft\web\User $currentUser */
+        $currentUser = Craft::$app->getUser();
+        $canView = $currentUser->checkPermission(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS);
+        $canDelete = $currentUser->checkPermission(ToolsController::PERMISSION_DELETE_SUBMISSIONS);
+
+        if (!$canView && !$canDelete) {
+            return null;
+        }
+
         $nav['label'] = Craft::t('contact-form-extensions', 'Form Submissions');
         $nav['fontIcon'] = 'envelope';
-        $nav['subnav'] = [
-            'submissions' => [
+        $nav['url'] = $canView ? 'contact-form-extensions' : 'contact-form-extensions/tools';
+        $nav['subnav'] = [];
+
+        if ($canView) {
+            $nav['subnav']['submissions'] = [
                 'label' => Craft::t('contact-form-extensions', 'Submissions'),
                 'url' => 'contact-form-extensions',
-            ],
-            'tools' => [
+            ];
+        }
+
+        if ($canDelete) {
+            $nav['subnav']['tools'] = [
                 'label' => Craft::t('contact-form-extensions', 'Tools'),
                 'url' => 'contact-form-extensions/tools',
-            ],
-        ];
+            ];
+        }
 
         return $nav;
     }
@@ -266,16 +285,17 @@ class ContactFormExtensions extends Plugin
                     return;
                 }
 
-                if (is_array($e->submission->message) && array_key_exists('toEmail', $e->submission->message)) {
-                    $email = Craft::$app->getSecurity()->validateData($e->submission->message['toEmail']);
-                    $e->toEmails = explode(',', (string) $email);
+                $toEmail = $this->_validatedMessageOverride($e->submission->message, 'toEmail');
+                if ($toEmail !== null) {
+                    $e->toEmails = explode(',', $toEmail);
                 }
 
                 if ($settings->enableTemplateOverwrite) {
                     $app->getView()->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-                    if (is_array($e->submission->message) && array_key_exists('notificationTemplate', $e->submission->message)) {
-                        $template = '_emails/' . Craft::$app->getSecurity()->validateData($e->submission->message['notificationTemplate']);
+                    $notificationTemplate = $this->_validatedMessageOverride($e->submission->message, 'notificationTemplate');
+                    if ($notificationTemplate !== null) {
+                        $template = '_emails/' . $notificationTemplate;
                     } else {
                         $template = App::parseEnv($settings->notificationTemplate);
                     }
@@ -310,8 +330,9 @@ class ContactFormExtensions extends Plugin
 
                 $app->getView()->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
-                if (is_array($e->submission->message) && array_key_exists('confirmationTemplate', $e->submission->message)) {
-                    $template = '_emails/' . Craft::$app->getSecurity()->validateData($e->submission->message['confirmationTemplate']);
+                $confirmationTemplate = $this->_validatedMessageOverride($e->submission->message, 'confirmationTemplate');
+                if ($confirmationTemplate !== null) {
+                    $template = '_emails/' . $confirmationTemplate;
                 } else {
                     $template = App::parseEnv($settings->confirmationTemplate);
                 }
@@ -333,9 +354,8 @@ class ContactFormExtensions extends Plugin
 
                 $message->setHtmlBody($html);
 
-                if (is_array($e->submission->message) && array_key_exists('confirmationSubject', $e->submission->message)) {
-                    $confirmationSubject = Craft::$app->getSecurity()->validateData($e->submission->message['confirmationSubject']);
-                } else {
+                $confirmationSubject = $this->_validatedMessageOverride($e->submission->message, 'confirmationSubject');
+                if ($confirmationSubject === null) {
                     $confirmationSubject = App::parseEnv($settings->getConfirmationSubject());
                 }
                 $message->setSubject((string) $confirmationSubject);
@@ -347,6 +367,28 @@ class ContactFormExtensions extends Plugin
                 }
             });
         });
+    }
+
+    /**
+     * Returns a validated hashed message override, or null when missing/invalid.
+     *
+     * @param mixed  $message
+     * @param string $key
+     *
+     * @return string|null
+     */
+    private function _validatedMessageOverride(mixed $message, string $key): ?string
+    {
+        if (!is_array($message) || !array_key_exists($key, $message)) {
+            return null;
+        }
+
+        $validated = Craft::$app->getSecurity()->validateData($message[$key]);
+        if ($validated === false || $validated === null || $validated === '') {
+            return null;
+        }
+
+        return (string) $validated;
     }
 
     /**

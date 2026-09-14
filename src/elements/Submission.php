@@ -162,6 +162,14 @@ class Submission extends Element
      */
     protected static function defineSources(?string $context = null): array
     {
+        $user = Craft::$app->getUser()->getIdentity();
+        if (
+            Craft::$app->getRequest()->getIsCpRequest()
+            && ($user === null || !$user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS))
+        ) {
+            return [];
+        }
+
         $forms = (new Query())
             ->select(['s.form'])
             ->distinct()

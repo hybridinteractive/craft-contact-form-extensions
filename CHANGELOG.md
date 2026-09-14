@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Custom permissions for viewing and deleting submissions
 - Native reCAPTCHA v2 implementation (no third-party Laravel package)
 
+### Security
+- Submissions index requires `contact-form-extensions:view-submissions` (also enforced on element queries/exports)
+- Hashed message overrides are ignored when HMAC validation fails
+- Twig `settings()` returns public fields only (no reCAPTCHA secret)
+
 ### Changed
 - Plugin is actively maintained again for Craft CMS 5 (no longer deprecated)
 - Element sources use a DISTINCT query instead of loading every submission (fixes CP OOM)
