@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.0] - 2026-03-14
+### Added
+- Spam status on Submission elements with CP filtering (`enableSaveSpam` setting)
+- Flat CSV exporter for submissions
+- Tools CP page to clear submissions by form
+- Submission index per-page limit control
+- Database indexes on `form`, `dateCreated`, `fromEmail`, and `isSpam`
+- Custom permissions for viewing and deleting submissions
+- Native reCAPTCHA v2 implementation (no third-party Laravel package)
+
+### Changed
+- Plugin is actively maintained again for Craft CMS 5 (no longer deprecated)
+- Element sources use a DISTINCT query instead of loading every submission (fixes CP OOM)
+- Contact Form mailer listeners register after other plugins so spam plugins can mark submissions first
+- Confirmation emails honor the Craft mailer component `from` address
+- Template overrides use forward-slash paths and `App::parseEnv()`
+- Submission detail template uses `|capitalize` instead of deprecated `|ucfirst`
+- Unified element editor for submission detail screens
+- Composer package hygiene: PHP 8.2 platform, no committed lock file, Craft ECS/PHPStan configs
+
+### Fixed
+- reCAPTCHA v2 broken on Craft 5 due to undeclared `albertcht/invisible-recaptcha` dependency and polyfill.io CDN
+- Missing subject / message edge cases on the submission detail screen
+
 ## [5.0.0] - 2024-07-25
 Craft CMS 5 🎉
 
@@ -29,7 +53,7 @@ message['saveSubmissionOverride'] -> message['disableSaveSubmission']
 ## [1.3.0] - 2022-04-14
 - Adding ability to override recaptcha on a per form basis. [#108](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/108)
 - Override for saving to db on a per form basis
-- Add ability to disable the email confirmation should be sent on a specific form. 
+- Add ability to disable the email confirmation should be sent on a specific form.
 
 ## [1.2.8] - 2021-10-19
 - Fixed Second form on page does not send [#78](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/78) - Added unique id's to the functions and id tags to make the recaptcha separate for each form.
@@ -50,7 +74,7 @@ message['saveSubmissionOverride'] -> message['disableSaveSubmission']
 - Fixed a bug that was causing `lightSwitch` fields to be out of sync [#87](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/87)
 
 ## [1.2.3] - 2020-10-23
-- Added `Subject` to Submissions Detail page. 
+- Added `Subject` to Submissions Detail page.
 
 ## [1.2.2] - 2020-08-28
 - Added `fromName` for confirmation email - Thank you [@skoften](https://github.com/skoften) and [@jesuismaxime](https://github.com/jesuismaxime)
@@ -87,7 +111,7 @@ message['saveSubmissionOverride'] -> message['disableSaveSubmission']
 ### Added
 - Ability to override `toEmail` inside your form
 - Ability to override `template` inside your form (thanks @helderdb)
-- Ability to hide the badge when using ReCaptcha V3 
+- Ability to hide the badge when using ReCaptcha V3
 
 ### Fixed
 - Fixed an issue with email being sent from the wrong address (thanks @helderdb)

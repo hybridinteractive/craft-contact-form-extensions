@@ -1,6 +1,6 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 4.x.
+ * Contact Form Extensions plugin for Craft CMS 5.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
@@ -10,40 +10,48 @@ namespace hybridinteractive\contactformextensions\services;
 use Craft;
 use craft\base\Component;
 use craft\contactform\models\Submission as CraftContactFormSubmission;
+use craft\helpers\App;
 use craft\helpers\StringHelper;
 use hybridinteractive\contactformextensions\ContactFormExtensions;
 use hybridinteractive\contactformextensions\elements\Submission;
+use hybridinteractive\contactformextensions\models\RecaptchaV2;
 use hybridinteractive\contactformextensions\models\RecaptchaV3;
+use hybridinteractive\contactformextensions\models\Settings;
 use yii\base\Exception;
 
+/**
+ * Contact Form Extensions service.
+ *
+ * @author Hybrid Interactive
+ * @since 5.0.0
+ */
 class ContactFormExtensionsService extends Component
 {
     // Public Methods
     // =========================================================================
 
     /**
-     * This function can literally be anything you want, and you can have as many service
-     * functions as you want.
+     * Saves a Craft Contact Form submission as a CFE Submission element.
      *
-     * From any other plugin file, call it like this:
-     *
-     *     CraftContactFormExtensions::$plugin->craftContactFormExtensionsService->exampleService()
-     *
-     * @param Submission $submission
-     *
+     * @param CraftContactFormSubmission $submission
+     * @param bool $isSpam
+     * @return Submission
      * @throws Exception
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\InvalidConfigException
      *
-     * @return mixed
+     * @author Hybrid Interactive
+     * @since 5.0.0
      */
-    public function saveSubmission(CraftContactFormSubmission $submission)
+    public function saveSubmission(CraftContactFormSubmission $submission, bool $isSpam = false): Submission
     {
         $contactFormSubmission = new Submission();
         $contactFormSubmission->form = $submission->message['formName'] ?? 'contact';
         $contactFormSubmission->fromName = $submission->fromName;
         $contactFormSubmission->fromEmail = $submission->fromEmail;
         $contactFormSubmission->subject = $submission->subject;
+        $contactFormSubmission->isSpam = $isSpam;
 
         if (!is_array($submission->message)) {
             $submission->message = ['message' => $this->utf8Value($submission->message)];
@@ -52,54 +60,68 @@ class ContactFormExtensionsService extends Component
         $message = $this->utf8AllTheThings($submission->message);
         $contactFormSubmission->message = json_encode($message);
 
-        if (Craft::$app->elements->saveElement($contactFormSubmission)) {
+        if (Craft::$app->getElements()->saveElement($contactFormSubmission)) {
             return $contactFormSubmission;
         }
 
         throw new Exception(json_encode($contactFormSubmission->errors));
     }
 
-    public function getRecaptcha()
+    /**
+     * Returns a RecaptchaV2 or RecaptchaV3 instance based on settings.
+     *
+     * @return RecaptchaV2|RecaptchaV3
+     * @throws \yii\base\InvalidConfigException
+     *
+     * @author Hybrid Interactive
+     * @since 5.0.0
+     */
+    public function getRecaptcha(): RecaptchaV2|RecaptchaV3
     {
-        $siteKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSiteKey);
-        $secretKey = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaSecretKey);
+        /** @var Settings $settings */
+        $settings = ContactFormExtensions::$plugin->getSettings();
+
+        $siteKey = App::parseEnv($settings->recaptchaSiteKey);
+        $secretKey = App::parseEnv($settings->recaptchaSecretKey);
 
         $recaptchaUrl = 'https://www.google.com/recaptcha/api.js';
         $recaptchaVerificationUrl = 'https://www.google.com/recaptcha/api/siteverify';
 
-        if (ContactFormExtensions::$plugin->settings->enableRecaptchaOverride === true) {
-            $recaptchaUrl = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaUrl);
-            $recaptchaVerificationUrl = Craft::parseEnv(ContactFormExtensions::$plugin->settings->recaptchaVerificationUrl);
+        if ($settings->enableRecaptchaOverride === true) {
+            $recaptchaUrl = App::parseEnv($settings->recaptchaUrl);
+            $recaptchaVerificationUrl = App::parseEnv($settings->recaptchaVerificationUrl);
         }
 
-        if (ContactFormExtensions::$plugin->settings->recaptchaVersion === '3') {
-            $recaptcha = new RecaptchaV3(
-                $siteKey,
-                $secretKey,
-                $recaptchaUrl,
-                $recaptchaVerificationUrl,
-                ContactFormExtensions::$plugin->settings->recaptchaThreshold,
-                ContactFormExtensions::$plugin->settings->recaptchaTimeout,
-                ContactFormExtensions::$plugin->settings->recaptchaHideBadge
+        if ($settings->recaptchaVersion === '3') {
+            return new RecaptchaV3(
+                (string)$siteKey,
+                (string)$secretKey,
+                (string)$recaptchaUrl,
+                (string)$recaptchaVerificationUrl,
+                (float)$settings->recaptchaThreshold,
+                (int)$settings->recaptchaTimeout,
+                (bool)$settings->recaptchaHideBadge
             );
-
-            return $recaptcha;
         }
 
-        $options = [
-            'hideBadge' => ContactFormExtensions::$plugin->settings->recaptchaHideBadge,
-            'dataBadge' => ContactFormExtensions::$plugin->settings->recaptchaDataBadge,
-            'timeout'   => ContactFormExtensions::$plugin->settings->recaptchaTimeout,
-            'debug'     => ContactFormExtensions::$plugin->settings->recaptchaDebug,
-        ];
-
-        return new \AlbertCht\InvisibleReCaptcha\InvisibleReCaptcha($siteKey, $secretKey, $options);
+        return new RecaptchaV2(
+            (string)$siteKey,
+            (string)$secretKey,
+            (string)$recaptchaUrl,
+            (string)$recaptchaVerificationUrl,
+            (bool)$settings->recaptchaHideBadge,
+            (string)$settings->recaptchaDataBadge,
+            (int)$settings->recaptchaTimeout,
+            (bool)$settings->recaptchaDebug
+        );
     }
 
     /**
      * @param array $things
-     *
      * @return array
+     *
+     * @author Hybrid Interactive
+     * @since 5.0.0
      */
     public function utf8AllTheThings(array $things): array
     {
@@ -112,10 +134,12 @@ class ContactFormExtensionsService extends Component
 
     /**
      * @param array|string $value
-     *
      * @return array|string
+     *
+     * @author Hybrid Interactive
+     * @since 5.0.0
      */
-    public function utf8Value($value)
+    public function utf8Value(array|string $value): array|string
     {
         if (is_array($value)) {
             return $this->utf8AllTheThings($value);
