@@ -13,6 +13,7 @@ use craft\base\Element;
 use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
+use craft\helpers\Html;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
@@ -279,8 +280,7 @@ class Submission extends Element
      */
     public function canView(User $user): bool
     {
-        return $user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS)
-            || $user->can('accessPlugin-contact-form-extensions');
+        return $user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS);
     }
 
     /**
@@ -288,8 +288,7 @@ class Submission extends Element
      */
     public function canDelete(User $user): bool
     {
-        return $user->can(ToolsController::PERMISSION_DELETE_SUBMISSIONS)
-            || $user->can('accessPlugin-contact-form-extensions');
+        return $user->can(ToolsController::PERMISSION_DELETE_SUBMISSIONS);
     }
 
     /**
@@ -363,8 +362,9 @@ class Submission extends Element
             $html = '<ul>';
             foreach ($message as $key => $value) {
                 if (is_string($value) && !in_array($key, $skipKeys, true)) {
-                    $shortened = trim(substr($value, 0, 30));
-                    $html .= "<li><em>{$key}</em>: {$shortened}...</li>";
+                    $shortened = Html::encode(trim(substr($value, 0, 30)));
+                    $encodedKey = Html::encode((string) $key);
+                    $html .= "<li><em>{$encodedKey}</em>: {$shortened}...</li>";
                 }
             }
             $html .= '</ul>';

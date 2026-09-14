@@ -33,7 +33,17 @@
         const storageKey = '{{ limitStorageKey }}';
         const defaultLimit = {{ defaultLimit }};
         const savedLimit = parseInt(localStorage.getItem(storageKey) || defaultLimit, 10);
-        Craft.defaultIndexCriteria = Object.assign({}, Craft.defaultIndexCriteria || {}, { limit: savedLimit });
+        const limit = [25, 50, 100].includes(savedLimit) ? savedLimit : defaultLimit;
+        window.__cfeSubmissionsLimit = limit;
+
+        // Craft paginates with settings.batchSize for both limit and offset.
+        // Do not set criteria.limit or page 2 will skip rows.
+        const originalCreateElementIndex = Craft.createElementIndex;
+        Craft.createElementIndex = function(elementType, $container, settings) {
+            settings = settings || {};
+            settings.batchSize = limit;
+            return originalCreateElementIndex.call(this, elementType, $container, settings);
+        };
     })();
     {{ parent() }}
 {% endblock %}
@@ -52,8 +62,10 @@
                 const newLimit = parseInt(this.value, 10);
                 localStorage.setItem(storageKey, newLimit);
                 if (typeof Craft !== 'undefined' && Craft.elementIndex) {
-                    Craft.elementIndex.settings.criteria = Craft.elementIndex.settings.criteria || {};
-                    Craft.elementIndex.settings.criteria.limit = newLimit;
+                    Craft.elementIndex.settings.batchSize = newLimit;
+                    if (Craft.elementIndex.settings.criteria) {
+                        delete Craft.elementIndex.settings.criteria.limit;
+                    }
                     Craft.elementIndex.updateElements(true, true);
                 }
             });

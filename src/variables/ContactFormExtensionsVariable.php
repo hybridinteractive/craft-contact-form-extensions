@@ -12,6 +12,7 @@ use Craft;
 use craft\elements\db\ElementQueryInterface;
 use hybridinteractive\contactformextensions\ContactFormExtensions;
 use hybridinteractive\contactformextensions\elements\Submission;
+use hybridinteractive\contactformextensions\models\RecaptchaV3;
 use hybridinteractive\contactformextensions\models\Settings;
 
 /**
@@ -67,11 +68,16 @@ class ContactFormExtensionsVariable
         /** @var Settings $settings */
         $settings = ContactFormExtensions::$plugin->getSettings();
 
-        if ($settings->recaptcha) {
-            return ContactFormExtensions::$plugin->contactFormExtensionsService->getRecaptcha()->render($localeOrAction);
+        if (!$settings->recaptcha) {
+            return '';
         }
 
-        return '';
+        $recaptcha = ContactFormExtensions::$plugin->contactFormExtensionsService->getRecaptcha();
+        if ($recaptcha instanceof RecaptchaV3) {
+            return $recaptcha->render($localeOrAction ?: 'homepage');
+        }
+
+        return $recaptcha->render($localeOrAction);
     }
 
     /**

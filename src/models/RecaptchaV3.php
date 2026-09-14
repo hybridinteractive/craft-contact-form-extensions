@@ -8,7 +8,9 @@
 
 namespace hybridinteractive\contactformextensions\models;
 
+use Craft;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\TransferException;
 
 /**
  * reCAPTCHA v3 helper with multi-form unique response field IDs.
@@ -92,7 +94,7 @@ class RecaptchaV3
     /**
      * Renders the reCAPTCHA v3 script and hidden response input.
      *
-     * @param string $action
+     * @param string|null $action
      *
      * @return string
      *
@@ -100,11 +102,13 @@ class RecaptchaV3
      *
      * @since 5.0.0
      */
-    public function render(string $action = 'homepage'): string
+    public function render(?string $action = 'homepage'): string
     {
+        $action = $action !== null && $action !== '' ? $action : 'homepage';
         $siteKey = $this->siteKey;
         $api_uri = $this->recaptchaUrl;
         $uniqueId = uniqid();
+        $safeAction = htmlspecialchars($action, ENT_QUOTES, 'UTF-8');
 
         $html = <<<HTML
                 <script src="{$api_uri}?onload=onloadRecaptcha{$uniqueId}&render={$siteKey}" async defer></script>
@@ -123,7 +127,7 @@ class RecaptchaV3
                                     e.stopImmediatePropagation();
 
                                     if (input.value == '') {
-                                        grecaptcha.execute('{$siteKey}', {action: '{$action}'}).then(function(token) {
+                                        grecaptcha.execute('{$siteKey}', {action: '{$safeAction}'}).then(function(token) {
                                             input.value = token;
                                             form.submit();
                                         });
@@ -191,10 +195,16 @@ class RecaptchaV3
      */
     private function _sendVerifyRequest(array $query = []): array
     {
-        $response = $this->client->post($this->recaptchaVerificationUrl, [
-            'form_params' => $query,
-        ]);
+        try {
+            $response = $this->client->post($this->recaptchaVerificationUrl, [
+                'form_params' => $query,
+            ]);
 
-        return json_decode((string) $response->getBody(), true) ?? [];
+            return json_decode((string) $response->getBody(), true) ?? [];
+        } catch (TransferException $e) {
+            Craft::error('reCAPTCHA verification request failed: ' . $e->getMessage(), __METHOD__);
+
+            return [];
+        }
     }
 }

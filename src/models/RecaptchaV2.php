@@ -10,7 +10,7 @@ namespace hybridinteractive\contactformextensions\models;
 
 use Craft;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 
 /**
  * Invisible reCAPTCHA v2 implementation (no third-party Laravel package).
@@ -110,9 +110,11 @@ class RecaptchaV2
      */
     public function render(?string $lang = null): string
     {
+        $uniqueId = uniqid();
+
         $html = $this->_renderPolyfill();
-        $html .= $this->_renderCaptchaHtml();
-        $html .= $this->_renderFooterJs($lang);
+        $html .= $this->_renderCaptchaHtml($uniqueId);
+        $html .= $this->_renderFooterJs($uniqueId, $lang);
 
         return $html;
     }
@@ -155,7 +157,7 @@ class RecaptchaV2
             }
 
             return true;
-        } catch (RequestException $e) {
+        } catch (TransferException $e) {
             Craft::error('reCAPTCHA verification request failed: ' . $e->getMessage(), __METHOD__);
 
             return false;
@@ -174,67 +176,55 @@ class RecaptchaV2
     }
 
     /**
+     * @param string $uniqueId
+     *
      * @return string
      */
-    private function _renderCaptchaHtml(): string
+    private function _renderCaptchaHtml(string $uniqueId): string
     {
-        $html = '<div id="_g-recaptcha"></div>' . PHP_EOL;
+        $html = '<div id="_g-recaptcha' . $uniqueId . '"></div>' . PHP_EOL;
         if ($this->hideBadge) {
             $html .= '<style>.grecaptcha-badge{display:none !important;}</style>' . PHP_EOL;
         }
 
-        $html .= '<div class="g-recaptcha" data-sitekey="' . htmlspecialchars($this->siteKey) . '" ';
-        $html .= 'data-size="invisible" data-callback="_submitForm" data-badge="' . htmlspecialchars($this->dataBadge) . '"></div>';
-
         return $html;
     }
 
     /**
+     * @param string      $uniqueId
      * @param string|null $lang
      *
      * @return string
      */
-    private function _renderFooterJs(?string $lang = null): string
+    private function _renderFooterJs(string $uniqueId, ?string $lang = null): string
     {
         $apiUrl = $this->recaptchaUrl;
+        $query = ['onload' => 'onloadRecaptcha' . $uniqueId, 'render' => 'explicit'];
         if ($lang) {
-            $apiUrl .= '?hl=' . htmlspecialchars($lang);
+            $query['hl'] = $lang;
         }
+        $apiUrl .= '?' . http_build_query($query);
 
-        $html = '<script src="' . htmlspecialchars($apiUrl) . '" async defer></script>' . PHP_EOL;
-        $html .= '<script>var _submitForm,_captchaForm,_captchaSubmit,_execute=true,_captchaBadge;</script>';
-        $html .= "<script>window.addEventListener('load', _loadCaptcha);" . PHP_EOL;
-        $html .= 'function _loadCaptcha(){';
-        if ($this->hideBadge) {
-            $html .= "_captchaBadge=document.querySelector('.grecaptcha-badge');";
-            $html .= "if(_captchaBadge){_captchaBadge.style = 'display:none !important;';}" . PHP_EOL;
-        }
-        $html .= '_captchaForm=document.querySelector("#_g-recaptcha").closest("form");';
-        $html .= "_captchaSubmit=_captchaForm.querySelector('[type=submit]');";
-        $html .= '_submitForm=function(){if(typeof _submitEvent==="function"){_submitEvent();';
-        $html .= 'grecaptcha.reset();}else{_captchaForm.submit();}};';
-        $html .= "_captchaForm.addEventListener('submit',";
-        $html .= "function(e){e.preventDefault();if(typeof _beforeSubmit==='function'){";
-        $html .= '_execute=_beforeSubmit(e);}if(_execute){grecaptcha.execute();}});';
+        $containerId = '_g-recaptcha' . $uniqueId;
+        $onload = 'onloadRecaptcha' . $uniqueId;
+        $siteKey = json_encode($this->siteKey, JSON_THROW_ON_ERROR);
+        $dataBadge = json_encode($this->dataBadge, JSON_THROW_ON_ERROR);
+
+        $html = '<script src="' . htmlspecialchars($apiUrl, ENT_QUOTES, 'UTF-8') . '" async defer></script>' . PHP_EOL;
+        $html .= '<script>' . PHP_EOL;
+        $html .= 'var ' . $onload . '=function(){';
+        $html .= 'var container=document.getElementById("' . $containerId . '");';
+        $html .= 'var form=container.closest("form");';
+        $html .= 'var execute=true;';
+        $html .= 'var widgetId=grecaptcha.render(container,{sitekey:' . $siteKey . ',size:"invisible",badge:' . $dataBadge . ',callback:function(){';
+        $html .= 'if(typeof _submitEvent==="function"){_submitEvent();grecaptcha.reset(widgetId);}else{form.submit();}}});';
+        $html .= 'form.addEventListener("submit",function(e){e.preventDefault();';
+        $html .= 'if(typeof _beforeSubmit==="function"){execute=_beforeSubmit(e);}';
+        $html .= 'if(execute){grecaptcha.execute(widgetId);}});';
         if ($this->debug) {
-            $html .= $this->_renderDebug();
+            $html .= $this->_consoleLog('"reCAPTCHA widget bound for ' . $containerId . '"');
         }
-        $html .= '}</script>' . PHP_EOL;
-
-        return $html;
-    }
-
-    /**
-     * @return string
-     */
-    private function _renderDebug(): string
-    {
-        $debugElements = ['_submitForm', '_captchaForm', '_captchaSubmit'];
-        $html = '';
-        foreach ($debugElements as $element) {
-            $html .= $this->_consoleLog('"Checking element binding of ' . $element . '..."');
-            $html .= $this->_consoleLog($element . '!==undefined');
-        }
+        $html .= '};</script>' . PHP_EOL;
 
         return $html;
     }

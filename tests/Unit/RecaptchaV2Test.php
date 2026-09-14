@@ -56,6 +56,14 @@ class RecaptchaV2Test extends TestCase
 
         self::assertStringContainsString('cdnjs.cloudflare.com/polyfill', $html);
         self::assertStringContainsString('site-key', $html);
+        self::assertStringContainsString('render=explicit', $html);
         self::assertStringNotContainsString('polyfill.io', $html);
+        self::assertMatchesRegularExpression('/id="_g-recaptcha[a-f0-9]+"/', $html);
+        self::assertMatchesRegularExpression('/grecaptcha\.execute\(widgetId\)/', $html);
+
+        $second = $recaptcha->render();
+        preg_match('/id="(_g-recaptcha[a-f0-9]+)"/', $html, $firstId);
+        preg_match('/id="(_g-recaptcha[a-f0-9]+)"/', $second, $secondId);
+        self::assertNotSame($firstId[1], $secondId[1]);
     }
 }
