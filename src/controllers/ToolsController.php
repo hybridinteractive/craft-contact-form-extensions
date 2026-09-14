@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -17,6 +18,7 @@ use yii\web\Response;
  * Tools controller for clearing submissions.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.1.0
  */
 class ToolsController extends Controller
@@ -40,10 +42,12 @@ class ToolsController extends Controller
     /**
      * Shows the tools page.
      *
-     * @return Response
      * @throws ForbiddenHttpException
      *
+     * @return Response
+     *
      * @author Hybrid Interactive
+     *
      * @since 5.1.0
      */
     public function actionIndex(): Response
@@ -52,7 +56,7 @@ class ToolsController extends Controller
 
         $formNames = $this->_getFormNames();
         $formOptions = array_map(
-            static fn(string $form) => ['label' => ucfirst($form), 'value' => $form],
+            static fn (string $form) => ['label' => ucfirst($form), 'value' => $form],
             $formNames
         );
         array_unshift($formOptions, [
@@ -68,12 +72,14 @@ class ToolsController extends Controller
     /**
      * Clears submissions by form name (or all if formName is `all`).
      *
-     * @return Response
      * @throws ForbiddenHttpException
      * @throws \yii\web\BadRequestHttpException
      * @throws \Throwable
      *
+     * @return Response
+     *
      * @author Hybrid Interactive
+     *
      * @since 5.1.0
      */
     public function actionClearSubmissions(): Response

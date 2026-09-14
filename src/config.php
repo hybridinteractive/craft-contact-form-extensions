@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -20,24 +21,24 @@
  */
 
 return [
-    'enableDatabase' => true,
-    'enableSaveSpam' => false,
+    'enableDatabase'          => true,
+    'enableSaveSpam'          => false,
     'enableConfirmationEmail' => true,
     'enableTemplateOverwrite' => true,
-    'notificationTemplate' => '',
-    'confirmationTemplate' => '',
-    'confirmationSubject' => '',
+    'notificationTemplate'    => '',
+    'confirmationTemplate'    => '',
+    'confirmationSubject'     => '',
 
-    'recaptcha' => false,
-    'enableRecaptchaOverride' => false,
-    'recaptchaUrl' => '',
+    'recaptcha'                => false,
+    'enableRecaptchaOverride'  => false,
+    'recaptchaUrl'             => '',
     'recaptchaVerificationUrl' => '',
-    'recaptchaVersion' => '',
-    'recaptchaSiteKey' => '',
-    'recaptchaSecretKey' => '',
-    'recaptchaHideBadge' => false,
-    'recaptchaDataBadge' => 'bottomright',
-    'recaptchaTimeout' => 5,
-    'recaptchaThreshold' => .5,
-    'recaptchaDebug' => false,
+    'recaptchaVersion'         => '',
+    'recaptchaSiteKey'         => '',
+    'recaptchaSecretKey'       => '',
+    'recaptchaHideBadge'       => false,
+    'recaptchaDataBadge'       => 'bottomright',
+    'recaptchaTimeout'         => 5,
+    'recaptchaThreshold'       => .5,
+    'recaptchaDebug'           => false,
 ];

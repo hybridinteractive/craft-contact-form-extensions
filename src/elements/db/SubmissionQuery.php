@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact Form Extensions plugin for Craft CMS 5.x.
  *
@@ -15,6 +16,7 @@ use hybridinteractive\contactformextensions\elements\Submission;
  * Submission element query.
  *
  * @author Hybrid Interactive
+ *
  * @since 5.0.0
  */
 class SubmissionQuery extends ElementQuery
@@ -57,9 +59,11 @@ class SubmissionQuery extends ElementQuery
 
     /**
      * @param mixed $value
+     *
      * @return static
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function form(mixed $value): static
@@ -71,9 +75,11 @@ class SubmissionQuery extends ElementQuery
 
     /**
      * @param mixed $value
+     *
      * @return static
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function subject(mixed $value): static
@@ -85,9 +91,11 @@ class SubmissionQuery extends ElementQuery
 
     /**
      * @param mixed $value
+     *
      * @return static
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function fromName(mixed $value): static
@@ -99,9 +107,11 @@ class SubmissionQuery extends ElementQuery
 
     /**
      * @param mixed $value
+     *
      * @return static
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function fromEmail(mixed $value): static
@@ -113,9 +123,11 @@ class SubmissionQuery extends ElementQuery
 
     /**
      * @param mixed $value
+     *
      * @return static
      *
      * @author Hybrid Interactive
+     *
      * @since 5.0.0
      */
     public function message(mixed $value): static
@@ -127,9 +139,11 @@ class SubmissionQuery extends ElementQuery
 
     /**
      * @param mixed $value
+     *
      * @return static
      *
      * @author Hybrid Interactive
+     *
      * @since 5.1.0
      */
     public function isSpam(mixed $value): static
@@ -148,9 +162,9 @@ class SubmissionQuery extends ElementQuery
     protected function statusCondition(string $status): mixed
     {
         return match ($status) {
-            Submission::STATUS_IS_SPAM => ['contactform_submissions.isSpam' => true],
+            Submission::STATUS_IS_SPAM     => ['contactform_submissions.isSpam' => true],
             Submission::STATUS_IS_NOT_SPAM => ['contactform_submissions.isSpam' => false],
-            default => parent::statusCondition($status),
+            default                        => parent::statusCondition($status),
         };
     }
 
