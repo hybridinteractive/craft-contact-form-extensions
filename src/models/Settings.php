@@ -153,16 +153,16 @@ class Settings extends Model
             [['notificationTemplate', 'confirmationTemplate', 'recaptchaUrl', 'recaptchaVerificationUrl', 'recaptchaSiteKey', 'recaptchaSecretKey', 'recaptchaDataBadge', 'recaptchaVersion'], 'string'],
             ['recaptchaTimeout', 'integer'],
             ['recaptchaThreshold', 'double', 'max' => 1, 'min' => 0],
-            [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function ($model) {
+            [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function($model) {
                 return $model->enableConfirmationEmail === true;
             }],
-            ['notificationTemplate', 'required', 'when' => static function ($model) {
+            ['notificationTemplate', 'required', 'when' => static function($model) {
                 return $model->enableTemplateOverwrite === true;
             }],
-            [['recaptchaSiteKey', 'recaptchaSecretKey'], 'required', 'when' => static function ($model) {
+            [['recaptchaSiteKey', 'recaptchaSecretKey'], 'required', 'when' => static function($model) {
                 return $model->recaptcha === true;
             }],
-            [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function ($model) {
+            [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function($model) {
                 return $model->enableRecaptchaOverride === true;
             }],
         ]);

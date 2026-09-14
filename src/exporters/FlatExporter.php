@@ -49,13 +49,13 @@ class FlatExporter extends ElementExporter
             }
 
             $results[] = [
-                'id'        => $element['id'],
-                'uid'       => $element['uid'],
-                'form'      => $element['form'],
-                'fromName'  => $element['fromName'],
+                'id' => $element['id'],
+                'uid' => $element['uid'],
+                'form' => $element['form'],
+                'fromName' => $element['fromName'],
                 'fromEmail' => $element['fromEmail'],
-                'subject'   => $element['subject'],
-                'isSpam'    => $element['isSpam'] ?? false,
+                'subject' => $element['subject'],
+                'isSpam' => $element['isSpam'] ?? false,
                 ...$message,
                 'dateCreated' => $element['dateCreated'],
                 'dateUpdated' => $element['dateUpdated'],

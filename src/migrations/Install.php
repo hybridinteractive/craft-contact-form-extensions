@@ -91,16 +91,16 @@ class Install extends Migration
             $this->createTable(
                 '{{%contactform_submissions}}',
                 [
-                    'id'          => $this->integer()->notNull(),
-                    'form'        => $this->string()->null(),
-                    'subject'     => $this->string()->null(),
-                    'fromName'    => $this->string()->null(),
-                    'fromEmail'   => $this->string()->null(),
-                    'message'     => $this->text()->notNull(),
-                    'isSpam'      => $this->boolean()->defaultValue(false)->notNull(),
+                    'id' => $this->integer()->notNull(),
+                    'form' => $this->string()->null(),
+                    'subject' => $this->string()->null(),
+                    'fromName' => $this->string()->null(),
+                    'fromEmail' => $this->string()->null(),
+                    'message' => $this->text()->notNull(),
+                    'isSpam' => $this->boolean()->defaultValue(false)->notNull(),
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid'         => $this->uid(),
+                    'uid' => $this->uid(),
                     'PRIMARY KEY(id)',
                 ]
             );

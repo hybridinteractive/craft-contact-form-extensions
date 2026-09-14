@@ -140,7 +140,7 @@ class RecaptchaV3
             HTML;
 
         if ($this->hideBadge) {
-            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>'.PHP_EOL;
+            $html .= '<style>.grecaptcha-badge{display:none;!important}</style>' . PHP_EOL;
         }
 
         return $html;
@@ -165,7 +165,7 @@ class RecaptchaV3
         }
 
         $body = $this->_sendVerifyRequest([
-            'secret'   => $this->secretKey,
+            'secret' => $this->secretKey,
             'remoteip' => $clientIp,
             'response' => $response,
         ]);

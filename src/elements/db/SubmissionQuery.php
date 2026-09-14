@@ -162,9 +162,9 @@ class SubmissionQuery extends ElementQuery
     protected function statusCondition(string $status): mixed
     {
         return match ($status) {
-            Submission::STATUS_IS_SPAM     => ['contactform_submissions.isSpam' => true],
+            Submission::STATUS_IS_SPAM => ['contactform_submissions.isSpam' => true],
             Submission::STATUS_IS_NOT_SPAM => ['contactform_submissions.isSpam' => false],
-            default                        => parent::statusCondition($status),
+            default => parent::statusCondition($status),
         };
     }
 

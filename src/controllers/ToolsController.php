@@ -56,7 +56,7 @@ class ToolsController extends Controller
 
         $formNames = $this->_getFormNames();
         $formOptions = array_map(
-            static fn (string $form) => ['label' => ucfirst($form), 'value' => $form],
+            static fn(string $form) => ['label' => ucfirst($form), 'value' => $form],
             $formNames
         );
         array_unshift($formOptions, [

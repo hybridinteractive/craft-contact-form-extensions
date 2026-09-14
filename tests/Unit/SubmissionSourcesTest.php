@@ -20,7 +20,7 @@ class SubmissionSourcesTest extends TestCase
      */
     public function testDefineSourcesUsesDistinctQuery(): void
     {
-        $source = file_get_contents(dirname(__DIR__, 2).'/src/elements/Submission.php');
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/elements/Submission.php');
 
         self::assertIsString($source);
         self::assertStringNotContainsString('self::find()->all()', $source);

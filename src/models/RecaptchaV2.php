@@ -139,7 +139,7 @@ class RecaptchaV2
             $client = new Client(['timeout' => $this->timeout]);
             $result = $client->post($this->recaptchaVerificationUrl, [
                 'form_params' => [
-                    'secret'   => $this->secretKey,
+                    'secret' => $this->secretKey,
                     'remoteip' => $clientIp,
                     'response' => $response,
                 ],
@@ -149,14 +149,14 @@ class RecaptchaV2
 
             if (!isset($body['success']) || $body['success'] !== true) {
                 $errorCodes = $body['error-codes'] ?? [];
-                Craft::warning('reCAPTCHA verification failed: '.implode(', ', $errorCodes), __METHOD__);
+                Craft::warning('reCAPTCHA verification failed: ' . implode(', ', $errorCodes), __METHOD__);
 
                 return false;
             }
 
             return true;
         } catch (RequestException $e) {
-            Craft::error('reCAPTCHA verification request failed: '.$e->getMessage(), __METHOD__);
+            Craft::error('reCAPTCHA verification request failed: ' . $e->getMessage(), __METHOD__);
 
             return false;
         }
@@ -170,7 +170,7 @@ class RecaptchaV2
      */
     private function _renderPolyfill(): string
     {
-        return '<script src="https://cdnjs.cloudflare.com/polyfill/v2/polyfill.min.js"></script>'.PHP_EOL;
+        return '<script src="https://cdnjs.cloudflare.com/polyfill/v2/polyfill.min.js"></script>' . PHP_EOL;
     }
 
     /**
@@ -178,13 +178,13 @@ class RecaptchaV2
      */
     private function _renderCaptchaHtml(): string
     {
-        $html = '<div id="_g-recaptcha"></div>'.PHP_EOL;
+        $html = '<div id="_g-recaptcha"></div>' . PHP_EOL;
         if ($this->hideBadge) {
-            $html .= '<style>.grecaptcha-badge{display:none !important;}</style>'.PHP_EOL;
+            $html .= '<style>.grecaptcha-badge{display:none !important;}</style>' . PHP_EOL;
         }
 
-        $html .= '<div class="g-recaptcha" data-sitekey="'.htmlspecialchars($this->siteKey).'" ';
-        $html .= 'data-size="invisible" data-callback="_submitForm" data-badge="'.htmlspecialchars($this->dataBadge).'"></div>';
+        $html .= '<div class="g-recaptcha" data-sitekey="' . htmlspecialchars($this->siteKey) . '" ';
+        $html .= 'data-size="invisible" data-callback="_submitForm" data-badge="' . htmlspecialchars($this->dataBadge) . '"></div>';
 
         return $html;
     }
@@ -198,16 +198,16 @@ class RecaptchaV2
     {
         $apiUrl = $this->recaptchaUrl;
         if ($lang) {
-            $apiUrl .= '?hl='.htmlspecialchars($lang);
+            $apiUrl .= '?hl=' . htmlspecialchars($lang);
         }
 
-        $html = '<script src="'.htmlspecialchars($apiUrl).'" async defer></script>'.PHP_EOL;
+        $html = '<script src="' . htmlspecialchars($apiUrl) . '" async defer></script>' . PHP_EOL;
         $html .= '<script>var _submitForm,_captchaForm,_captchaSubmit,_execute=true,_captchaBadge;</script>';
-        $html .= "<script>window.addEventListener('load', _loadCaptcha);".PHP_EOL;
+        $html .= "<script>window.addEventListener('load', _loadCaptcha);" . PHP_EOL;
         $html .= 'function _loadCaptcha(){';
         if ($this->hideBadge) {
             $html .= "_captchaBadge=document.querySelector('.grecaptcha-badge');";
-            $html .= "if(_captchaBadge){_captchaBadge.style = 'display:none !important;';}".PHP_EOL;
+            $html .= "if(_captchaBadge){_captchaBadge.style = 'display:none !important;';}" . PHP_EOL;
         }
         $html .= '_captchaForm=document.querySelector("#_g-recaptcha").closest("form");';
         $html .= "_captchaSubmit=_captchaForm.querySelector('[type=submit]');";
@@ -219,7 +219,7 @@ class RecaptchaV2
         if ($this->debug) {
             $html .= $this->_renderDebug();
         }
-        $html .= '}</script>'.PHP_EOL;
+        $html .= '}</script>' . PHP_EOL;
 
         return $html;
     }
@@ -232,8 +232,8 @@ class RecaptchaV2
         $debugElements = ['_submitForm', '_captchaForm', '_captchaSubmit'];
         $html = '';
         foreach ($debugElements as $element) {
-            $html .= $this->_consoleLog('"Checking element binding of '.$element.'..."');
-            $html .= $this->_consoleLog($element.'!==undefined');
+            $html .= $this->_consoleLog('"Checking element binding of ' . $element . '..."');
+            $html .= $this->_consoleLog($element . '!==undefined');
         }
 
         return $html;

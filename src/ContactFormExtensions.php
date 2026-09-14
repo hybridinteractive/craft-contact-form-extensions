@@ -120,11 +120,11 @@ class ContactFormExtensions extends Plugin
         $nav['subnav'] = [
             'submissions' => [
                 'label' => Craft::t('contact-form-extensions', 'Submissions'),
-                'url'   => 'contact-form-extensions',
+                'url' => 'contact-form-extensions',
             ],
             'tools' => [
                 'label' => Craft::t('contact-form-extensions', 'Tools'),
-                'url'   => 'contact-form-extensions/tools',
+                'url' => 'contact-form-extensions/tools',
             ],
         ];
 
@@ -155,9 +155,9 @@ class ContactFormExtensions extends Plugin
         $overrides = $app->getConfig()->getConfigFromFile(strtolower($this->handle));
 
         return $app->getView()->renderTemplate('contact-form-extensions/_settings', [
-            'settings'  => $settings,
+            'settings' => $settings,
             'overrides' => array_keys($overrides),
-            'readOnly'  => !Craft::$app->getConfig()->getGeneral()->allowAdminChanges,
+            'readOnly' => !Craft::$app->getConfig()->getGeneral()->allowAdminChanges,
         ]);
     }
 
@@ -169,7 +169,7 @@ class ContactFormExtensions extends Plugin
      */
     private function _registerSettings(): void
     {
-        Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function (TemplateEvent $e) {
+        Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE, function(TemplateEvent $e) {
             if (
                 $e->template === 'settings/plugins/_settings.twig' &&
                 isset($e->variables['plugin']) &&
@@ -188,7 +188,7 @@ class ContactFormExtensions extends Plugin
      */
     private function _registerVariable(): void
     {
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
             /** @var CraftVariable $variable */
             $variable = $event->sender;
             $variable->set('contactFormExtensions', ContactFormExtensionsVariable::class);
@@ -203,9 +203,9 @@ class ContactFormExtensions extends Plugin
         Event::on(
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
-            function (RegisterUserPermissionsEvent $event) {
+            function(RegisterUserPermissionsEvent $event) {
                 $event->permissions[] = [
-                    'heading'     => Craft::t('contact-form-extensions', 'Contact Form Extensions'),
+                    'heading' => Craft::t('contact-form-extensions', 'Contact Form Extensions'),
                     'permissions' => [
                         SubmissionsController::PERMISSION_VIEW_SUBMISSIONS => [
                             'label' => Craft::t('contact-form-extensions', 'View form submissions'),
@@ -227,8 +227,8 @@ class ContactFormExtensions extends Plugin
      */
     private function _registerContactFormEventListeners(): void
     {
-        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function () {
-            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function (CraftContactFormSendEvent $e) {
+        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function() {
+            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_BEFORE_SEND, function(CraftContactFormSendEvent $e) {
                 /** @var Settings $settings */
                 $settings = $this->getSettings();
                 /** @var \craft\web\Application|\craft\console\Application $app */
@@ -275,7 +275,7 @@ class ContactFormExtensions extends Plugin
                     $app->getView()->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
                     if (is_array($e->submission->message) && array_key_exists('notificationTemplate', $e->submission->message)) {
-                        $template = '_emails/'.Craft::$app->getSecurity()->validateData($e->submission->message['notificationTemplate']);
+                        $template = '_emails/' . Craft::$app->getSecurity()->validateData($e->submission->message['notificationTemplate']);
                     } else {
                         $template = App::parseEnv($settings->notificationTemplate);
                     }
@@ -293,7 +293,7 @@ class ContactFormExtensions extends Plugin
                 }
             });
 
-            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function (CraftContactFormSendEvent $e) {
+            Event::on(CraftContactFormMailer::class, CraftContactFormMailer::EVENT_AFTER_SEND, function(CraftContactFormSendEvent $e) {
                 /** @var Settings $settings */
                 $settings = $this->getSettings();
                 /** @var \craft\web\Application|\craft\console\Application $app */
@@ -311,7 +311,7 @@ class ContactFormExtensions extends Plugin
                 $app->getView()->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
                 if (is_array($e->submission->message) && array_key_exists('confirmationTemplate', $e->submission->message)) {
-                    $template = '_emails/'.Craft::$app->getSecurity()->validateData($e->submission->message['confirmationTemplate']);
+                    $template = '_emails/' . Craft::$app->getSecurity()->validateData($e->submission->message['confirmationTemplate']);
                 } else {
                     $template = App::parseEnv($settings->confirmationTemplate);
                 }

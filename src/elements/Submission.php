@@ -167,7 +167,7 @@ class Submission extends Element
             ->from(['s' => '{{%contactform_submissions}}'])
             ->innerJoin(['e' => '{{%elements}}'], '[[e.id]] = [[s.id]]')
             ->where([
-                'e.type'        => static::class,
+                'e.type' => static::class,
                 'e.dateDeleted' => null,
             ])
             ->andWhere(['not', ['s.form' => null]])
@@ -177,16 +177,16 @@ class Submission extends Element
 
         $sources = [
             [
-                'key'      => '*',
-                'label'    => Craft::t('contact-form-extensions', 'All submissions'),
+                'key' => '*',
+                'label' => Craft::t('contact-form-extensions', 'All submissions'),
                 'criteria' => [],
             ],
         ];
 
         foreach ($forms as $formHandle) {
             $sources[] = [
-                'key'      => $formHandle,
-                'label'    => ucfirst((string) $formHandle),
+                'key' => $formHandle,
+                'label' => ucfirst((string) $formHandle),
                 'criteria' => ['form' => $formHandle],
             ];
         }
@@ -204,9 +204,9 @@ class Submission extends Element
         $actions = parent::defineActions($source);
 
         $actions[] = $elementsService->createAction([
-            'type'                => Delete::class,
+            'type' => Delete::class,
             'confirmationMessage' => Craft::t('contact-form-extensions', 'Are you sure you want to delete the selected submissions?'),
-            'successMessage'      => Craft::t('contact-form-extensions', 'Submissions deleted.'),
+            'successMessage' => Craft::t('contact-form-extensions', 'Submissions deleted.'),
         ]);
 
         return $actions;
@@ -229,12 +229,12 @@ class Submission extends Element
     protected static function defineTableAttributes(): array
     {
         return [
-            'id'          => Craft::t('contact-form-extensions', 'ID'),
-            'form'        => Craft::t('contact-form-extensions', 'Form'),
-            'subject'     => Craft::t('contact-form-extensions', 'Subject'),
-            'fromName'    => Craft::t('contact-form-extensions', 'From Name'),
-            'fromEmail'   => Craft::t('contact-form-extensions', 'From Email'),
-            'message'     => Craft::t('contact-form-extensions', 'Message'),
+            'id' => Craft::t('contact-form-extensions', 'ID'),
+            'form' => Craft::t('contact-form-extensions', 'Form'),
+            'subject' => Craft::t('contact-form-extensions', 'Subject'),
+            'fromName' => Craft::t('contact-form-extensions', 'From Name'),
+            'fromEmail' => Craft::t('contact-form-extensions', 'From Email'),
+            'message' => Craft::t('contact-form-extensions', 'Message'),
             'dateCreated' => Craft::t('contact-form-extensions', 'Date Created'),
         ];
     }
@@ -297,7 +297,7 @@ class Submission extends Element
      */
     public function getCpEditUrl(): ?string
     {
-        return UrlHelper::cpUrl('contact-form-extensions/submissions/'.$this->id);
+        return UrlHelper::cpUrl('contact-form-extensions/submissions/' . $this->id);
     }
 
     /**
@@ -316,7 +316,7 @@ class Submission extends Element
             'contact-form-extensions'
         );
 
-        $title = $this->subject ?: Craft::t('contact-form-extensions', 'Submission').' #'.$this->id;
+        $title = $this->subject ?: Craft::t('contact-form-extensions', 'Submission') . ' #' . $this->id;
         $behavior->title($title);
 
         $message = [];
@@ -330,7 +330,7 @@ class Submission extends Element
         }
 
         $behavior->contentTemplate('contact-form-extensions/submissions/_show', [
-            'submission'    => $this,
+            'submission' => $this,
             'messageObject' => $message,
         ]);
     }
@@ -381,12 +381,12 @@ class Submission extends Element
     public function afterSave(bool $isNew): void
     {
         $data = [
-            'form'      => $this->form,
-            'subject'   => $this->subject,
-            'fromName'  => $this->fromName,
+            'form' => $this->form,
+            'subject' => $this->subject,
+            'fromName' => $this->fromName,
             'fromEmail' => $this->fromEmail,
-            'message'   => $this->message,
-            'isSpam'    => $this->isSpam,
+            'message' => $this->message,
+            'isSpam' => $this->isSpam,
         ];
 
         if ($isNew) {
