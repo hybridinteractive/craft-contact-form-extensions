@@ -1,8 +1,6 @@
-# StyleCI fights Craft ECS (function spacing, => alignment, etc.).
-# Coding standards are enforced by craftcms/ecs in GitHub Actions instead.
-php: false
-js: false
-ts: false
-css: false
-vue: false
-py: false
+# Coding standards are enforced by craftcms/ecs in GitHub Actions.
+# Keep StyleCI installed but analyze nothing so it cannot fight ECS.
+preset: recommended
+finder:
+  not-name:
+    - "*.php"
