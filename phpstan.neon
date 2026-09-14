@@ -1,16 +1,10 @@
+includes:
+    - vendor/craftcms/phpstan/phpstan.neon
+    - phpstan-baseline.neon
+
 parameters:
-    level: 1
+    level: 5
     paths:
         - src
-    scanFiles:
-        - vendor/craftcms/cms/src/Craft.php
-        - vendor/yiisoft/yii2/Yii.php
-    stubFiles:
-        - stubs/BaseYii.stub
-    earlyTerminatingMethodCalls:
-        Craft:
-            - dd
-        yii\base\Application:
-            - end
-        yii\base\ErrorHandler:
-            - convertExceptionToError
+    treatPhpDocTypesAsCertain: false
+    tmpDir: %currentWorkingDirectory%/tmp/phpstan

@@ -1,46 +1,27 @@
 <?php
+/**
+ * Contact Form Extensions plugin for Craft CMS 5.x.
+ *
+ * Adds extensions to the Craft CMS contact form plugin.
+ */
 
 namespace hybridinteractive\contactformextensions\controllers;
 
 use craft\web\Controller;
-use hybridinteractive\contactformextensions\ContactFormExtensions;
-use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
-use hybridinteractive\contactformextensions\elements\Submission;
 
+/**
+ * Submissions controller.
+ *
+ * Kept for permission constants used by the Submission element and permission registration.
+ * Edit screens use Craft's unified element editor.
+ *
+ * @author Hybrid Interactive
+ * @since 5.0.0
+ */
 class SubmissionsController extends Controller
 {
-    /**
-     * @param string|null $submissionId
-     * @param string|null $siteHandle
-     *
-     * @return \yii\web\Response
-     */
-    public function actionShowSubmission(string $submissionId = null, string $siteHandle = null)
-    {
-        $query = new SubmissionQuery(Submission::class);
-        $query->id = $submissionId;
+    // Const Properties
+    // =========================================================================
 
-        /* @var Submission $submission */
-        $submission = $query->one();
-
-        if ($submission) {
-            $messageObject = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings((array) json_decode($submission->message));
-
-            $variables = [
-                'submission'    => $submission,
-                'siteHandle'    => $siteHandle,
-                'messageObject' => $messageObject,
-            ];
-
-            return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
-        } else {
-            $variables = [
-                'submission'    => null,
-                'siteHandle'    => '',
-                'messageObject' => '',
-            ];
-
-            return $this->renderTemplate('contact-form-extensions/submissions/_show', $variables);
-        }
-    }
+    public const PERMISSION_VIEW_SUBMISSIONS = 'contact-form-extensions:view-submissions';
 }

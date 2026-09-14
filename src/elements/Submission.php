@@ -1,6 +1,6 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 4.x.
+ * Contact Form Extensions plugin for Craft CMS 5.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
@@ -11,26 +11,94 @@ use Craft;
 use craft\base\Element;
 use craft\elements\actions\Delete;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
+use craft\web\CpScreenResponseBehavior;
+use hybridinteractive\contactformextensions\ContactFormExtensions;
+use hybridinteractive\contactformextensions\controllers\SubmissionsController;
+use hybridinteractive\contactformextensions\controllers\ToolsController;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
+use hybridinteractive\contactformextensions\exporters\FlatExporter;
+use yii\db\Query;
+use yii\web\Response;
 
+/**
+ * Submission element.
+ *
+ * @author Hybrid Interactive
+ * @since 5.0.0
+ */
 class Submission extends Element
 {
+    // Const Properties
+    // =========================================================================
+
+    public const STATUS_IS_SPAM = 'spam';
+    public const STATUS_IS_NOT_SPAM = 'not-spam';
+
     // Public Properties
     // =========================================================================
 
-    public ?string $form;
-    public ?string $fromName;
-    public ?string $fromEmail;
-    public ?string $subject;
-    public $message;
+    /**
+     * @var string|null
+     */
+    public ?string $form = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $fromName = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $fromEmail = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $subject = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $message = null;
+
+    /**
+     * @var bool
+     */
+    public bool $isSpam = false;
 
     // Static Methods
     // =========================================================================
 
     /**
-     * @inheritDoc
+     * @inheritdoc
+     */
+    public static function displayName(): string
+    {
+        return Craft::t('contact-form-extensions', 'Submission');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('contact-form-extensions', 'Submissions');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function refHandle(): ?string
+    {
+        return 'submission';
+    }
+
+    /**
+     * @inheritdoc
      */
     public static function hasContent(): bool
     {
@@ -38,59 +106,85 @@ class Submission extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public static function isLocalized(): bool
     {
         return false;
     }
 
-    public function canView($user): bool
+    /**
+     * @inheritdoc
+     */
+    public static function hasStatuses(): bool
     {
         return true;
     }
 
-    public function canDelete($user): bool
+    /**
+     * @inheritdoc
+     */
+    public static function statuses(): array
     {
-        return true;
+        return [
+            self::STATUS_IS_NOT_SPAM => [
+                'label' => Craft::t('contact-form-extensions', 'Not spam'),
+                'color' => 'green',
+            ],
+            self::STATUS_IS_SPAM => [
+                'label' => Craft::t('contact-form-extensions', 'Spam'),
+                'color' => 'red',
+            ],
+        ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function find(): ElementQueryInterface
     {
         return new SubmissionQuery(static::class);
     }
 
+    /**
+     * @inheritdoc
+     */
     protected static function defineSearchableAttributes(): array
     {
         return ['form', 'subject', 'fromName', 'fromEmail'];
     }
 
-    public function getCpEditUrl(): ?string
-    {
-        return UrlHelper::cpUrl('contact-form-extensions/submissions/'.$this->id);
-    }
-
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected static function defineSources(string $context = null): array
     {
-        $forms = array_unique(array_map(function (self $submission) {
-            return $submission->form;
-        }, self::find()->all()));
+        $forms = (new Query())
+            ->select(['s.form'])
+            ->distinct()
+            ->from(['s' => '{{%contactform_submissions}}'])
+            ->innerJoin(['e' => '{{%elements}}'], '[[e.id]] = [[s.id]]')
+            ->where([
+                'e.type' => static::class,
+                'e.dateDeleted' => null,
+            ])
+            ->andWhere(['not', ['s.form' => null]])
+            ->andWhere(['!=', 's.form', ''])
+            ->orderBy(['s.form' => SORT_ASC])
+            ->column();
 
         $sources = [
             [
-                'key'      => '*',
-                'label'    => Craft::t('contact-form-extensions', 'All submissions'),
+                'key' => '*',
+                'label' => Craft::t('contact-form-extensions', 'All submissions'),
                 'criteria' => [],
             ],
         ];
 
         foreach ($forms as $formHandle) {
             $sources[] = [
-                'key'      => $formHandle,
-                'label'    => ucfirst($formHandle),
+                'key' => $formHandle,
+                'label' => ucfirst((string)$formHandle),
                 'criteria' => ['form' => $formHandle],
             ];
         }
@@ -99,7 +193,7 @@ class Submission extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected static function defineActions(string $source = null): array
     {
@@ -108,34 +202,43 @@ class Submission extends Element
         $actions = parent::defineActions($source);
 
         $actions[] = $elementsService->createAction([
-            'type'                => Delete::class,
+            'type' => Delete::class,
             'confirmationMessage' => Craft::t('contact-form-extensions', 'Are you sure you want to delete the selected submissions?'),
-            'successMessage'      => Craft::t('contact-form-extensions', 'Submissions deleted.'),
+            'successMessage' => Craft::t('contact-form-extensions', 'Submissions deleted.'),
         ]);
 
         return $actions;
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    protected static function defineTableAttributes(): array
+    protected static function defineExporters(string $source): array
     {
-        $attributes = [
-            'id'          => Craft::t('contact-form-extensions', 'ID'),
-            'form'        => Craft::t('contact-form-extensions', 'Form'),
-            'subject'     => Craft::t('contact-form-extensions', 'Subject'),
-            'fromName'    => Craft::t('contact-form-extensions', 'From Name'),
-            'fromEmail'   => Craft::t('contact-form-extensions', 'From Email'),
-            'message'     => Craft::t('contact-form-extensions', 'Message'),
-            'dateCreated' => Craft::t('contact-form-extensions', 'Date Created'),
-        ];
+        $exporters = parent::defineExporters($source);
+        $exporters[] = FlatExporter::class;
 
-        return $attributes;
+        return $exporters;
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
+     */
+    protected static function defineTableAttributes(): array
+    {
+        return [
+            'id' => Craft::t('contact-form-extensions', 'ID'),
+            'form' => Craft::t('contact-form-extensions', 'Form'),
+            'subject' => Craft::t('contact-form-extensions', 'Subject'),
+            'fromName' => Craft::t('contact-form-extensions', 'From Name'),
+            'fromEmail' => Craft::t('contact-form-extensions', 'From Email'),
+            'message' => Craft::t('contact-form-extensions', 'Message'),
+            'dateCreated' => Craft::t('contact-form-extensions', 'Date Created'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
@@ -151,15 +254,113 @@ class Submission extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function getTableAttributeHtml(string $attribute): string
+    protected static function defineSortOptions(): array
     {
-        if ($attribute == 'message') {
-            $message = (array) json_decode($this->message);
+        return parent::defineSortOptions();
+    }
+
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function getStatus(): ?string
+    {
+        return $this->isSpam ? self::STATUS_IS_SPAM : self::STATUS_IS_NOT_SPAM;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function canView(User $user): bool
+    {
+        return $user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS)
+            || $user->can('accessPlugin-contact-form-extensions');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function canDelete(User $user): bool
+    {
+        return $user->can(ToolsController::PERMISSION_DELETE_SUBMISSIONS)
+            || $user->can('accessPlugin-contact-form-extensions');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpEditUrl(): ?string
+    {
+        return UrlHelper::cpUrl('contact-form-extensions/submissions/' . $this->id);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function prepareEditScreen(Response $response, string $containerId): void
+    {
+        /** @var CpScreenResponseBehavior|null $behavior */
+        $behavior = $response->getBehavior(CpScreenResponseBehavior::NAME);
+        if ($behavior === null) {
+            return;
+        }
+
+        $behavior->addCrumb(
+            Craft::t('contact-form-extensions', 'Form Submissions'),
+            'contact-form-extensions'
+        );
+
+        $title = $this->subject ?: Craft::t('contact-form-extensions', 'Submission') . ' #' . $this->id;
+        $behavior->title($title);
+
+        $message = [];
+        if (is_string($this->message) && $this->message !== '') {
+            $decoded = json_decode($this->message, true);
+            if (is_array($decoded)) {
+                $message = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings($decoded);
+            }
+        } elseif (is_array($this->message)) {
+            $message = ContactFormExtensions::$plugin->contactFormExtensionsService->utf8AllTheThings($this->message);
+        }
+
+        $behavior->contentTemplate('contact-form-extensions/submissions/_show', [
+            'submission' => $this,
+            'messageObject' => $message,
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function attributeHtml(string $attribute): string
+    {
+        if ($attribute === 'message') {
+            $message = [];
+            if (is_string($this->message)) {
+                $decoded = json_decode($this->message, true);
+                $message = is_array($decoded) ? $decoded : [];
+            } elseif (is_array($this->message)) {
+                $message = $this->message;
+            }
+
+            $skipKeys = [
+                'formName',
+                'toEmail',
+                'confirmationSubject',
+                'confirmationTemplate',
+                'notificationTemplate',
+                'disableRecaptcha',
+                'disableConfirmation',
+                'disableSaveSubmission',
+            ];
+
             $html = '<ul>';
             foreach ($message as $key => $value) {
-                if (is_string($value) && $key != 'formName' && $key != 'toEmail' && $key != 'confirmationSubject' && $key != 'confirmationTemplate' && $key != 'notificationTemplate' && $key != 'disableRecaptcha' && $key != 'disableConfirmation') {
+                if (is_string($value) && !in_array($key, $skipKeys, true)) {
                     $shortened = trim(substr($value, 0, 30));
                     $html .= "<li><em>{$key}</em>: {$shortened}...</li>";
                 }
@@ -169,46 +370,31 @@ class Submission extends Element
             return StringHelper::convertToUtf8($html);
         }
 
-        return parent::getTableAttributeHtml($attribute);
+        return parent::attributeHtml($attribute);
     }
 
     /**
-     * @inheritDoc
-     */
-    protected static function defineSortOptions(): array
-    {
-        $sortOptions = parent::defineSortOptions();
-
-        return $sortOptions;
-    }
-
-    /**
-     * @param bool $isNew
-     *
-     * @throws \yii\db\Exception
+     * @inheritdoc
      */
     public function afterSave(bool $isNew): void
     {
+        $data = [
+            'form' => $this->form,
+            'subject' => $this->subject,
+            'fromName' => $this->fromName,
+            'fromEmail' => $this->fromEmail,
+            'message' => $this->message,
+            'isSpam' => $this->isSpam,
+        ];
+
         if ($isNew) {
-            Craft::$app->db->createCommand()
-                ->insert('{{%contactform_submissions}}', [
-                    'id'        => $this->id,
-                    'form'      => $this->form,
-                    'subject'   => $this->subject,
-                    'fromName'  => $this->fromName,
-                    'fromEmail' => $this->fromEmail,
-                    'message'   => $this->message,
-                ])
+            $data['id'] = $this->id;
+            Craft::$app->getDb()->createCommand()
+                ->insert('{{%contactform_submissions}}', $data)
                 ->execute();
         } else {
-            Craft::$app->db->createCommand()
-                ->update('{{%contactform_submissions}}', [
-                    'form'      => $this->form,
-                    'subject'   => $this->subject,
-                    'fromName'  => $this->fromName,
-                    'fromEmail' => $this->fromEmail,
-                    'message'   => $this->message,
-                ], ['id' => $this->id])
+            Craft::$app->getDb()->createCommand()
+                ->update('{{%contactform_submissions}}', $data, ['id' => $this->id])
                 ->execute();
         }
 

@@ -1,0 +1,42 @@
+{% import "_includes/forms" as forms %}
+
+{% set selectedSubnavItem = 'tools' %}
+{% set title = "Tools"|t('contact-form-extensions') %}
+
+{% set crumbs = [
+    { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') },
+    { label: "Tools"|t('contact-form-extensions'), url: url('contact-form-extensions/tools') }
+] %}
+
+{% extends "_layouts/cp" %}
+
+{% block content %}
+    <div id="tools" class="readable">
+        <h2>{{ "Clear Submissions"|t('contact-form-extensions') }}</h2>
+        <p class="light">{{ "Delete all submissions for a specific form. This action cannot be undone."|t('contact-form-extensions') }}</p>
+
+        {% if formOptions|length %}
+            <form method="post" action="" class="utility">
+                {{ csrfInput() }}
+                {{ actionInput('contact-form-extensions/tools/clear-submissions') }}
+                {{ redirectInput('contact-form-extensions/tools') }}
+
+                <div class="input ltr">
+                    {{ forms.selectField({
+                        label: "Form"|t('contact-form-extensions'),
+                        id: 'formName',
+                        name: 'formName',
+                        options: formOptions,
+                        required: true,
+                    }) }}
+                </div>
+
+                <div class="buttons">
+                    <button type="submit" class="btn submit delete icon" data-confirm="{{ "Are you sure you want to delete all submissions for this form? This cannot be undone."|t('contact-form-extensions') }}">{{ "Clear submissions"|t('contact-form-extensions') }}</button>
+                </div>
+            </form>
+        {% else %}
+            <p class="light">{{ "No form submissions found in the database."|t('contact-form-extensions') }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

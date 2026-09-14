@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [v5, feature/**, develop-v5]
+  pull_request:
+    branches: [v5]
+
+jobs:
+  quality:
+    name: Code quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: ctype, curl, mbstring, intl, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: |
+          composer config --no-plugins allow-plugins.yiisoft/yii2-composer true
+          composer config --no-plugins allow-plugins.craftcms/plugin-installer true
+          composer update --no-interaction --prefer-dist --no-progress
+
+      - name: ECS
+        run: composer run check-cs
+
+      - name: PHPStan
+        run: composer run phpstan
+
+      - name: PHPUnit
+        run: composer run test

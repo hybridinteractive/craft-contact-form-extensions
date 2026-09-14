@@ -1,6 +1,6 @@
 <?php
 /**
- * Craft Contact Form Extensions plugin for Craft CMS 4.x.
+ * Contact Form Extensions plugin for Craft CMS 5.x.
  *
  * Adds extensions to the Craft CMS contact form plugin.
  */
@@ -11,14 +11,10 @@ use Craft;
 use craft\base\Model;
 
 /**
- * CraftContactFormExtensions Settings Model.
+ * Settings model for Contact Form Extensions.
  *
- * This is a model used to define the plugin's settings.
- *
- * Models are containers for data. Just about every time information is passed
- * between services, controllers, and templates in Craft, it’s passed via a model.
- *
- * https://craftcms.com/docs/plugins/models
+ * @author Hybrid Interactive
+ * @since 5.0.0
  */
 class Settings extends Model
 {
@@ -28,106 +24,120 @@ class Settings extends Model
     /**
      * @var bool
      */
-    public $enableDatabase = true;
+    public bool $enableDatabase = true;
 
     /**
      * @var bool
      */
-    public $enableTemplateOverwrite = true;
+    public bool $enableTemplateOverwrite = true;
 
     /**
      * @var bool
      */
-    public $enableConfirmationEmail = true;
+    public bool $enableConfirmationEmail = true;
+
+    /**
+     * When true, submissions marked as spam are still saved so they can be reviewed in the CP.
+     *
+     * @var bool
+     */
+    public bool $enableSaveSpam = false;
 
     /**
      * @var string|null
      */
-    public $notificationTemplate = '';
+    public ?string $notificationTemplate = '';
 
     /**
      * @var string|null
      */
-    public $confirmationTemplate = '';
+    public ?string $confirmationTemplate = '';
 
     /**
-     * @var string|null
+     * @var string|array|null
      */
-    public $confirmationSubject = '';
+    public string|array|null $confirmationSubject = '';
 
     /**
      * @var bool
      */
-    public $recaptcha = false;
+    public bool $recaptcha = false;
 
     /**
      * @var bool
      */
-    public $enableRecaptchaOverride = false;
+    public bool $enableRecaptchaOverride = false;
 
     /**
      * @var string|null
      */
-    public $recaptchaUrl = '';
+    public ?string $recaptchaUrl = '';
 
     /**
      * @var string|null
      */
-    public $recaptchaVerificationUrl = '';
+    public ?string $recaptchaVerificationUrl = '';
 
     /**
      * @var string|null
      */
-    public $recaptchaVersion = '';
+    public ?string $recaptchaVersion = '';
 
     /**
      * @var string|null
      */
-    public $recaptchaSiteKey = '';
+    public ?string $recaptchaSiteKey = '';
 
     /**
      * @var string|null
      */
-    public $recaptchaSecretKey = '';
+    public ?string $recaptchaSecretKey = '';
 
     /**
      * @var bool
      */
-    public $recaptchaHideBadge = false;
+    public bool $recaptchaHideBadge = false;
 
     /**
      * @var string
      */
-    public $recaptchaDataBadge = 'bottomright';
+    public string $recaptchaDataBadge = 'bottomright';
 
     /**
      * @var int
      */
-    public $recaptchaTimeout = 5;
+    public int $recaptchaTimeout = 5;
 
     /**
      * @var bool
      */
-    public $recaptchaDebug = false;
+    public bool $recaptchaDebug = false;
 
     /**
-     * @var int
+     * @var float
      */
-    public $recaptchaThreshold = 0.5;
+    public float $recaptchaThreshold = 0.5;
 
     // Public Methods
     // =========================================================================
 
     /**
+     * Returns the confirmation subject for the current site.
+     *
      * @return string
+     *
+     * @author Hybrid Interactive
+     * @since 5.0.0
      */
     public function getConfirmationSubject(): string
     {
         if (is_array($this->confirmationSubject)) {
-            return $this->confirmationSubject[Craft::$app->sites->currentSite->handle];
+            $handle = Craft::$app->getSites()->getCurrentSite()->handle;
+
+            return (string)($this->confirmationSubject[$handle] ?? '');
         }
 
-        return $this->confirmationSubject;
+        return (string)$this->confirmationSubject;
     }
 
     /**
@@ -135,30 +145,23 @@ class Settings extends Model
      */
     public function defineRules(): array
     {
-        return [
-            [['enableDatabase', 'enableTemplateOverwrite', 'enableConfirmationEmail', 'recaptcha', 'enableRecaptchaOverride', 'recaptchaHideBadge', 'recaptchaDebug'], 'boolean'],
-
-            [['notificationTemplate', 'confirmationTemplate', 'confirmationSubject', 'recaptchaUrl', 'recaptchaVerificationUrl', 'recaptchaSiteKey', 'recaptchaSecretKey', 'recaptchaDataBadge'], 'string'],
-
+        return array_merge(parent::defineRules(), [
+            [['enableDatabase', 'enableTemplateOverwrite', 'enableConfirmationEmail', 'enableSaveSpam', 'recaptcha', 'enableRecaptchaOverride', 'recaptchaHideBadge', 'recaptchaDebug'], 'boolean'],
+            [['notificationTemplate', 'confirmationTemplate', 'recaptchaUrl', 'recaptchaVerificationUrl', 'recaptchaSiteKey', 'recaptchaSecretKey', 'recaptchaDataBadge', 'recaptchaVersion'], 'string'],
             ['recaptchaTimeout', 'integer'],
             ['recaptchaThreshold', 'double', 'max' => 1, 'min' => 0],
-
-            [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function ($model) {
-                return $model->enableConfirmationEmail == true;
+            [['confirmationTemplate', 'confirmationSubject'], 'required', 'when' => static function($model) {
+                return $model->enableConfirmationEmail === true;
             }],
-
-            ['notificationTemplate', 'required', 'when' => static function ($model) {
-                return $model->enableTemplateOverwrite == true;
+            ['notificationTemplate', 'required', 'when' => static function($model) {
+                return $model->enableTemplateOverwrite === true;
             }],
-
-            [['recaptchaSiteKey', 'recaptchaSecretKey'], 'required', 'when' => static function ($model) {
-                return $model->recaptcha == true;
+            [['recaptchaSiteKey', 'recaptchaSecretKey'], 'required', 'when' => static function($model) {
+                return $model->recaptcha === true;
             }],
-
-            [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function ($model) {
-                return $model->enableRecaptchaOverride == true;
+            [['recaptchaUrl', 'recaptchaVerificationUrl'], 'required', 'when' => static function($model) {
+                return $model->enableRecaptchaOverride === true;
             }],
-
-        ];
+        ]);
     }
 }
