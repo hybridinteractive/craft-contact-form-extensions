@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Craft Contact Form Extensions plugin for Craft CMS 4.x.
  *
@@ -73,7 +74,7 @@ class Submission extends Element
     /**
      * @inheritDoc
      */
-    protected static function defineSources(string $context = null): array
+    protected static function defineSources(?string $context = null): array
     {
         $forms = array_unique(array_map(function (self $submission) {
             return $submission->form;
@@ -101,7 +102,7 @@ class Submission extends Element
     /**
      * @inheritDoc
      */
-    protected static function defineActions(string $source = null): array
+    protected static function defineActions(?string $source = null): array
     {
         $elementsService = Craft::$app->getElements();
 

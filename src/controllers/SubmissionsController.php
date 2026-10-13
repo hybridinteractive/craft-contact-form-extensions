@@ -15,7 +15,7 @@ class SubmissionsController extends Controller
      *
      * @return \yii\web\Response
      */
-    public function actionShowSubmission(string $submissionId = null, string $siteHandle = null)
+    public function actionShowSubmission(?string $submissionId = null, ?string $siteHandle = null)
     {
         $query = new SubmissionQuery(Submission::class);
         $query->id = $submissionId;
