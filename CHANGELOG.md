@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.1.0] - 2026-03-14
+## [5.1.0] - 2026-10-13
 ### Added
 - Spam status on Submission elements with CP filtering (`enableSaveSpam` setting)
 - Flat CSV exporter for submissions
