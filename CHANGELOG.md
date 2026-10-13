@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.4] - 2026-10-13
+### Fixed
+- Submission detail template uses `|capitalize` instead of deprecated `|ucfirst` [#206](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/206)
+
+### Added
+- German and French control panel translations
+
 ## [4.2.2] - 2022-11-14
 Fixed an issue where the settings tabs were not showing [#164](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/164)
 

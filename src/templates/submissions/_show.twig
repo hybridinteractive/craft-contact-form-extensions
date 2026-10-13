@@ -45,7 +45,7 @@
             <p>{{ submission.fromEmail }}</p>
             {% for key, value in messageObject %}
                 {% if key != "formName" and key != "toEmail" and key != "confirmationSubject" and key != "confirmationTemplate" and key != "notificationTemplate" and key != "disableRecaptcha" and key != "disableConfirmation" %}
-                    <h3>{{ key|ucfirst|t('contact-form-extensions') }}</h3>
+                    <h3>{{ key|capitalize|t('contact-form-extensions') }}</h3>
                     {% if value is iterable %}
                         {% for item in value %}
                             <p>{{ item|nl2br }}</p>
