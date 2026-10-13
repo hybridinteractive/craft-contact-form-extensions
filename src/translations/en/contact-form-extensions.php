@@ -1,18 +1,41 @@
 <?php
-/**
- * Craft Contact Form Extensions plugin for Craft CMS 4.x.
- *
- * Adds extensions to the Craft CMS contact form plugin.
- */
 
 /**
- * Craft Contact Form Extensions en Translation.
- *
- * Returns an array with the string to be translated (as passed to `Craft::t('craft-contact-form-extensions', '...')`) as
- * the key, and the translation as the value.
- *
- * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
+ * Contact Form Extensions English translations.
  */
+
 return [
-
+    'Form Submissions' => 'Form Submissions',
+    'Submissions' => 'Submissions',
+    'Submission' => 'Submission',
+    'Tools' => 'Tools',
+    'All submissions' => 'All submissions',
+    'All forms' => 'All forms',
+    'Not spam' => 'Not spam',
+    'Spam' => 'Spam',
+    'Flat' => 'Flat',
+    'View form submissions' => 'View form submissions',
+    'Delete form submissions' => 'Delete form submissions',
+    'Contact Form Extensions' => 'Contact Form Extensions',
+    'Are you sure you want to delete the selected submissions?' => 'Are you sure you want to delete the selected submissions?',
+    'Submissions deleted.' => 'Submissions deleted.',
+    'Please select a form' => 'Please select a form',
+    '{count} submission(s) deleted.' => '{count} submission(s) deleted.',
+    'Clear Submissions' => 'Clear Submissions',
+    'Clear submissions' => 'Clear submissions',
+    'Delete all submissions for a specific form. This action cannot be undone.' => 'Delete all submissions for a specific form. This action cannot be undone.',
+    'Are you sure you want to delete all submissions for this form? This cannot be undone.' => 'Are you sure you want to delete all submissions for this form? This cannot be undone.',
+    'No form submissions found in the database.' => 'No form submissions found in the database.',
+    'Per page' => 'Per page',
+    'Subject' => 'Subject',
+    'From name' => 'From name',
+    'From email' => 'From email',
+    'From Name' => 'From Name',
+    'From Email' => 'From Email',
+    'Form' => 'Form',
+    'Message' => 'Message',
+    'Date Created' => 'Date Created',
+    'ID' => 'ID',
+    'Submission does not exist or was deleted' => 'Submission does not exist or was deleted',
+    'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.' => 'The Contact Form plugin is not installed or activated, Contact Form Extensions does not work without it.',
 ];

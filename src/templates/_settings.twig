@@ -9,6 +9,7 @@
 {%- endmacro %}
 
 {% from _self import configWarning %}
+{% set readOnly = readOnly ?? false %}
 
 <div id="tab-settings">
     {{ forms.lightswitchField({
@@ -16,9 +17,19 @@
         instructions: 'Save the submissions to the database so they can be viewed in the control panel',
         id: 'enableDatabase',
         name: 'enableDatabase',
-        disabled:     'enableDatabase' in overrides,
+        disabled: readOnly or 'enableDatabase' in overrides,
         warning:      'enableDatabase' in overrides ? configWarning('enableDatabase'),
         on: settings.enableDatabase == true
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: 'Save spam submissions',
+        instructions: 'When enabled, submissions marked as spam are still saved so they can be reviewed and filtered in the Control Panel.',
+        id: 'enableSaveSpam',
+        name: 'enableSaveSpam',
+        disabled: readOnly or 'enableSaveSpam' in overrides,
+        warning: 'enableSaveSpam' in overrides ? configWarning('enableSaveSpam'),
+        on: settings.enableSaveSpam == true
     }) }}
 
     {{ forms.lightswitchField({

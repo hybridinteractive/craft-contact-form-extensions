@@ -1,0 +1,6 @@
+# Coding standards are enforced by craftcms/ecs in GitHub Actions.
+# Keep StyleCI installed but analyze nothing so it cannot fight ECS.
+preset: recommended
+finder:
+  not-name:
+    - "*.php"

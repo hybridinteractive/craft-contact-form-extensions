@@ -1,66 +1,230 @@
 <?php
 
+/**
+ * Contact Form Extensions plugin for Craft CMS 5.x.
+ *
+ * Adds extensions to the Craft CMS contact form plugin.
+ */
+
 namespace hybridinteractive\contactformextensions\elements\db;
 
+use Craft;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
+use hybridinteractive\contactformextensions\controllers\SubmissionsController;
+use hybridinteractive\contactformextensions\elements\Submission;
 
+/**
+ * Submission element query.
+ *
+ * @author Hybrid Interactive
+ *
+ * @since 5.0.0
+ */
 class SubmissionQuery extends ElementQuery
 {
-    public $form;
-    public $subject;
-    public $fromName;
-    public $fromEmail;
-    public $message;
+    // Public Properties
+    // =========================================================================
 
-    public function form($value)
+    /**
+     * @var mixed
+     */
+    public mixed $form = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $subject = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $fromName = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $fromEmail = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $message = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $isSpam = null;
+
+    // Private Properties
+    // =========================================================================
+
+    /**
+     * When false, CP queries are not restricted to users with view permission.
+     * Kept private so element-index/export criteria cannot disable the gate.
+     *
+     * @var bool
+     */
+    private bool $_enforceViewPermission = true;
+
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.0.0
+     */
+    public function form(mixed $value): static
     {
         $this->form = $value;
 
         return $this;
     }
 
-    public function subject($value)
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.0.0
+     */
+    public function subject(mixed $value): static
     {
         $this->subject = $value;
 
         return $this;
     }
 
-    public function fromName($value)
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.0.0
+     */
+    public function fromName(mixed $value): static
     {
         $this->fromName = $value;
 
         return $this;
     }
 
-    public function fromEmail($value)
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.0.0
+     */
+    public function fromEmail(mixed $value): static
     {
         $this->fromEmail = $value;
 
         return $this;
     }
 
-    public function message($value)
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.0.0
+     */
+    public function message(mixed $value): static
     {
         $this->message = $value;
 
         return $this;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.1.0
+     */
+    public function isSpam(mixed $value): static
+    {
+        $this->isSpam = $value;
+
+        return $this;
+    }
+
+    /**
+     * Allows CP queries without the view-submissions permission check.
+     *
+     * @return static
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.1.0
+     */
+    public function withoutViewPermissionCheck(): static
+    {
+        $this->_enforceViewPermission = false;
+
+        return $this;
+    }
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    protected function statusCondition(string $status): mixed
+    {
+        return match ($status) {
+            Submission::STATUS_IS_SPAM => ['contactform_submissions.isSpam' => true],
+            Submission::STATUS_IS_NOT_SPAM => ['contactform_submissions.isSpam' => false],
+            default => parent::statusCondition($status),
+        };
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function beforePrepare(): bool
     {
-        // join in the products table
         $this->joinElementTable('contactform_submissions');
 
-        // select the columns
-        $this->query->select([
+        $this->query->addSelect([
             'contactform_submissions.form',
             'contactform_submissions.subject',
             'contactform_submissions.fromName',
             'contactform_submissions.fromEmail',
             'contactform_submissions.message',
+            'contactform_submissions.isSpam',
         ]);
+
+        // Element indexes/exports do not check canView() per row; deny unauthorized CP users here.
+        // Tools clear uses withoutViewPermissionCheck() so delete-only users can load rows to delete.
+        // Flag is private so criteria cannot set it from the request.
+        if (
+            $this->_enforceViewPermission
+            && Craft::$app->getRequest()->getIsCpRequest()
+        ) {
+            $user = Craft::$app->getUser()->getIdentity();
+            if ($user !== null && !$user->can(SubmissionsController::PERMISSION_VIEW_SUBMISSIONS)) {
+                $this->subQuery->andWhere('0=1');
+            }
+        }
 
         if ($this->form) {
             $this->subQuery->andWhere(Db::parseParam('contactform_submissions.form', $this->form));
@@ -80,6 +244,10 @@ class SubmissionQuery extends ElementQuery
 
         if ($this->message) {
             $this->subQuery->andWhere(Db::parseParam('contactform_submissions.message', $this->message));
+        }
+
+        if ($this->isSpam !== null) {
+            $this->subQuery->andWhere(Db::parseParam('contactform_submissions.isSpam', $this->isSpam));
         }
 
         return parent::beforePrepare();

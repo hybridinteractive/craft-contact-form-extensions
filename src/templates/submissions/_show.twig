@@ -1,51 +1,36 @@
-{% extends "_layouts/cp" %}
-{% import "_includes/forms" as forms %}
+{% css %}
+    .so-full-details .contact-form-extensions-submission {
+        padding: 24px var(--padding);
+        background-color: white;
+    }
+{% endcss %}
 
-{% set fullPageForm = true %}
-{% set title = submission ? submission.dateCreated|date('d/m/Y H:i') : "" %}
+{% set skipKeys = [
+    'formName',
+    'toEmail',
+    'confirmationSubject',
+    'confirmationTemplate',
+    'notificationTemplate',
+    'disableRecaptcha',
+    'disableConfirmation',
+    'disableSaveSubmission'
+] %}
 
-{# {% hook "cp.contactFormSubmission.show" %} #}
-
-{% if crumbs is not defined %}
+<div class="contact-form-extensions-submission readable">
     {% if submission %}
-        {% set crumbs = [
-            { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') },
-            { label: submission.subject, url: '' }
-        ] %}
+        <h3>{{ "Subject"|t('contact-form-extensions') }}</h3>
+        <p>{{ submission.subject ?? '' }}</p>
 
-    {% else %}
-        {% set crumbs = [
-            { label: craft.contactFormExtensions.name, url: url('contact-form-extensions') }
-        ] %}
-    {% endif %}
-{% endif %}
+        <h3>{{ "From name"|t('contact-form-extensions') }}</h3>
+        <p>{{ submission.fromName ?? '' }}</p>
 
+        <h3>{{ "From email"|t('contact-form-extensions') }}</h3>
+        <p>{{ submission.fromEmail ?? '' }}</p>
 
-{% block header %}
-    {{ block('pageTitle') }}
-    {# {{ block('contextMenu') }} #}
-    {# <div class="flex-grow"></div> #}
-    {# {{ block('actionButton') }} #}
-{% endblock %}
-
-{# {% block contextMenu %}
-{% endblock %}
-
-{% block actionButton %}
-{% endblock %} #}
-
-{% block content %}
-    <div class="readable">
-        {% if submission %}
-            <h3>{{ "Subject"|t('contact-form-extensions') }}</h3>
-            <p>{{ submission.subject }}</p>
-            <h3>{{ "From name"|t('contact-form-extensions') }}</h3>
-            <p>{{ submission.fromName }}</p>
-            <h3>{{ "From email"|t('contact-form-extensions') }}</h3>
-            <p>{{ submission.fromEmail }}</p>
+        {% if messageObject is iterable %}
             {% for key, value in messageObject %}
-                {% if key != "formName" and key != "toEmail" and key != "confirmationSubject" and key != "confirmationTemplate" and key != "notificationTemplate" and key != "disableRecaptcha" and key != "disableConfirmation" %}
-                    <h3>{{ key|ucfirst|t('contact-form-extensions') }}</h3>
+                {% if key not in skipKeys %}
+                    <h3>{{ key|capitalize|t('contact-form-extensions') }}</h3>
                     {% if value is iterable %}
                         {% for item in value %}
                             <p>{{ item|nl2br }}</p>
@@ -55,29 +40,8 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-        {% else %}
-            <h3>Submission does not exist or was deleted</h3>
         {% endif %}
-    </div>
-
-    <hr>
-    <a href="{{ url('contact-form-extensions') }}" class="btn">{{ "Back to overview"|t('contact-form-extensions') }}</a>
-
-    {# Give plugins a chance to add other things here #}
-    {# {% hook "cp.contactFormSubmission.show.content" %} #}
-{% endblock %}
-
-{% block details %}
-    {% if submission %}
-        <hr>
-        <div class="meta read-only">
-            <div class="data">
-                <h5 class="heading">{{ "Date Created"|t('app') }}</h5>
-                <div class="value">{{ submission.dateCreated|datetime('short') }}</div>
-            </div>
-        </div>
+    {% else %}
+        <h3>{{ "Submission does not exist or was deleted"|t('contact-form-extensions') }}</h3>
     {% endif %}
-
-    {# Give plugins a chance to add other stuff here #}
-    {# {% hook "cp.contactFormSubmission.show.details" %} #}
-{% endblock %}
+</div>
