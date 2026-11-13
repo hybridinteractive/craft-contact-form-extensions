@@ -5,6 +5,23 @@
     }
 {% endcss %}
 
+{% macro renderValue(value) %}
+    {% if value is iterable %}
+        <ul>
+            {% for key, item in value %}
+                <li>
+                    {% if key is not same as(loop.index0) %}
+                        <strong>{{ key|capitalize }}:</strong>
+                    {% endif %}
+                    {{ _self.renderValue(item) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ value|nl2br }}</p>
+    {% endif %}
+{% endmacro %}
+
 {% set skipKeys = [
     'formName',
     'toEmail',
@@ -31,13 +48,7 @@
             {% for key, value in messageObject %}
                 {% if key not in skipKeys %}
                     <h3>{{ key|capitalize|t('contact-form-extensions') }}</h3>
-                    {% if value is iterable %}
-                        {% for item in value %}
-                            <p>{{ item|nl2br }}</p>
-                        {% endfor %}
-                    {% else %}
-                        <p>{{ value|nl2br }}</p>
-                    {% endif %}
+                    {{ _self.renderValue(value) }}
                 {% endif %}
             {% endfor %}
         {% endif %}

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.1] - 2026-11-11
+### Fixed
+- Display nested message fields on submission detail screens.
+
 ## [5.1.0] - 2026-10-13
 ### Added
 - Spam status on Submission elements with CP filtering (`enableSaveSpam` setting)
