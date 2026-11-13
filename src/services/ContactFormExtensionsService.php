@@ -250,7 +250,10 @@ class ContactFormExtensionsService extends Component
     // =========================================================================
 
     /**
-     * Returns the text body lines Contact Form writes for the control keys in a message.
+     * Returns the text body entries Contact Form writes for the control keys in a message.
+     *
+     * Values are formatted the way Contact Form's `compileTextBody()` formats them, so an
+     * entry may span several lines when the submitted value contains line breaks.
      *
      * @param array $message
      *
@@ -262,11 +265,10 @@ class ContactFormExtensionsService extends Component
 
         foreach (array_intersect_key($message, array_flip(self::CONTROL_MESSAGE_KEYS)) as $key => $value) {
             if (is_array($value)) {
-                if (array_filter($value, 'is_scalar') !== $value) {
-                    continue;
-                }
-
-                $value = implode(', ', $value);
+                $value = implode(', ', array_map(
+                    fn(mixed $item) => is_array($item) ? 'Array' : (string) $item,
+                    $value
+                ));
             }
 
             if ($value !== null && !is_scalar($value)) {
@@ -280,6 +282,8 @@ class ContactFormExtensionsService extends Component
     }
 
     /**
+     * Removes each entry from the text, matching it as one or more whole lines.
+     *
      * @param string   $text
      * @param string[] $lines
      *
@@ -287,11 +291,12 @@ class ContactFormExtensionsService extends Component
      */
     private function _removeLines(string $text, array $lines): string
     {
-        $kept = array_filter(
-            explode("\n", $text),
-            fn(string $line) => !in_array($line, $lines, true)
-        );
+        foreach ($lines as $line) {
+            $quoted = preg_quote($line, '/');
+            $text = preg_replace('/\n' . $quoted . '(?=\n|$)/', '', $text) ?? $text;
+            $text = preg_replace('/^' . $quoted . '(?:\n|$)/', '', $text) ?? $text;
+        }
 
-        return implode("\n", $kept);
+        return $text;
     }
 }

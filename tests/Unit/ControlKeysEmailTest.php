@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace hybridinteractive\contactformextensions\tests\Unit;
 
+use Craft;
 use craft\contactform\events\SendEvent;
 use craft\contactform\Mailer;
 use craft\contactform\models\Submission;
+use craft\helpers\ArrayHelper;
 use craft\mail\Message;
 use hybridinteractive\contactformextensions\services\ContactFormExtensionsService;
 use PHPUnit\Framework\TestCase;
@@ -118,10 +120,92 @@ class ControlKeysEmailTest extends TestCase
         $e = $this->_event($this->_message);
         $e->sender = null;
         $text = $this->_text($e);
+        $html = $this->_html($e);
 
         (new ContactFormExtensionsService())->removeControlKeysFromEmail($e);
 
         self::assertSame($text, $this->_text($e));
+        self::assertSame($html, $this->_html($e));
+    }
+
+    /**
+     * @return array<string, array{0: mixed}>
+     */
+    public static function controlValueProvider(): array
+    {
+        return [
+            'string' => ['HASHED-TO-EMAIL'],
+            'true' => [true],
+            'false' => [false],
+            'null' => [null],
+            'int' => [5],
+            'flat array' => [['HASHED-TO-EMAIL', 'b']],
+            'nested array' => [[['HASHED-TO-EMAIL']]],
+            'multi-line' => ["HASHED-TO-EMAIL\nsecond"],
+            'trailing CRLF' => ["HASHED-TO-EMAIL\r\n"],
+        ];
+    }
+
+    /**
+     * @dataProvider controlValueProvider
+     *
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function testControlValuesOfAnyShapeAreRemoved(mixed $value): void
+    {
+        $e = $this->_event(['body' => 'Hello', 'phone' => '555-0100', 'toEmail' => $value]);
+
+        (new ContactFormExtensionsService())->removeControlKeysFromEmail($e);
+
+        foreach ([$this->_text($e), $this->_html($e)] as $body) {
+            self::assertStringNotContainsString('toEmail', $body);
+            self::assertStringNotContainsString('HASHED-TO-EMAIL', $body);
+            self::assertStringContainsString('555-0100', $body);
+            self::assertStringContainsString('Hello', $body);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testControlKeyOnlyMessageKeepsBodyLayout(): void
+    {
+        $e = $this->_event(['toEmail' => 'HASHED-TO-EMAIL', 'body' => 'Hello']);
+
+        (new ContactFormExtensionsService())->removeControlKeysFromEmail($e);
+
+        self::assertSame("- **Name:** Test\n- **Email:** test@example.com\n\nHello", $this->_text($e));
+    }
+
+    /**
+     * @return void
+     */
+    public function testControlKeysExcludedByAllowedMessageFieldsAreANoOp(): void
+    {
+        $e = $this->_event($this->_message, ['phone']);
+        $text = $this->_text($e);
+        $html = $this->_html($e);
+
+        (new ContactFormExtensionsService())->removeControlKeysFromEmail($e);
+
+        self::assertSame($text, $this->_text($e));
+        self::assertSame($html, $this->_html($e));
+    }
+
+    /**
+     * @return void
+     */
+    public function testAppendedTextIsKeptWhileControlLinesAreRemoved(): void
+    {
+        $e = $this->_event($this->_message);
+        $e->message->setTextBody($this->_text($e) . "\n\nIP: 127.0.0.1");
+
+        (new ContactFormExtensionsService())->removeControlKeysFromEmail($e);
+
+        $this->_assertClean($this->_text($e));
+        self::assertStringEndsWith("\n\nIP: 127.0.0.1", $this->_text($e));
     }
 
     // Private Methods
@@ -130,15 +214,23 @@ class ControlKeysEmailTest extends TestCase
     /**
      * Builds a send event the way Contact Form does before triggering EVENT_BEFORE_SEND.
      *
-     * @param array $message
+     * @param array         $message
+     * @param string[]|null $allowedMessageFields
      *
      * @return SendEvent
      */
-    private function _event(array $message): SendEvent
+    private function _event(array $message, ?array $allowedMessageFields = null): SendEvent
     {
         $mailer = new class() extends Mailer {
             /**
-             * Mirrors Contact Form's text body format without needing its plugin settings.
+             * @var string[]|null
+             */
+            public ?array $allowedMessageFields = null;
+
+            /**
+             * Follows Contact Form 3.x `Mailer::compileTextBody()` line for line, with the
+             * plugin settings lookup replaced by `$allowedMessageFields`. Nested arrays
+             * render as "Array", as PHP's implode() does (without its warning).
              *
              * @param Submission $submission
              *
@@ -146,20 +238,46 @@ class ControlKeysEmailTest extends TestCase
              */
             public function compileTextBody(Submission $submission): string
             {
-                $fields = (array) $submission->message;
-                $body = $fields['body'] ?? '';
-                unset($fields['body']);
+                $fields = [];
 
-                $lines = ['- **Name:** Test', '- **Email:** test@example.com'];
-                foreach ($fields as $key => $value) {
-                    $lines[] = "- **{$key}:** " . (is_array($value) ? implode(', ', $value) : $value);
+                if ($submission->fromName) {
+                    $fields[Craft::t('contact-form', 'Name')] = $submission->fromName;
                 }
 
-                return implode("\n", $lines) . "\n\n" . $body;
+                $fields[Craft::t('contact-form', 'Email')] = $submission->fromEmail;
+
+                $messageFields = array_merge((array) $submission->message);
+                $body = ArrayHelper::remove($messageFields, 'body', '');
+                foreach ($messageFields as $key => $value) {
+                    if ($this->allowedMessageFields === null || in_array($key, $this->allowedMessageFields)) {
+                        $fields[Craft::t('site', $key)] = $value;
+                    }
+                }
+
+                $text = '';
+
+                foreach ($fields as $key => $value) {
+                    $text .= ($text ? "\n" : '') . "- **{$key}:** ";
+                    if (is_array($value)) {
+                        $text .= implode(', ', array_map(fn($item) => is_array($item) ? 'Array' : $item, $value));
+                    } else {
+                        $text .= $value;
+                    }
+                }
+
+                if ($body !== '') {
+                    $body = preg_replace('/\R/u', "\n", $body);
+                    $text .= "\n\n" . $body;
+                }
+
+                return $text;
             }
         };
+        $mailer->allowedMessageFields = $allowedMessageFields;
 
         $submission = new Submission();
+        $submission->fromName = 'Test';
+        $submission->fromEmail = 'test@example.com';
         $submission->message = $message;
 
         $text = $mailer->compileTextBody($submission);
