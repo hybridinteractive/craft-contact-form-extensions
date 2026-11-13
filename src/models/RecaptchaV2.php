@@ -112,8 +112,7 @@ class RecaptchaV2
     {
         $uniqueId = uniqid();
 
-        $html = $this->_renderPolyfill();
-        $html .= $this->_renderCaptchaHtml($uniqueId);
+        $html = $this->_renderCaptchaHtml($uniqueId);
         $html .= $this->_renderFooterJs($uniqueId, $lang);
 
         return $html;
@@ -166,14 +165,6 @@ class RecaptchaV2
 
     // Private Methods
     // =========================================================================
-
-    /**
-     * @return string
-     */
-    private function _renderPolyfill(): string
-    {
-        return '<script src="https://cdnjs.cloudflare.com/polyfill/v2/polyfill.min.js"></script>' . PHP_EOL;
-    }
 
     /**
      * @param string $uniqueId

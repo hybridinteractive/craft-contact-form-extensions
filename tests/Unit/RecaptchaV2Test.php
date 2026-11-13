@@ -39,7 +39,7 @@ class RecaptchaV2Test extends TestCase
     /**
      * @return void
      */
-    public function testRenderIncludesCdnjsPolyfill(): void
+    public function testRenderOutputsWidgetWithoutPolyfill(): void
     {
         $recaptcha = new RecaptchaV2(
             'site-key',
@@ -54,10 +54,9 @@ class RecaptchaV2Test extends TestCase
 
         $html = $recaptcha->render();
 
-        self::assertStringContainsString('cdnjs.cloudflare.com/polyfill', $html);
         self::assertStringContainsString('site-key', $html);
         self::assertStringContainsString('render=explicit', $html);
-        self::assertStringNotContainsString('polyfill.io', $html);
+        self::assertStringNotContainsString('polyfill', $html);
         self::assertMatchesRegularExpression('/id="_g-recaptcha[a-f0-9]+"/', $html);
         self::assertMatchesRegularExpression('/grecaptcha\.execute\(widgetId\)/', $html);
         self::assertTrue(

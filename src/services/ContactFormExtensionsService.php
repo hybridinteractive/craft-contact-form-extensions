@@ -29,8 +29,52 @@ use yii\base\Exception;
  */
 class ContactFormExtensionsService extends Component
 {
+    // Const Properties
+    // =========================================================================
+
+    /**
+     * Message keys that carry hashed overrides or per-form switches rather than submitted content.
+     *
+     * @var string[]
+     */
+    public const CONTROL_MESSAGE_KEYS = [
+        'toEmail',
+        'confirmationSubject',
+        'confirmationTemplate',
+        'notificationTemplate',
+        'disableRecaptcha',
+        'disableConfirmation',
+        'disableSaveSubmission',
+    ];
+
+    /**
+     * Message keys hidden when displaying or exporting a submission.
+     *
+     * @var string[]
+     */
+    public const HIDDEN_MESSAGE_KEYS = [
+        'formName',
+        ...self::CONTROL_MESSAGE_KEYS,
+    ];
+
     // Public Methods
     // =========================================================================
+
+    /**
+     * Removes control keys (hashed overrides and per-form switches) from a submission message.
+     *
+     * @param array $message
+     *
+     * @return array
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.1.2
+     */
+    public function stripControlKeys(array $message): array
+    {
+        return array_diff_key($message, array_flip(self::CONTROL_MESSAGE_KEYS));
+    }
 
     /**
      * Saves a Craft Contact Form submission as a CFE Submission element.

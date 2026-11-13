@@ -22,17 +22,6 @@
     {% endif %}
 {% endmacro %}
 
-{% set skipKeys = [
-    'formName',
-    'toEmail',
-    'confirmationSubject',
-    'confirmationTemplate',
-    'notificationTemplate',
-    'disableRecaptcha',
-    'disableConfirmation',
-    'disableSaveSubmission'
-] %}
-
 <div class="contact-form-extensions-submission readable">
     {% if submission %}
         <h3>{{ "Subject"|t('contact-form-extensions') }}</h3>
