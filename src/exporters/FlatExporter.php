@@ -29,6 +29,8 @@ class FlatExporter extends ElementExporter
      * Prefix added to message fields whose names collide with a submission column.
      *
      * @var string
+     *
+     * @since 5.1.2
      */
     public const MESSAGE_COLUMN_PREFIX = 'message_';
 
@@ -63,8 +65,8 @@ class FlatExporter extends ElementExporter
     }
 
     /**
-     * Builds one export row. Message fields never overwrite submission columns and
-     * hidden keys (form name, hashed overrides, per-form switches) are left out.
+     * Builds one export row. Message fields never overwrite submission columns or each
+     * other, and control keys (hashed overrides, per-form switches) are left out.
      *
      * @param array $element
      * @param array $message
@@ -92,12 +94,12 @@ class FlatExporter extends ElementExporter
         ];
 
         foreach ($message as $key => $value) {
-            if (in_array($key, ContactFormExtensionsService::HIDDEN_MESSAGE_KEYS, true)) {
+            if (in_array($key, ContactFormExtensionsService::CONTROL_MESSAGE_KEYS, true)) {
                 continue;
             }
 
             $column = (string) $key;
-            if (array_key_exists($column, $row) || array_key_exists($column, $trailing)) {
+            while (array_key_exists($column, $row) || array_key_exists($column, $trailing)) {
                 $column = self::MESSAGE_COLUMN_PREFIX . $column;
             }
 

@@ -35,7 +35,7 @@
 
         {% if messageObject is iterable %}
             {% for key, value in messageObject %}
-                {% if key not in skipKeys %}
+                {% if key not in (skipKeys ?? []) %}
                     <h3>{{ key|capitalize|t('contact-form-extensions') }}</h3>
                     {{ _self.renderValue(value) }}
                 {% endif %}

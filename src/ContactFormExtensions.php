@@ -285,7 +285,7 @@ class ContactFormExtensions extends Plugin
                     return;
                 }
 
-                $this->_removeControlKeysFromBody($e);
+                $this->contactFormExtensionsService->removeControlKeysFromEmail($e);
 
                 $toEmail = $this->_validatedMessageOverride($e->submission->message, 'toEmail');
                 if ($toEmail !== null) {
@@ -369,42 +369,6 @@ class ContactFormExtensions extends Plugin
                 }
             });
         });
-    }
-
-    /**
-     * Rebuilds the Contact Form email body without hashed overrides and per-form switches,
-     * so values like `toEmail` hashes are not sent to the site owner.
-     *
-     * Skipped when another listener has already customized the body.
-     *
-     * @param CraftContactFormSendEvent $e
-     *
-     * @return void
-     */
-    private function _removeControlKeysFromBody(CraftContactFormSendEvent $e): void
-    {
-        $message = $e->submission->message;
-        if (!is_array($message)) {
-            return;
-        }
-
-        $stripped = $this->contactFormExtensionsService->stripControlKeys($message);
-        if (count($stripped) === count($message)) {
-            return;
-        }
-
-        /** @var CraftContactFormMailer $mailer */
-        $mailer = $e->sender;
-        if ($e->message->getSymfonyEmail()->getTextBody() !== $mailer->compileTextBody($e->submission)) {
-            return;
-        }
-
-        $submission = clone $e->submission;
-        $submission->message = $stripped;
-        $textBody = $mailer->compileTextBody($submission);
-
-        $e->message->setTextBody($textBody);
-        $e->message->setHtmlBody($mailer->compileHtmlBody($textBody));
     }
 
     /**
