@@ -10,6 +10,8 @@ namespace hybridinteractive\contactformextensions\services;
 
 use Craft;
 use craft\base\Component;
+use craft\contactform\events\SendEvent;
+use craft\contactform\Mailer;
 use craft\contactform\models\Submission as CraftContactFormSubmission;
 use craft\helpers\App;
 use craft\helpers\StringHelper;
@@ -29,8 +31,93 @@ use yii\base\Exception;
  */
 class ContactFormExtensionsService extends Component
 {
+    // Const Properties
+    // =========================================================================
+
+    /**
+     * Message keys that carry hashed overrides or per-form switches rather than submitted content.
+     *
+     * @var string[]
+     *
+     * @since 5.1.2
+     */
+    public const CONTROL_MESSAGE_KEYS = [
+        'toEmail',
+        'confirmationSubject',
+        'confirmationTemplate',
+        'notificationTemplate',
+        'disableRecaptcha',
+        'disableConfirmation',
+        'disableSaveSubmission',
+    ];
+
+    /**
+     * Message keys hidden when displaying a submission in the control panel.
+     *
+     * @var string[]
+     *
+     * @since 5.1.2
+     */
+    public const HIDDEN_MESSAGE_KEYS = [
+        'formName',
+        ...self::CONTROL_MESSAGE_KEYS,
+    ];
+
     // Public Methods
     // =========================================================================
+
+    /**
+     * Removes control keys from the Contact Form notification email body.
+     *
+     * Lines Contact Form wrote for control keys are removed from the text body, wherever
+     * they appear. The HTML body is only rebuilt when it is still Contact Form's own
+     * rendering of a known text body, so HTML set by another listener is left alone.
+     *
+     * @param SendEvent $e
+     *
+     * @return void
+     *
+     * @author Hybrid Interactive
+     *
+     * @since 5.1.2
+     */
+    public function removeControlKeysFromEmail(SendEvent $e): void
+    {
+        $mailer = $e->sender;
+        $message = $e->submission->message;
+        if (!$mailer instanceof Mailer || !is_array($message)) {
+            return;
+        }
+
+        $lines = $this->_controlKeyLines($message);
+        if (empty($lines)) {
+            return;
+        }
+
+        $email = $e->message->getSymfonyEmail();
+        $textBody = $email->getTextBody();
+        $htmlBody = $email->getHtmlBody();
+
+        if (is_string($textBody)) {
+            $e->message->setTextBody($this->_removeLines($textBody, $lines));
+        }
+
+        if (!is_string($htmlBody)) {
+            return;
+        }
+
+        $sources = array_unique(array_filter(
+            [$textBody, $mailer->compileTextBody($e->submission)],
+            'is_string'
+        ));
+        foreach ($sources as $source) {
+            if ($htmlBody === $mailer->compileHtmlBody($source)) {
+                $e->message->setHtmlBody($mailer->compileHtmlBody($this->_removeLines($source, $lines)));
+
+                return;
+            }
+        }
+    }
 
     /**
      * Saves a Craft Contact Form submission as a CFE Submission element.
@@ -157,5 +244,59 @@ class ContactFormExtensionsService extends Component
         }
 
         return StringHelper::convertToUtf8($value);
+    }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * Returns the text body entries Contact Form writes for the control keys in a message.
+     *
+     * Values are formatted the way Contact Form's `compileTextBody()` formats them, so an
+     * entry may span several lines when the submitted value contains line breaks.
+     *
+     * @param array $message
+     *
+     * @return string[]
+     */
+    private function _controlKeyLines(array $message): array
+    {
+        $lines = [];
+
+        foreach (array_intersect_key($message, array_flip(self::CONTROL_MESSAGE_KEYS)) as $key => $value) {
+            if (is_array($value)) {
+                $value = implode(', ', array_map(
+                    fn(mixed $item) => is_array($item) ? 'Array' : (string) $item,
+                    $value
+                ));
+            }
+
+            if ($value !== null && !is_scalar($value)) {
+                continue;
+            }
+
+            $lines[] = '- **' . Craft::t('site', $key) . ':** ' . $value;
+        }
+
+        return $lines;
+    }
+
+    /**
+     * Removes each entry from the text, matching it as one or more whole lines.
+     *
+     * @param string   $text
+     * @param string[] $lines
+     *
+     * @return string
+     */
+    private function _removeLines(string $text, array $lines): string
+    {
+        foreach ($lines as $line) {
+            $quoted = preg_quote($line, '/');
+            $text = preg_replace('/\n' . $quoted . '(?=\n|$)/', '', $text) ?? $text;
+            $text = preg_replace('/^' . $quoted . '(?:\n|$)/', '', $text) ?? $text;
+        }
+
+        return $text;
     }
 }

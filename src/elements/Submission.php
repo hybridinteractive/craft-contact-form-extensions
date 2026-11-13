@@ -22,6 +22,7 @@ use hybridinteractive\contactformextensions\controllers\SubmissionsController;
 use hybridinteractive\contactformextensions\controllers\ToolsController;
 use hybridinteractive\contactformextensions\elements\db\SubmissionQuery;
 use hybridinteractive\contactformextensions\exporters\FlatExporter;
+use hybridinteractive\contactformextensions\services\ContactFormExtensionsService;
 use yii\db\Query;
 use yii\web\Response;
 
@@ -339,6 +340,7 @@ class Submission extends Element
         $behavior->contentTemplate('contact-form-extensions/submissions/_show', [
             'submission' => $this,
             'messageObject' => $message,
+            'skipKeys' => ContactFormExtensionsService::HIDDEN_MESSAGE_KEYS,
         ]);
     }
 
@@ -356,16 +358,7 @@ class Submission extends Element
                 $message = $this->message;
             }
 
-            $skipKeys = [
-                'formName',
-                'toEmail',
-                'confirmationSubject',
-                'confirmationTemplate',
-                'notificationTemplate',
-                'disableRecaptcha',
-                'disableConfirmation',
-                'disableSaveSubmission',
-            ];
+            $skipKeys = ContactFormExtensionsService::HIDDEN_MESSAGE_KEYS;
 
             $html = '<ul>';
             foreach ($message as $key => $value) {

@@ -285,6 +285,8 @@ class ContactFormExtensions extends Plugin
                     return;
                 }
 
+                $this->contactFormExtensionsService->removeControlKeysFromEmail($e);
+
                 $toEmail = $this->_validatedMessageOverride($e->submission->message, 'toEmail');
                 if ($toEmail !== null) {
                     $e->toEmails = explode(',', $toEmail);

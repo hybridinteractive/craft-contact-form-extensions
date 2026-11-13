@@ -49,6 +49,17 @@ When you overwrite the email templates, your Twig view will receive a `submissio
 - message
 - attachment
 
+`submission.message` still contains the hidden override and per-form fields described below (`toEmail`, `confirmationTemplate`, `confirmationSubject`, `notificationTemplate`, `disableRecaptcha`, `disableConfirmation`, `disableSaveSubmission`), so the overrides keep working. If your template loops over `submission.message`, skip those keys so their values don't end up in the email:
+
+```twig
+{% set hiddenKeys = ['toEmail', 'confirmationTemplate', 'confirmationSubject', 'notificationTemplate', 'disableRecaptcha', 'disableConfirmation', 'disableSaveSubmission'] %}
+{% for key, value in submission.message|filter((v, k) => k not in hiddenKeys) %}
+    <p><strong>{{ key }}:</strong> {{ value is iterable ? value|join(', ') : value }}</p>
+{% endfor %}
+```
+
+When you don't overwrite the notification template, the plugin removes these fields from Contact Form's default email body. If another plugin or module replaces or edits the HTML body of that email, the HTML is left as it is, and that code should skip these keys too.
+
 ## Overriding the form name
 
 When saving submissions to the database the default form name will be "Contact". If you add a `message[formName]` hidden field you can override the form name. This can also used to create multiple form indexes in the Control Panel.
