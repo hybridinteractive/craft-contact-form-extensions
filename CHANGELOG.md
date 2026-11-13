@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [5.1.2] - 2026-11-13
 ### Fixed
 - Hashed overrides and per-form switches (`toEmail`, `confirmationTemplate`, `confirmationSubject`, `notificationTemplate`, `disable*`) no longer appear in the notification email body ([#196](https://github.com/hybridinteractive/craft-contact-form-extensions/issues/196))
 - Flat CSV export: message fields named like a submission column (`id`, `form`, `subject`, etc.) no longer overwrite that column; they are exported as `message_<name>`. Hashed overrides and per-form switches are left out of the export.
